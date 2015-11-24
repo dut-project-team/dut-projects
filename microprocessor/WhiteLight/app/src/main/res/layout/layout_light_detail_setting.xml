@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Light information"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:gravity="center_vertical"
+                android:text="Light sensor"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:id="@+id/light_detail_setting_sp_lsensor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_marginLeft="10dp"
+                android:spinnerMode="dropdown" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:gravity="center_vertical"
+                android:text="People sensor"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:layout_marginLeft="10dp"
+                android:id="@+id/light_detail_setting_sp_psensor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:spinnerMode="dropdown" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:gravity="center_vertical"
+                android:text="Light pin"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:layout_marginLeft="10dp"
+                android:id="@+id/light_detail_setting_sp_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:spinnerMode="dropdown" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:gravity="center_vertical"
+                android:text="Light type"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:layout_marginLeft="10dp"
+                android:id="@+id/light_detail_setting_sp_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:spinnerMode="dropdown" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/light_detail_setting_btn_apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Apply" />
+
+        <Button
+            android:id="@+id/light_detail_setting_btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+    </LinearLayout>
+</LinearLayout>

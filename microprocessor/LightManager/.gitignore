@@ -1,0 +1,4 @@
+/bin/
+/obj/
+*.h~
+*.cscope_file_list

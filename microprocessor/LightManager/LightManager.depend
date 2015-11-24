@@ -1,0 +1,40 @@
+# depslib dependency file v1.0
+1442503971 source:/media/noem/clouds/OneDrive/Repos/LightManager/ConfigManager.c
+
+1442557749 source:/media/noem/clouds/OneDrive/Repos/LightManager/ConfigManager.cpp
+	"ConfigManager.h"
+
+1442558891 /media/noem/clouds/OneDrive/Repos/LightManager/ConfigManager.h
+	"Lib.h"
+
+1442559264 /media/noem/clouds/OneDrive/Repos/LightManager/Lib.h
+	<stdio.h>
+	<stdlib.h>
+	"Config.h"
+
+1442557227 /media/noem/clouds/OneDrive/Repos/LightManager/Config.h
+
+1442557865 source:/media/noem/clouds/OneDrive/Repos/LightManager/Lib.cpp
+	"Lib.h"
+
+1445529841 source:/mnt/01D0430720DCAEB0/OneDrive/Repos/LightManager/Lib.cpp
+	"Lib.h"
+
+1447175676 /mnt/01D0430720DCAEB0/OneDrive/Repos/LightManager/Lib.h
+	<stdlib.h>
+	"Config.h"
+
+1445419073 /mnt/01D0430720DCAEB0/OneDrive/Repos/LightManager/Config.h
+
+1447175493 source:/mnt/01D0430720DCAEB0/OneDrive/Repos/LightManager/Package.cpp
+	"Package.h"
+	<string.h>
+
+1447175758 /mnt/01D0430720DCAEB0/OneDrive/Repos/LightManager/Package.h
+	"Lib.h"
+
+1447168723 source:/mnt/01D0430720DCAEB0/OneDrive/Repos/LightManager/main.cpp
+	"Package.h"
+	<stdio.h>
+	<string.h>
+

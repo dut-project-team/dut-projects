@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Light type here"
+        android:id="@+id/light_config_def_tv_type" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Level 0"
+                android:layout_column="0" />
+
+            <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/light_config_def_sp_level0"
+                android:layout_column="1"
+                android:spinnerMode="dropdown" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Level 1"
+                android:id="@+id/textView3"
+                android:layout_column="0" />
+
+            <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/light_config_def_sp_level1"
+                android:layout_column="1"
+                android:spinnerMode="dropdown" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Level 2"
+                android:id="@+id/textView4"
+                android:layout_column="0" />
+
+            <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/light_config_def_sp_level2"
+                android:layout_column="1"
+                android:spinnerMode="dropdown" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Level 3"
+                android:id="@+id/textView5"
+                android:layout_column="0" />
+
+            <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/light_config_def_sp_level3"
+                android:layout_column="1"
+                android:spinnerMode="dropdown" />
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apply"
+        android:id="@+id/light_config_def_btn_apply"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>

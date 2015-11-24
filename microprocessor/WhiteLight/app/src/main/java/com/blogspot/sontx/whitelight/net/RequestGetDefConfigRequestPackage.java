@@ -1,0 +1,11 @@
+package com.blogspot.sontx.whitelight.net;
+
+/**
+ * Copyright by NE 2015.
+ * Created by noem on 12/11/2015.
+ */
+public class RequestGetDefConfigRequestPackage extends RequestPackage {
+    protected RequestGetDefConfigRequestPackage() {
+        super(COMMAND_GET_DEFCONFIG);
+    }
+}

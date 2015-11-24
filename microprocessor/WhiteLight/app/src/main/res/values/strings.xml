@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">WhiteLight</string>
+    <string-array name="light_sensor_pins">
+        <item>9</item>
+        <item>8</item>
+    </string-array>
+    <string-array name="people_sensor_pins">
+        <item>7</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="light_pins">
+        <item>13</item>
+        <item>12</item>
+        <item>11</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="light_types">
+        <item>Living room</item>
+        <item>Bedroom</item>
+        <item>Kitchen</item>
+        <item>Porch</item>
+        <item>Bathroom</item>
+        <item>Toilet</item>
+        <item>Dinning room</item>
+        <item>Loft room</item>
+    </string-array>
+    <string-array name="def_configs_list">
+        <item>None</item>
+        <item>Light sensor(every time)</item>
+        <item>Light sensor(only night)</item>
+        <item>People sensor(every time)</item>
+        <item>People sensor(only night)</item>
+        <item>Both sensor(every time)</item>
+        <item>Both sensor(only night)</item>
+        <item>Time off…</item>
+    </string-array>
+</resources>

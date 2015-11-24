@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/light_detail_menu_switch"
+        android:title="Switch mode"
+        android:icon="@android:drawable/ic_menu_more"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/light_detail_menu_setting"
+        android:title="Setting"
+        android:icon="@android:drawable/ic_menu_preferences"
+        app:showAsAction="ifRoom"/>
+</menu>
