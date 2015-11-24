@@ -30,4 +30,8 @@ public final class ServerConnection {
     public boolean updateDefConfig(DefConfig config, int id) {
         return true;
     }
+
+    public boolean addLight(UserConfig light) {
+        return true;
+    }
 }

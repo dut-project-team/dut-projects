@@ -34,4 +34,9 @@
         <item>Both sensor(only night)</item>
         <item>Time off…</item>
     </string-array>
+    <string-array name="light_modes">
+        <item>USR MODE</item>
+        <item>DEF MODE</item>
+        <item>OFF MODE</item>
+    </string-array>
 </resources>
