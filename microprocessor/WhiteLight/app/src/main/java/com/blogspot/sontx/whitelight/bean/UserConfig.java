@@ -1,6 +1,7 @@
 package com.blogspot.sontx.whitelight.bean;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 /**
  * Copyright by NE 2015.
@@ -17,8 +18,8 @@ public class UserConfig extends Config {
     private byte sensor;
     private byte extra;
     private byte nConfig;
-    private short[] lstTime;
-    private byte[] lstConfig;
+    private short[] lstTime = new short[MAX_NUM_CONFIG];
+    private byte[] lstConfig = new byte[MAX_NUM_CONFIG];
     private String name;
 
     public static int getFrameSize() {
@@ -59,6 +60,13 @@ public class UserConfig extends Config {
 
     public static String shortToTimeString(short time) {
         return String.format("%02d:%02d", time / 60, time % 60);
+    }
+
+    private static byte[] getFixedBytes(String st, int count) {
+        byte[] buff = new byte[count];
+        byte[] st_buff = st.getBytes(Charset.forName("ASCII"));
+        System.arraycopy(st_buff, 0, buff, 0, Math.min(buff.length, st_buff.length));
+        return buff;
     }
 
     public static byte combine(byte low, byte high) {
@@ -168,7 +176,7 @@ public class UserConfig extends Config {
         buff[offset] = nConfig;
         offset++;
 
-        System.arraycopy(name.getBytes(Charset.forName("ASCII")), 0, buff, offset, MAX_LEN_NAME);
+        System.arraycopy(getFixedBytes(name, MAX_LEN_NAME), 0, buff, offset, MAX_LEN_NAME);
 
         return buff;
     }
