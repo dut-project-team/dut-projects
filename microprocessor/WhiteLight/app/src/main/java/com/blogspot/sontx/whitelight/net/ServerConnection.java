@@ -34,4 +34,8 @@ public final class ServerConnection {
     public boolean addLight(UserConfig light) {
         return true;
     }
+
+    public boolean removeLight(int id) {
+        return true;
+    }
 }

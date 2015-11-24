@@ -1,7 +1,9 @@
 package com.blogspot.sontx.whitelight.ui;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +33,7 @@ import com.blogspot.sontx.whitelight.ui.view.SimpleSpinner;
 
 import java.util.List;
 
-public class LightActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class LightActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     private List<Light> lights;
     private List<DefConfig> defConfigs;
     private LightAdapter lightAdapter;
@@ -56,6 +58,7 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
         listView.setOnItemClickListener(this);
 
         lightAdapter = new LightAdapter(this.getApplicationContext(), lights);
+        lightAdapter.setOnClickListener(this);
         listView.setAdapter(lightAdapter);
         Toast.makeText(this, "Loaded!", Toast.LENGTH_SHORT).show();
     }
@@ -167,19 +170,84 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
         dialog.show();
     }
 
+    @Override
+    public void onClick(View v) {
+        final LightHolder holder = (LightHolder) v.getTag();
+        if(holder == null)
+            return;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setMessage(String.format("Are you sure you want to remove '%s'?", holder.light.getName()));
+        builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(LightActivity.this, "removing..", Toast.LENGTH_SHORT).show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final boolean ok = ServerConnection.getInstance().removeLight(holder.lightId);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(ok) {
+                                    List<Light> lights = (List<Light>) SharedObject.getInstance().get(Config.SHARED_LIGHTS);
+                                    lights.remove(holder.light);
+                                    lightAdapter.notifyDataSetChanged();
+                                    listView.invalidateViews();
+                                    Toast.makeText(LightActivity.this, "Removed", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(LightActivity.this, "Fail!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }).start();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
     private static class ViewHolder {
         ImageView ivState;
         TextView tvName;
         TextView tvConfig;
+        ImageView ivType;
+    }
+
+
+    private static class LightHolder {
+        public final Light light;
+        public final int lightId;
+        public LightHolder(Light light, int lightId) {
+            this.light = light;
+            this.lightId = lightId;
+        }
     }
 
     private class LightAdapter extends BaseAdapter {
         private List<Light> lights;
         private LayoutInflater inflater;
+        private View.OnClickListener mOnClickListener = null;
+        private int[] roomImages = {R.drawable.livingroom_icon, R.drawable.bedroom_icon,
+                R.drawable.kichen_icon, R.drawable.porch_icon,
+                R.drawable.bathroom_icon, R.drawable.toilet_icon,
+                R.drawable.dinningroom_icon, R.drawable.loftroom_icon};
 
         public LightAdapter(Context context, List<Light> lights) {
             this.inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
             this.lights = lights;
+        }
+
+        public void setOnClickListener(View.OnClickListener listener) {
+            mOnClickListener = listener;
         }
 
         @Override
@@ -206,6 +274,7 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
                 holder.ivState = (ImageView) convertView.findViewById(R.id.light_item_iv_state);
                 holder.tvName = (TextView) convertView.findViewById(R.id.light_item_tv_name);
                 holder.tvConfig = (TextView) convertView.findViewById(R.id.light_item_tv_config);
+                holder.ivType = (ImageView) convertView.findViewById(R.id.light_item_ib_remove);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -227,6 +296,9 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
                     break;
             }
             holder.tvConfig.setText(configName);
+            holder.ivType.setImageResource(roomImages[light.getLightType() - 1]);
+            holder.ivType.setTag(new LightHolder(light, position));
+            holder.ivType.setOnClickListener(mOnClickListener);
             return convertView;
         }
     }
