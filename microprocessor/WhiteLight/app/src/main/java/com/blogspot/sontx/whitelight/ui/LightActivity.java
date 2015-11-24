@@ -66,7 +66,10 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(position == 0) {
-            showAddLightDialog();
+            if(lights.size() >= Config.MAX_SUPPORT_LIGHTS)
+                Toast.makeText(LightActivity.this, String.format("Support only %d lights", Config.MAX_SUPPORT_LIGHTS), Toast.LENGTH_SHORT).show();
+            else
+                showAddLightDialog();
         } else {
             Intent intent = new Intent(this, LightDetailActivity.class);
             Bundle bundle = new Bundle();
@@ -221,7 +224,6 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
         TextView tvConfig;
         ImageView ivType;
     }
-
 
     private static class LightHolder {
         public final Light light;
