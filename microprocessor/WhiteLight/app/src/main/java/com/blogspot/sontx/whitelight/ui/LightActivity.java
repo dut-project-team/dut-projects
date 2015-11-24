@@ -147,7 +147,6 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
                                 @Override
                                 public void run() {
                                     if (ok) {
-                                        List<Light> lights = (List<Light>) SharedObject.getInstance().get(Config.SHARED_LIGHTS);
                                         lights.add(light);
                                         lightAdapter.notifyDataSetChanged();
                                         listView.invalidateViews();
@@ -194,7 +193,6 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
                             @Override
                             public void run() {
                                 if(ok) {
-                                    List<Light> lights = (List<Light>) SharedObject.getInstance().get(Config.SHARED_LIGHTS);
                                     lights.remove(holder.light);
                                     lightAdapter.notifyDataSetChanged();
                                     listView.invalidateViews();
