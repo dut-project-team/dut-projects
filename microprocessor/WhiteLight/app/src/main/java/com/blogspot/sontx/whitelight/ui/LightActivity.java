@@ -31,14 +31,14 @@ import com.blogspot.sontx.whitelight.bean.UserConfig;
 import com.blogspot.sontx.whitelight.lib.Config;
 import com.blogspot.sontx.whitelight.lib.SharedObject;
 import com.blogspot.sontx.whitelight.net.ServerConnection;
-import com.blogspot.sontx.whitelight.sample.LightSample;
 import com.blogspot.sontx.whitelight.ui.view.LimitEditText;
 import com.blogspot.sontx.whitelight.ui.view.SimpleSpinner;
 
 import java.io.IOException;
 import java.util.List;
 
-public class LightActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class LightActivity extends AppCompatActivity implements
+        AdapterView.OnItemClickListener, View.OnClickListener, ServerConnection.OnRefreshDataListener {
     private List<Light> lights;
     private List<DefConfig> defConfigs;
     private LightAdapter lightAdapter;
@@ -55,6 +55,34 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
                 sharedPreferences.getString(Config.SHARED_IPADDR, ""));
     }
 
+    private void fetchData() {
+        Toast.makeText(LightActivity.this, "Fetching...", Toast.LENGTH_SHORT).show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                lights = ServerConnection.getInstance().getAllLights();
+                defConfigs = ServerConnection.getInstance().getAllDefConfigs();
+                SharedObject.getInstance().set(Config.SHARED_USERCONFIG, lights);
+                SharedObject.getInstance().set(Config.SHARED_LIGHTS, lights);
+                SharedObject.getInstance().set(Config.SHARED_DEFCONFIG, defConfigs);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (lights != null && defConfigs != null) {
+                            listView.setOnItemClickListener(LightActivity.this);
+                            lightAdapter = new LightAdapter(LightActivity.this.getApplicationContext(), lights);
+                            lightAdapter.setOnClickListener(LightActivity.this);
+                            listView.setAdapter(lightAdapter);
+                            Toast.makeText(LightActivity.this, "Done!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LightActivity.this, "Fail!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +91,11 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
         listView = (ListView) findViewById(R.id.light_lv_lights);
         View tvHeader = getLayoutInflater().inflate(R.layout.layout_light_header, null);
         listView.addHeaderView(tvHeader);
+
+        ServerConnection.getInstance().setOnRefreshDataListener(this);
+
+        // for test only
+        /*
         Toast.makeText(LightActivity.this, "Loading", Toast.LENGTH_SHORT).show();
 
         lights = LightSample.getLights();
@@ -77,6 +110,7 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
         lightAdapter.setOnClickListener(this);
         listView.setAdapter(lightAdapter);
         Toast.makeText(this, "Loaded!", Toast.LENGTH_SHORT).show();
+        */
     }
 
     @Override
@@ -302,6 +336,7 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
                             builder.show();
                         } else {
                             Toast.makeText(LightActivity.this, "Connected!", Toast.LENGTH_SHORT).show();
+                            fetchData();
                         }
                     }
                 });
@@ -363,6 +398,14 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
         editor.putString(Config.SHARED_IPADDR, (String) SharedObject.getInstance().get(Config.SHARED_IPADDR));
         editor.commit();
         super.onStop();
+    }
+
+    @Override
+    public void refreshLightStates(byte[] lightStates) {
+        for (int i = 0; i < lightStates.length; i++) {
+            lights.get(i).setState(lightStates[i]);
+        }
+        listView.invalidateViews();
     }
 
     private static class ViewHolder {
