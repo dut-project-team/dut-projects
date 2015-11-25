@@ -76,6 +76,7 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
             case R.id.light_menu_connect:
                 break;
             case R.id.light_menu_defconfig:
+                startActivity(new Intent(this, DefConfigActivity.class));
                 break;
             case R.id.light_menu_about:
                 break;

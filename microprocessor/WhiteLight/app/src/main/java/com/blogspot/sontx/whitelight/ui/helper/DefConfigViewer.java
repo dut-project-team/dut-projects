@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,6 +34,22 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
     private int defConfigId;
     private Button btnApply;
     private Context context;
+    private int hackSelectionState = 0;
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    Toast.makeText(context, "Done!", Toast.LENGTH_SHORT).show();
+                    break;
+                case 0:
+                    Toast.makeText(context, "Fail!", Toast.LENGTH_SHORT).show();
+                    btnApply.setEnabled(true);
+                    break;
+            }
+            return true;
+        }
+    });
 
     public DefConfigViewer(View root) {
         this.context = root.getContext();
@@ -49,6 +66,10 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
         spLevels[2] = (SimpleSpinner) view.findViewById(R.id.light_config_def_sp_level2);
         spLevels[3] = (SimpleSpinner) view.findViewById(R.id.light_config_def_sp_level3);
 
+        for (SimpleSpinner spinner : spLevels) {
+            spinner.setOnItemSelectedListener(this);
+        }
+
         btnApply = (Button) view.findViewById(R.id.light_config_def_btn_apply);
         btnApply.setOnClickListener(this);
     }
@@ -58,6 +79,10 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
             spLevels[i].setEnabled(enable);
         }
         btnApply.setVisibility(enable ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public int getDefConfigId() {
+        return defConfigId;
     }
 
     public void setDefConfig(int defConfigId) {
@@ -70,25 +95,37 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
 
         String[] items = context.getResources().getStringArray(R.array.def_configs_list);
         DefConfig.Level[] levels = defConfig.exportState();
+        hackSelectionState = 0;
         for (int i = 0; i < 4; i++) {
             SimpleSpinner spinner = spLevels[i];
-            LevelAdapter adapter = new LevelAdapter(context,
-                    android.R.layout.simple_spinner_dropdown_item, items);
+            // unregister event on old adapter
+            LevelAdapter adapter = (LevelAdapter) spinner.getAdapter();
+            if (adapter != null)
+                adapter.setSpecialItemOnClickListener(null, -1);
+            // init new adapter
+            adapter = new LevelAdapter(context, android.R.layout.simple_spinner_dropdown_item, items);
             DefConfig.Level level = levels[i];
             int position = level.value;
             if (level.isTime) {
                 String time = UserConfig.shortToTimeString((short) level.value);
                 adapter.setValue(position = 7, time);
             }
+            // register event for new adapter
+            adapter.setSpecialItemOnClickListener(this, 7);
+            // init new adapter for spinner
             spinner.setAdapter(adapter);
             spinner.setSelection(position);
-            spinner.setOnItemSelectedListener(this);
         }
+        btnApply.setEnabled(false);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (view.getId()) {
+        if (hackSelectionState < 5) {
+            hackSelectionState++;
+            return;
+        }
+        switch (parent.getId()) {
             case R.id.light_config_def_sp_level0:
                 cacheChanged(0, position);
                 break;
@@ -105,10 +142,7 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
     }
 
     private void cacheChanged(int level, int configId) {
-        // time off
-        if (configId == 7) {
-            pickTimeOff(level);
-        } else {
+        if (configId < 7) {
             // save to def config object
             DefConfig.Level[] levels = defConfig.exportState();
             DefConfig.Level _level = new DefConfig.Level(configId, false);
@@ -124,6 +158,18 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
         final TimePicker picker = (TimePicker) dialog.findViewById(R.id.light_config_def_timepicker_tp_picker);
         Button btnOK = (Button) dialog.findViewById(R.id.light_config_def_timepicker_btn_ok);
         Button btnCancel = (Button) dialog.findViewById(R.id.light_config_def_timepicker_btn_cancel);
+
+        // get current time in spinner
+        SimpleSpinner spinner = spLevels[level];
+        String st_time = spinner.getItemAtPosition(7).toString();
+        if (st_time.contains(":")) {
+            String st_hour = st_time.substring(0, 2);
+            String st_minute = st_time.substring(3, 5);
+            int hour = Integer.parseInt(st_hour);
+            int minute = Integer.parseInt(st_minute);
+            picker.setCurrentHour(hour);
+            picker.setCurrentMinute(minute);
+        }
 
         dialog.setTitle(R.string.app_name);
         btnOK.setOnClickListener(new View.OnClickListener() {
@@ -163,46 +209,65 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-                    Toast.makeText(context, "Done!", Toast.LENGTH_SHORT).show();
-                    break;
-                case 0:
-                    Toast.makeText(context, "Fail!", Toast.LENGTH_SHORT).show();
-                    btnApply.setEnabled(true);
-                    break;
-            }
-            return true;
-        }
-    });
-
     @Override
     public void onClick(View v) {
-        btnApply.setEnabled(false);
-        Toast.makeText(context, "Apply...", Toast.LENGTH_SHORT).show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean ok = ServerConnection.getInstance().updateDefConfig(defConfig, defConfigId);
-                handler.sendEmptyMessage(ok ? 1 : 0);
+        if (v.equals(btnApply)) {
+            btnApply.setEnabled(false);
+            Toast.makeText(context, "Apply...", Toast.LENGTH_SHORT).show();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    boolean ok = ServerConnection.getInstance().updateDefConfig(defConfig, defConfigId);
+                    handler.sendEmptyMessage(ok ? 1 : 0);
+                }
+            }).start();
+        } else {
+            // spinner item clicked, only with time off
+            View parent = (View) v.getParent();
+            switch (parent.getId()) {
+                case R.id.light_config_def_sp_level0:
+                    pickTimeOff(0);
+                    break;
+                case R.id.light_config_def_sp_level1:
+                    pickTimeOff(1);
+                    break;
+                case R.id.light_config_def_sp_level2:
+                    pickTimeOff(2);
+                    break;
+                case R.id.light_config_def_sp_level3:
+                    pickTimeOff(3);
+                    break;
             }
-        }).start();
+        }
     }
 
     private class LevelAdapter extends ArrayAdapter<String> {
         private String[] objects;
+        private View.OnClickListener mOnClickListener = null;
+        private int specialId;
+
+        public void setSpecialItemOnClickListener(View.OnClickListener listener, int specialId) {
+            mOnClickListener = listener;
+            this.specialId = specialId;
+        }
 
         public LevelAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
-            this.objects = objects;
+            this.objects = objects.clone();
         }
 
         @Override
         public String getItem(int position) {
             return objects[position];
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+            if (position == specialId) {
+                view.setOnClickListener(mOnClickListener);
+            }
+            return view;
         }
 
         public void setValue(int pos, String value) {

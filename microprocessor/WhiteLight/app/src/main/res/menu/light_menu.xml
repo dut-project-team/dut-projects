@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/light_menu_connect"
+        android:title="Connect" />
+    <item
+        android:id="@+id/light_menu_defconfig"
+        android:title="Change Default Config" />
+    <item
+        android:id="@+id/light_menu_about"
+        android:title="About" />
+</menu>
