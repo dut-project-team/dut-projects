@@ -318,6 +318,7 @@ public class LightActivity extends AppCompatActivity implements
             public void run() {
                 final StringBuilder sbuilder = new StringBuilder();
                 try {
+                    ServerConnection.getInstance().setRefreshRate((Integer) SharedObject.getInstance().get(Config.SHARED_REFRESH_RATE));
                     ServerConnection.getInstance().connect(ip, port);
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -3,6 +3,7 @@ package com.blogspot.sontx.whitelight.net;
 import android.os.Handler;
 
 import com.blogspot.sontx.libex.net.MixSocket;
+import com.blogspot.sontx.libex.util.Convert;
 import com.blogspot.sontx.whitelight.bean.DefConfig;
 import com.blogspot.sontx.whitelight.bean.Light;
 import com.blogspot.sontx.whitelight.bean.UserConfig;
@@ -24,28 +25,32 @@ public final class ServerConnection {
 
     private OnRefreshDataListener mOnRefreshDataListener;
     private RefreshObject refreshObject = new RefreshObject();
+    private int refreshRate;
 
     private Handler handler = new Handler();
+    private MixSocket socket = null;
 
     public void setOnRefreshDataListener(OnRefreshDataListener listener) {
         mOnRefreshDataListener = listener;
     }
 
-    private MixSocket socket = null;
-
     public void setRefreshRate(int rate) {
-        handler.postDelayed(refreshObject, rate);
+        refreshRate = rate;
+        if (socket != null && !socket.isClosed())
+            handler.postDelayed(refreshObject, rate);
     }
 
     public void connect(String ip, int port) throws IOException {
         disconnect();
         socket = new MixSocket(ip, port);
+        setRefreshRate(refreshRate);
     }
 
     public void disconnect() {
         if (socket == null)
             return;
         try {
+            handler.removeCallbacks(refreshObject);
             socket.close();
             socket = null;
         } catch (IOException e) {
@@ -54,6 +59,10 @@ public final class ServerConnection {
     }
 
     public List<Light> getAllLights() {
+        return null;
+    }
+
+    public List<DefConfig> getAllDefConfigs() {
         return null;
     }
 
@@ -73,10 +82,35 @@ public final class ServerConnection {
         return true;
     }
 
+    private boolean checkState() {
+        return socket == null || socket.isClosed();
+    }
+
+    private byte[] getLightStates() {
+        if (!checkState())
+            return null;
+        RequestGetLightStateRequestPackage request = new RequestGetLightStateRequestPackage();
+        boolean ok = socket.send(Convert.base64Encode(request.getBytes()));
+        if (ok) {
+            String receive = socket.receiveString();
+            if (receive.length() > 0) {
+                byte[] buff = Convert.base64Decode(receive);
+                ResponseLightStatePackage response = new ResponseLightStatePackage();
+                response.init(buff);
+                byte[] states = response.getStates();
+                return states;
+            }
+        }
+        return null;
+    }
+
     private class RefreshObject implements Runnable {
         @Override
         public void run() {
-            // update
+            if (mOnRefreshDataListener != null) {
+                byte[] states = getLightStates();
+                mOnRefreshDataListener.refreshLightStates(states);
+            }
         }
     }
 
