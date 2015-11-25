@@ -9,6 +9,7 @@ import com.blogspot.sontx.whitelight.bean.Light;
 import com.blogspot.sontx.whitelight.bean.UserConfig;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,6 +60,27 @@ public final class ServerConnection {
     }
 
     public List<Light> getAllLights() {
+        ResponseUserConfigPackage response = new ResponseUserConfigPackage();
+        if (sendForResult(new RequestGetUserConfigRequestPackage(), response)) {
+            List<UserConfig> userConfigs = response.getUserConfigs();
+            byte[] states = getLightStates();
+            if (userConfigs == null || states == null || userConfigs.size() != states.length)
+                return null;
+            List<Light> lights = new ArrayList<>(states.length);
+            for (int i = 0; i < states.length; i++) {
+                UserConfig userConfig = userConfigs.get(i);
+                Light light = new Light();
+                light.setState(states[i]);
+                light.setName(userConfig.getName());
+                light.setSensor(userConfig.getSensor());
+                light.setExtra(userConfig.getExtra());
+                light.setLstConfig(userConfig.getLstConfig());
+                light.setLstTime(userConfig.getLstTime());
+                light.setNConfig(userConfig.getNConfig());
+                lights.add(light);
+            }
+            return lights;
+        }
         return null;
     }
 
@@ -87,21 +109,24 @@ public final class ServerConnection {
     }
 
     private byte[] getLightStates() {
+        ResponseLightStatePackage response = new ResponseLightStatePackage();
+        if (sendForResult(new RequestGetLightStateRequestPackage(), response))
+            return response.getStates();
+        return null;
+    }
+
+    private boolean sendForResult(RequestPackage request, ResponsePackage response) {
         if (!checkState())
-            return null;
-        RequestGetLightStateRequestPackage request = new RequestGetLightStateRequestPackage();
-        boolean ok = socket.send(Convert.base64Encode(request.getBytes()));
-        if (ok) {
+            return false;
+        if (socket.send(Convert.base64Encode(request.getBytes()))) {
             String receive = socket.receiveString();
             if (receive.length() > 0) {
                 byte[] buff = Convert.base64Decode(receive);
-                ResponseLightStatePackage response = new ResponseLightStatePackage();
                 response.init(buff);
-                byte[] states = response.getStates();
-                return states;
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     private class RefreshObject implements Runnable {
