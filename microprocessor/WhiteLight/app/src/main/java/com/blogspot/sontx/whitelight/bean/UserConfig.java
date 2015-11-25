@@ -1,7 +1,6 @@
 package com.blogspot.sontx.whitelight.bean;
 
 import java.nio.charset.Charset;
-import java.util.Arrays;
 
 /**
  * Copyright by NE 2015.
@@ -59,6 +58,8 @@ public class UserConfig extends Config {
     }
 
     public static String shortToTimeString(short time) {
+        if (time == 1440)
+            return "00:00";
         return String.format("%02d:%02d", time / 60, time % 60);
     }
 

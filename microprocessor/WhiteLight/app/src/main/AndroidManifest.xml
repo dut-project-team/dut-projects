@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.LightActivity" />
-        <activity android:name=".ui.LightDetailActivity"></activity>
+        <activity android:name=".ui.LightDetailActivity" />
+        <activity android:name=".ui.DefConfigActivity"></activity>
     </application>
 
 </manifest>

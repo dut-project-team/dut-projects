@@ -8,13 +8,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -61,6 +62,25 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
         lightAdapter.setOnClickListener(this);
         listView.setAdapter(lightAdapter);
         Toast.makeText(this, "Loaded!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.light_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.light_menu_connect:
+                break;
+            case R.id.light_menu_defconfig:
+                break;
+            case R.id.light_menu_about:
+                break;
+        }
+        return true;
     }
 
     @Override

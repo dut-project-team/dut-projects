@@ -10,13 +10,11 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blogspot.sontx.whitelight.R;
-import com.blogspot.sontx.whitelight.bean.DefConfig;
 import com.blogspot.sontx.whitelight.bean.Light;
 import com.blogspot.sontx.whitelight.bean.UserConfig;
 import com.blogspot.sontx.whitelight.lib.Config;
@@ -36,11 +34,6 @@ public class LightDetailActivity extends AppCompatActivity {
     private Light light;
     private int lightId;
     private ConfigLayout currentLayout;
-
-    private DefConfig getDefConfig(byte lightType) {
-        List<DefConfig> defConfigs = (List<DefConfig>) SharedObject.getInstance().get(Config.SHARED_DEFCONFIG);
-        return defConfigs.get(lightType - 1);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +60,7 @@ public class LightDetailActivity extends AppCompatActivity {
                 applyConfigLayout(new UserConfigLayout(light, lightId));
                 break;
             case UserConfig.CONFIG_TYPE_DEF:
-                applyConfigLayout(new DefConfigLayout(getDefConfig(light.getLightType()), light, lightId));
+                applyConfigLayout(new DefConfigLayout(light));
                 break;
             default:
                 finish();
@@ -175,7 +168,7 @@ public class LightDetailActivity extends AppCompatActivity {
                                 if (ok) {
                                     Toast.makeText(LightDetailActivity.this, "Done!", Toast.LENGTH_SHORT).show();
                                     if(currentLayout instanceof DefConfigLayout)
-                                        ((DefConfigLayout)currentLayout).setDefConfig(getDefConfig(lightType));
+                                        ((DefConfigLayout) currentLayout).loadDefConfig(lightType - 1);
                                 } else {
                                     Toast.makeText(LightDetailActivity.this, "Fail!", Toast.LENGTH_SHORT).show();
                                 }
