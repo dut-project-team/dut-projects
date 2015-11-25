@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -12,10 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ import com.blogspot.sontx.whitelight.sample.LightSample;
 import com.blogspot.sontx.whitelight.ui.view.LimitEditText;
 import com.blogspot.sontx.whitelight.ui.view.SimpleSpinner;
 
+import java.io.IOException;
 import java.util.List;
 
 public class LightActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
@@ -39,6 +43,17 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
     private List<DefConfig> defConfigs;
     private LightAdapter lightAdapter;
     private ListView listView;
+    private SharedPreferences sharedPreferences;
+
+    private void loadConfig() {
+        sharedPreferences = getSharedPreferences("content_saved", MODE_PRIVATE);
+        SharedObject.getInstance().set(Config.SHARED_REFRESH_RATE,
+                sharedPreferences.getInt(Config.SHARED_REFRESH_RATE, 5000));
+        SharedObject.getInstance().set(Config.SHARED_PORTNUM,
+                sharedPreferences.getInt(Config.SHARED_PORTNUM, 2512));
+        SharedObject.getInstance().set(Config.SHARED_IPADDR,
+                sharedPreferences.getString(Config.SHARED_IPADDR, ""));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +80,20 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        loadConfig();
+
+        String ip = (String) SharedObject.getInstance().get(Config.SHARED_IPADDR);
+        if (ip != null && ip.length() > 0) {
+            int port = (int) SharedObject.getInstance().get(Config.SHARED_PORTNUM);
+            performConnect(ip, port);
+        } else {
+            showConnectionDialog();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.light_menu, menu);
         return true;
@@ -74,6 +103,7 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.light_menu_connect:
+                showConnectionDialog();
                 break;
             case R.id.light_menu_defconfig:
                 startActivity(new Intent(this, DefConfigActivity.class));
@@ -193,6 +223,93 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
         dialog.show();
     }
 
+    private void showConnectionDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.layout_connection);
+        setTitle(R.string.app_name);
+
+        final EditText etIP = (EditText) dialog.findViewById(R.id.connection_et_ip);
+        final EditText etPort = (EditText) dialog.findViewById(R.id.connection_et_port);
+        final SimpleSpinner spRefresh = (SimpleSpinner) dialog.findViewById(R.id.connection_sp_rate);
+        Button btnOK = (Button) dialog.findViewById(R.id.connection_btn_connect);
+        Button btnCancel = (Button) dialog.findViewById(R.id.connection_btn_cancel);
+
+        String[] refreshRates = getResources().getStringArray(R.array.refresh_rates);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item, refreshRates);
+        spRefresh.setAdapter(adapter);
+
+        etIP.setText(SharedObject.getInstance().get(Config.SHARED_IPADDR).toString());
+        etPort.setText(SharedObject.getInstance().get(Config.SHARED_PORTNUM).toString());
+        spRefresh.setSelectionText(SharedObject.getInstance().get(Config.SHARED_REFRESH_RATE).toString());
+
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                String st_ip = etIP.getText().toString();
+                String st_port = etPort.getText().toString();
+                if (st_ip.length() == 0) {
+                    Toast.makeText(LightActivity.this, "IP is empty", Toast.LENGTH_SHORT).show();
+                } else if (st_port.length() == 0) {
+                    Toast.makeText(LightActivity.this, "Port is empty", Toast.LENGTH_SHORT).show();
+                } else {
+                    int port = Integer.parseInt(st_port);
+                    String refreshRate = spRefresh.getSelectedItem().toString();
+                    SharedObject.getInstance().set(Config.SHARED_REFRESH_RATE, refreshRate);
+                    ServerConnection.getInstance().setRefreshRate(Integer.parseInt(refreshRate));
+                    performConnect(st_ip, port);
+                }
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private void performConnect(final String ip, final int port) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_progress);
+        ViewGroup.LayoutParams params = dialog.getWindow().getAttributes();
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        dialog.getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+        dialog.setCancelable(false);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final StringBuilder sbuilder = new StringBuilder();
+                try {
+                    ServerConnection.getInstance().connect(ip, port);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    sbuilder.append(e.getMessage());
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                        // some error
+                        if (sbuilder.length() > 0) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LightActivity.this);
+                            builder.setTitle(R.string.app_name);
+                            builder.setMessage(sbuilder.toString());
+                            builder.setIcon(android.R.drawable.ic_dialog_alert);
+                            builder.show();
+                        } else {
+                            Toast.makeText(LightActivity.this, "Connected!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+        dialog.show();
+    }
+
     @Override
     public void onClick(View v) {
         final LightHolder holder = (LightHolder) v.getTag();
@@ -235,6 +352,17 @@ public class LightActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
         builder.show();
+    }
+
+    @Override
+    protected void onStop() {
+        ServerConnection.getInstance().disconnect();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(Config.SHARED_REFRESH_RATE, (int) SharedObject.getInstance().get(Config.SHARED_REFRESH_RATE));
+        editor.putInt(Config.SHARED_PORTNUM, (int) SharedObject.getInstance().get(Config.SHARED_PORTNUM));
+        editor.putString(Config.SHARED_IPADDR, (String) SharedObject.getInstance().get(Config.SHARED_IPADDR));
+        editor.commit();
+        super.onStop();
     }
 
     private static class ViewHolder {

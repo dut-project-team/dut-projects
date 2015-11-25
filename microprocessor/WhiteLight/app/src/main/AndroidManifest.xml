@@ -20,7 +20,8 @@
         </activity>
         <activity android:name=".ui.LightActivity" />
         <activity android:name=".ui.LightDetailActivity" />
-        <activity android:name=".ui.DefConfigActivity"></activity>
+        <activity android:name=".ui.DefConfigActivity" />
+        <activity android:name=".ui.ConnectionActivity"></activity>
     </application>
 
 </manifest>
