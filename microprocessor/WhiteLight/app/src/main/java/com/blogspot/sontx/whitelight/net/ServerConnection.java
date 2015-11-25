@@ -85,6 +85,10 @@ public final class ServerConnection {
     }
 
     public List<DefConfig> getAllDefConfigs() {
+        ResponseDefConfigPackage response = new ResponseDefConfigPackage();
+        if (sendForResult(new RequestGetDefConfigRequestPackage(), response)) {
+            return response.getDefConfigs();
+        }
         return null;
     }
 
