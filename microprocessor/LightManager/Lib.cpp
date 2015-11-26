@@ -1,40 +1,43 @@
 #include "Lib.h"
 
-ulong genState(ubyte n, int l0, int l1, int l2, int l3)
+ulong to_state(ubyte n, int l0, int l1, int l2, int l3)
 {
     ulong state = n - 1;
     state <<= 30;// 2 high bits is n
     ubyte offset = 30;
 
     // saving level0
-    if(l0 > 0)
+    if(l0 >= 0)
     {
         offset -= 5;
         state |= (ulong)l0 << offset;
     }
     else
     {
+		if(l0 == -1440) l0 = 0;
         offset -= 12;
         state |= (-(ulong)l0 | 0x800) << offset;
     }
     if(n == 1) return state;
 
     // saving level1
-    if(l1 > 0)
+    if(l1 >= 0)
     {
         offset -= 5;
         state |= (ulong)l1 << offset;
     }
     else
     {
+		if(l1 == -1440) l1 = 0;
         offset -= 12;
         state |= (-(ulong)l1 | 0x800) << offset;
     }
     if(n == 2) return state;
 
     // saving level2
-    if(l2 > 0)
+    if(l2 >= 0)
     {
+		if(l2 == -1440) l2 = 0;
         offset -= 5;
         state |= (ulong)l2 << offset;
     }
@@ -46,13 +49,14 @@ ulong genState(ubyte n, int l0, int l1, int l2, int l3)
     if(n == 3) return state;
 
     // saving level3
-    if(l3 > 0)
+    if(l3 >= 0)
     {
         offset -= 5;
         state |= (ulong)l3 << offset;
     }
     else
     {
+		if(l3 == -1440) l3 = 0;
         offset -= 12;
         state |= (-(ulong)l3 | 0x800) << offset;
     }

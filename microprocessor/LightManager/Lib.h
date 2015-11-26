@@ -49,8 +49,8 @@ struct DefConfig
     // then, read 1 bit: 0 - config, 1 - time
     // config use 4 bit to save value(and 1 bit to indicate)
     // time use 11 bit to save value(and 1 bit to indicate)
-	// note: with time, to define 0h you must set value to 1440
-	// instead of 0
+	// note: with time, to define 0h you must set value to -1440
+	// instead of 0. with other values must set to negative number
     ulong state;
 };
 
