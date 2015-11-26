@@ -2,6 +2,14 @@
 #define PACKAGE_H
 #include "Lib.h"
 
+#define COMMAND_EDIT_USERCONFIG			1
+#define COMMAND_ADD_LIGHT				2
+#define COMMAND_REMOVE_LIGHT			3
+#define COMMAND_GET_USERCONFIG			4
+#define COMMAND_GET_DEFCONFIG			5
+#define COMMAND_GET_LIGHTSTATE			6
+#define COMMAND_GET_AVAILABLE_CONFIG	7
+
 class Package
 {
 protected:
