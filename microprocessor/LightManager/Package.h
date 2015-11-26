@@ -73,7 +73,7 @@ private:
 public:
     byte_t is_success() { return m_success; }
     void set_success(byte_t success) { m_success = success; }
-    virtual const byte_t* get_bytes(byte_t& length);
+    virtual const byte_t* get_bytes(uint& length);
     ResponsePackage() {}
 };
 
@@ -85,7 +85,7 @@ private:
     byte_t m_count;
 public:
     void set_configs(UserConfig** configs, byte_t count) { m_ppconfig = configs; m_count = count; }
-    virtual const byte_t* get_bytes(byte_t& length);
+    virtual const byte_t* get_bytes(uint& length);
 };
 
 // success + count + configs
@@ -96,7 +96,7 @@ private:
     byte_t m_count;
 public:
     void set_configs(const DefConfig** configs, byte_t count) { m_ppconfig = configs; m_count = count; }
-    virtual const byte_t* get_bytes(byte_t& length);
+    virtual const byte_t* get_bytes(uint& length);
 };
 
 // success + count + states
@@ -107,7 +107,7 @@ private:
     const byte_t* m_pstates;
 public:
     void set_states(const byte_t* states, byte_t count) { m_pstates = states; m_count = count; }
-    virtual const byte_t* get_bytes(byte_t& length);
+    virtual const byte_t* get_bytes(uint& length);
 };
 
 // success + pin_count + pins + light_sensor_count + light_sensors + people_sensor_count + people_sensors
@@ -124,7 +124,7 @@ public:
     void set_pins(const byte_t* pins, byte_t count) { m_ppins = pins; m_pin_count = count; }
     void set_ls(const byte_t* ls, byte_t count) { m_pls = ls; m_ls_count = count; }
     void set_ps(const byte_t* ps, byte_t count) { m_pps = ps; m_ps_count = count; }
-    virtual const byte_t* get_bytes(byte_t& length);
+    virtual const byte_t* get_bytes(uint& length);
 };
 
 class ResponseAddLightPackage: public ResponsePackage
@@ -133,6 +133,6 @@ private:
     byte_t m_new_id;
 public:
     void set_new_id(byte_t new_id) { m_new_id = new_id; }
-    virtual const byte_t* get_bytes(byte_t& length);
+    virtual const byte_t* get_bytes(uint& length);
 };
 #endif // PACKAGE_H

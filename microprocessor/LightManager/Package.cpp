@@ -39,7 +39,7 @@ bool RequestRemoveLightPackage::init(const byte_t* st, int length)
     return true;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponsePackage::get_bytes(byte_t& length)
+const byte_t* ResponsePackage::get_bytes(uint& length)
 {
     byte_t* st = new byte_t[1];
     st[0] = m_success;
@@ -47,7 +47,7 @@ const byte_t* ResponsePackage::get_bytes(byte_t& length)
     return st;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponseUserConfigPackage::get_bytes(byte_t& length)
+const byte_t* ResponseUserConfigPackage::get_bytes(uint& length)
 {
     const byte_t* header = ResponsePackage::get_bytes(length);
     int sz_uconfig = sizeof(UserConfig);
@@ -65,7 +65,7 @@ const byte_t* ResponseUserConfigPackage::get_bytes(byte_t& length)
     return bytes;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponseDefConfigPackage::get_bytes(byte_t& length)
+const byte_t* ResponseDefConfigPackage::get_bytes(uint& length)
 {
     const byte_t* header = ResponsePackage::get_bytes(length);
     int sz_dconfig = sizeof(DefConfig);
@@ -83,7 +83,7 @@ const byte_t* ResponseDefConfigPackage::get_bytes(byte_t& length)
     return bytes;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponseLightStatePackage::get_bytes(byte_t& length)
+const byte_t* ResponseLightStatePackage::get_bytes(uint& length)
 {
     const byte_t* header = ResponsePackage::get_bytes(length);
     byte_t* bytes = new byte_t[length + 1 + m_count];
@@ -95,7 +95,7 @@ const byte_t* ResponseLightStatePackage::get_bytes(byte_t& length)
     return bytes;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponseAvailableConfigsPackage::get_bytes(byte_t& length)
+const byte_t* ResponseAvailableConfigsPackage::get_bytes(uint& length)
 {
     const byte_t* header = ResponsePackage::get_bytes(length);
     byte_t sz_total = length + 3 + m_pin_count + m_ls_count + m_ps_count;
@@ -124,7 +124,7 @@ const byte_t* ResponseAvailableConfigsPackage::get_bytes(byte_t& length)
     return bytes;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponseAddLightPackage::get_bytes(byte_t& length)
+const byte_t* ResponseAddLightPackage::get_bytes(uint& length)
 {
     const byte_t* header = ResponsePackage::get_bytes(length);
     byte_t* bytes = new byte_t[length + 1];
