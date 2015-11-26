@@ -81,10 +81,10 @@ public:
 class ResponseUserConfigPackage: public ResponsePackage
 {
 private:
-    const UserConfig** m_ppconfig = NULL;
+    UserConfig** m_ppconfig = NULL;
     byte_t m_count;
 public:
-    void set_configs(const UserConfig** configs, byte_t count) { m_ppconfig = configs; m_count = count; }
+    void set_configs(UserConfig** configs, byte_t count) { m_ppconfig = configs; m_count = count; }
     virtual const byte_t* get_bytes(byte_t& length);
 };
 
