@@ -37,12 +37,12 @@ ulong to_state(ubyte n, int l0, int l1, int l2, int l3)
     // saving level2
     if(l2 >= 0)
     {
-		if(l2 == -1440) l2 = 0;
         offset -= 5;
         state |= (ulong)l2 << offset;
     }
     else
     {
+		if(l2 == -1440) l2 = 0;
         offset -= 12;
         state |= (-(ulong)l2 | 0x800) << offset;
     }
