@@ -68,7 +68,7 @@ public class LightActivity extends AppCompatActivity implements
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (lights != null && defConfigs != null) {
+                        if (lights != null) {
                             listView.setOnItemClickListener(LightActivity.this);
                             lightAdapter = new LightAdapter(LightActivity.this.getApplicationContext(), lights);
                             lightAdapter.setOnClickListener(LightActivity.this);
@@ -273,8 +273,10 @@ public class LightActivity extends AppCompatActivity implements
                 android.R.layout.simple_spinner_dropdown_item, refreshRates);
         spRefresh.setAdapter(adapter);
 
-        etIP.setText(SharedObject.getInstance().get(Config.SHARED_IPADDR).toString());
-        etPort.setText(SharedObject.getInstance().get(Config.SHARED_PORTNUM).toString());
+        etIP.setText("192.168.1.10");
+        etPort.setText("80");
+        //etIP.setText(SharedObject.getInstance().get(Config.SHARED_IPADDR).toString());
+        //etPort.setText(SharedObject.getInstance().get(Config.SHARED_PORTNUM).toString());
         spRefresh.setSelectionText(SharedObject.getInstance().get(Config.SHARED_REFRESH_RATE).toString());
 
         btnOK.setOnClickListener(new View.OnClickListener() {
@@ -318,12 +320,15 @@ public class LightActivity extends AppCompatActivity implements
             public void run() {
                 final StringBuilder sbuilder = new StringBuilder();
                 try {
-                    ServerConnection.getInstance().setRefreshRate((Integer) SharedObject.getInstance().get(Config.SHARED_REFRESH_RATE));
+                    int refreshRate = Integer.parseInt(SharedObject.getInstance().get(Config.SHARED_REFRESH_RATE).toString());
+                    ServerConnection.getInstance().setRefreshRate(refreshRate);
                     ServerConnection.getInstance().connect(ip, port);
                 } catch (IOException e) {
                     e.printStackTrace();
                     sbuilder.append(e.getMessage());
                 }
+                SharedObject.getInstance().set(Config.SHARED_IPADDR, ip);
+                SharedObject.getInstance().set(Config.SHARED_PORTNUM, port);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -406,7 +411,12 @@ public class LightActivity extends AppCompatActivity implements
         for (int i = 0; i < lightStates.length; i++) {
             lights.get(i).setState(lightStates[i]);
         }
-        listView.invalidateViews();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listView.invalidateViews();
+            }
+        });
     }
 
     private static class ViewHolder {

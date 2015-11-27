@@ -9,6 +9,7 @@ import com.blogspot.sontx.whitelight.bean.Light;
 import com.blogspot.sontx.whitelight.bean.UserConfig;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,36 +19,35 @@ import java.util.List;
  */
 public final class ServerConnection {
     private static ServerConnection instance = null;
+    private OnRefreshDataListener mOnRefreshDataListener;
+    private RefreshObject refreshObject = new RefreshObject();
+    private int refreshRate;
+    private Handler handler = new Handler();
+    private MixSocket socket = null;
+
     public static ServerConnection getInstance() {
         if (instance == null)
             instance = new ServerConnection();
         return instance;
     }
 
-    private OnRefreshDataListener mOnRefreshDataListener;
-    private RefreshObject refreshObject = new RefreshObject();
-    private int refreshRate;
-
-    private Handler handler = new Handler();
-    private MixSocket socket = null;
-
     public void setOnRefreshDataListener(OnRefreshDataListener listener) {
         mOnRefreshDataListener = listener;
     }
 
-    public void setRefreshRate(int rate) {
-        refreshRate = rate;
-        if (socket != null && !socket.isClosed())
-            handler.postDelayed(refreshObject, rate);
+    public synchronized void setRefreshRate(int rate) {
+//        refreshRate = rate;
+//        if (socket != null && !socket.isClosed())
+//            handler.postDelayed(refreshObject, rate);
     }
 
-    public void connect(String ip, int port) throws IOException {
+    public synchronized void connect(String ip, int port) throws IOException {
         disconnect();
         socket = new MixSocket(ip, port);
         setRefreshRate(refreshRate);
     }
 
-    public void disconnect() {
+    public synchronized void disconnect() {
         if (socket == null)
             return;
         try {
@@ -59,14 +59,15 @@ public final class ServerConnection {
         }
     }
 
-    public List<Light> getAllLights() {
+    public synchronized List<Light> getAllLights() {
         ResponseUserConfigPackage response = new ResponseUserConfigPackage();
+        List<Light> lights = null;
         if (sendForResult(new RequestGetUserConfigRequestPackage(), response)) {
             List<UserConfig> userConfigs = response.getUserConfigs();
             byte[] states = getLightStates();
             if (userConfigs == null || states == null || userConfigs.size() != states.length)
                 return null;
-            List<Light> lights = new ArrayList<>(states.length);
+            lights = new ArrayList<>(states.length);
             for (int i = 0; i < states.length; i++) {
                 UserConfig userConfig = userConfigs.get(i);
                 Light light = new Light();
@@ -81,10 +82,10 @@ public final class ServerConnection {
             }
             return lights;
         }
-        return null;
+        return lights;
     }
 
-    public List<DefConfig> getAllDefConfigs() {
+    public synchronized List<DefConfig> getAllDefConfigs() {
         ResponseDefConfigPackage response = new ResponseDefConfigPackage();
         if (sendForResult(new RequestGetDefConfigRequestPackage(), response)) {
             return response.getDefConfigs();
@@ -92,24 +93,24 @@ public final class ServerConnection {
         return null;
     }
 
-    public boolean updateUserConfig(UserConfig config, int id) {
+    public synchronized boolean updateUserConfig(UserConfig config, int id) {
         return true;
     }
 
-    public boolean updateDefConfig(DefConfig config, int id) {
+    public synchronized boolean updateDefConfig(DefConfig config, int id) {
         return true;
     }
 
-    public boolean addLight(UserConfig light) {
+    public synchronized boolean addLight(UserConfig light) {
         return true;
     }
 
-    public boolean removeLight(int id) {
+    public synchronized boolean removeLight(int id) {
         return true;
     }
 
-    private boolean checkState() {
-        return socket == null || socket.isClosed();
+    private synchronized boolean checkState() {
+        return socket != null && !socket.isClosed();
     }
 
     private byte[] getLightStates() {
@@ -119,32 +120,59 @@ public final class ServerConnection {
         return null;
     }
 
-    private boolean sendForResult(RequestPackage request, ResponsePackage response) {
+    private synchronized boolean sendForResult(RequestPackage request, ResponsePackage response) {
         if (!checkState())
             return false;
-        if (socket.send(Convert.base64Encode(request.getBytes()))) {
-            String receive = socket.receiveString();
-            if (receive.length() > 0) {
-                byte[] buff = Convert.base64Decode(receive);
-                response.init(buff);
-                return true;
-            }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String line = Convert.base64Encode(request.getBytes());
+        int mid = line.length() / 2;
+        String line1 = line.substring(0, mid);
+        String line2 = line.substring(mid);
+        if (!socket.send(line1 + "\r"))
+            return false;
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (!socket.send(line2 + "\r"))
+            return false;
+        byte[] buff = new byte[500];
+        int ret = socket.receive(buff, 5000);
+//        String receive = socket.receiveLine(5000);
+        if (ret <= 0)
+            return false;
+        String receive = new String(buff, 0, ret, Charset.forName("ASCII"));
+        if (receive != null) {
+            buff = Convert.base64Decode(receive);
+            response.init(buff);
+            return true;
         }
         return false;
+    }
+
+    public interface OnRefreshDataListener {
+        // refresh light state only(off/on)
+        void refreshLightStates(byte[] lightStates);
     }
 
     private class RefreshObject implements Runnable {
         @Override
         public void run() {
             if (mOnRefreshDataListener != null) {
-                byte[] states = getLightStates();
-                mOnRefreshDataListener.refreshLightStates(states);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        byte[] states = getLightStates();
+                        if (states != null)
+                            mOnRefreshDataListener.refreshLightStates(states);
+                    }
+                }).start();
             }
         }
-    }
-
-    public interface OnRefreshDataListener {
-        // refresh light state only(off/on)
-        void refreshLightStates(byte[] lightStates);
     }
 }

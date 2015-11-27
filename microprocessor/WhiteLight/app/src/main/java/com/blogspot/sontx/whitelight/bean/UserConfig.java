@@ -12,8 +12,8 @@ public class UserConfig extends Config {
     public static final int CONFIG_TYPE_USER = 0;
     public static final int CONFIG_TYPE_DEF = -2;
     public static final int CONFIG_TYPE_OFF = -1;
-    public static final int MAX_LEN_NAME = 2;
-    public static final int MAX_NUM_CONFIG = 5;
+    public static final int MAX_LEN_NAME = 12;
+    public static final int MAX_NUM_CONFIG = 10;
     private byte sensor;
     private byte extra;
     private byte nConfig;
