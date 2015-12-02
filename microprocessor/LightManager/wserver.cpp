@@ -1,5 +1,6 @@
 #include "wserver.h"
 #include "ConfigManager.h"
+#include "Monitor.h"
 #include <SoftwareSerial.h>
 
 SoftwareSerial BTSerial(2, 3);
@@ -100,107 +101,98 @@ ByteHolder process_remove_light(byte_t* data, int length)
 
 ByteHolder process_get_userconfig()
 {
-    UserConfig* uc1 = new UserConfig();
-    UserConfig* uc2 = new UserConfig();
-    UserConfig* uc3 = new UserConfig();
-    uc1->n_configs = 2;
-    uc2->n_configs = 3;
-    uc3->n_configs = -2;
+    // get count of light
+    DataConfig* dtConfig = readDtConfig();
+    ubyte count = dtConfig->n_userConfigs;
+    delete dtConfig;
 
-    uint lstTime1[] = {0xFF0A, 20, 0, 0, 0, 0, 0, 0, 0, 0};
-    memcpy(uc1->lstTime, lstTime1, sizeof(lstTime1));
+    UserConfig** userConfigs = new UserConfig*[count];
+    for (ubyte i = 0; i < count; ++i)
+    {
+        UserConfig* userConfig;
+        readUserConfig(i, userConfig);
+        userConfigs[i] = userConfig;
+    }
 
-    uint lstTime2[] = {1100, 200, 999, 0, 0, 0, 0, 0, 0, 0};
-    memcpy(uc2->lstTime, lstTime2, sizeof(lstTime2));
-
-    ubyte listConfig1[] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    memcpy(uc1->lstConfig, listConfig1, sizeof(listConfig1));
-
-    ubyte listConfig2[] = {1, 0, 1, 0, 0, 0, 0, 0, 0, 0};
-    memcpy(uc2->lstConfig, listConfig2, sizeof(listConfig2));
-
-    strcpy(uc1->name,"light 1");
-    strcpy(uc2->name,"light 2");
-    strcpy(uc3->name,"light 3");
-    uc1->extra = 161;
-    uc2->extra = 178;
-    uc3->extra = 213;
-    uc1->sensor = 104;
-    uc2->sensor = 121;
-    uc3->sensor = 120;
-
-    UserConfig* uc[3];
-    uc[0] = uc1;
-    uc[1] = uc2;
-    uc[2] = uc3;
-
-    // create package
-    ResponseUserConfigPackage* res = new ResponseUserConfigPackage();
-    res->set_configs(uc, 3);
-
-    // convert
-    uint res_length;
-    byte_t* res_bytes = res->get_bytes(res_length);
+    ResponseUserConfigPackage* obj = new ResponseUserConfigPackage();
+    obj->set_configs(userConfigs, count);
+    uint length;
+    byte_t* bytes = obj->get_bytes(length);
+    delete obj;
+    for (ubyte i = 0; i < count; ++i)
+    {
+        delete userConfigs[i];
+    }
+    delete[] userConfigs;
 
     ByteHolder holder;
-    holder.buff = res_bytes;
-    holder.length = res_length;
-
-    // clean data
-    delete res;
-    delete uc1;
-    delete uc2;
-    delete uc3;
+    holder.buff = bytes;
+    holder.length = length;
     return holder;
 }
 
 ByteHolder process_get_defconfig()
 {
-    DefConfig* lstDC[8];
-    DefConfig* dc;
-    for (ubyte i = 1; i <= 8; ++i)
+    DefConfig* defConfigs[M_LIGHT_N_TYPES];
+    for (ubyte i = 0; i < M_LIGHT_N_TYPES; ++i)
     {
-        dc = getCfgDef(i);
-        lstDC[i - 1] = dc;
+        DefConfig* obj;
+        readDefConfig(M_LIGHT_LIVINGROOM + i, obj);
+        defConfigs[i] = obj;
     }
 
-    // create package
-    ResponseDefConfigPackage* res = new ResponseDefConfigPackage();
-    res->set_configs(lstDC, 8);
+    ResponseDefConfigPackage* obj = new ResponseDefConfigPackage();
+    obj->set_configs(defConfigs, M_LIGHT_N_TYPES);
 
     // convert
-    uint res_length;
-    byte_t* res_bytes = res->get_bytes(res_length);
+    uint length;
+    byte_t* bytes = obj->get_bytes(length);
 
-    ByteHolder holder;
-    holder.buff = res_bytes;
-    holder.length = res_length;
-
-    for (ubyte i = 0; i < 8; ++i)
+    delete obj;
+    for (ubyte i = 0; i < M_LIGHT_N_TYPES; ++i)
     {
-        delete lstDC[i];
+        delete defConfigs[i];
     }
 
-    delete res;
+    ByteHolder holder;
+    holder.buff = bytes;
+    holder.length = length;
+
     return holder;
 }
 
 ByteHolder process_get_lightstates()
 {
-    // create package
-    byte_t states[] = {1, 0, 1};
-    ResponseLightStatePackage* res = new ResponseLightStatePackage();
-    res->set_states(states, 3);
+    // get count of light
+    DataConfig* dtConfig = readDtConfig();
+    ubyte count = dtConfig->n_userConfigs;
+    delete dtConfig;
 
-    // covert
-    uint res_length;
-    byte_t* res_bytes = res->get_bytes(res_length);
+    log("get lights count = " + String((int)count));
+
+    // get lights state
+    byte_t* states = new byte_t[count];
+    for (ubyte i = 0; i < count; ++i)
+    {
+        UserConfig* userConfig;
+        readUserConfig(i, userConfig);
+        ubyte lightId = m_highof(userConfig->extra);
+        states[i] = getLightState(lightId);
+        delete userConfig;
+    }
+
+    // convert to bytes array
+    ResponseLightStatePackage* obj = new ResponseLightStatePackage();
+    obj->set_states(states, count);
+    uint length;
+    byte_t* bytes = obj->get_bytes(length);
+    delete[] states;
+    delete obj;
 
     ByteHolder holder;
-    holder.buff = res_bytes;
-    holder.length = res_length;
+    holder.buff = bytes;
+    holder.length = length;
 
-    delete res;
     return holder;
 }
 
@@ -235,6 +227,7 @@ void setup_bluetooth()
 void remote_control()
 {
     if (BTSerial.available() <= 0) return;
+    log("................................");
     log("Requesting...");
     char c_ctrl = BTSerial.read();
     byte_t* req = NULL;
