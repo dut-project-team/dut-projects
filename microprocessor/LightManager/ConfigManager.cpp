@@ -73,24 +73,8 @@ void resetDefConfig(ubyte lightType)
 
 byte_t readUserConfig(ubyte id, UserConfig*& config)
 {
-//    *config = new UserConfig();
-//    EEPROM.get(offset_of_usrcfgs() + id * sizeof(UserConfig), *config);
-//    return config->n_configs < 0 ? config->n_configs : 0;
-
     config = new UserConfig();
-
-    config->sensor = m_toextra(7, 6);
-
-    config->extra = m_toextra(12, M_LIGHT_LIVINGROOM);
-
-    config->lstTime[0] = m_timeint(6,0);
-    config->lstTime[0] = m_timeint(8,0);
-
-    config->lstConfig[0] = 0;
-    config->lstConfig[0] = 1;
-
-    config->n_configs = M_CONFIG_MODE_DEF;
-
+    EEPROM.get(offset_of_usrcfgs() + id * sizeof(UserConfig), *config);
     return config->n_configs < 0 ? config->n_configs : 0;
 }
 
@@ -136,7 +120,6 @@ DataConfig* readDtConfig()
         config->n_defConfigs = 0;
     if(config->n_userConfigs < 0)
         config->n_userConfigs = 0;
-    config->n_userConfigs = 1;
     return config;
 }
 
@@ -186,7 +169,7 @@ bool addUserConfig(const UserConfig* config)
         delete dtConfig;
         return false;
     }
-    EEPROM.put(offset_of_usrcfgs() + (dtConfig->n_userConfigs - 1) * sizeof(UserConfig), *config);
+    EEPROM.put(offset_of_usrcfgs() + (dtConfig->n_userConfigs) * sizeof(UserConfig), *config);
     ++dtConfig->n_userConfigs;
     EEPROM.put(offset_of_dtcfg(), *dtConfig);
     delete dtConfig;
