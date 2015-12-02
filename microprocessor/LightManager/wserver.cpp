@@ -49,23 +49,17 @@ ByteHolder process_edit_userconfig(byte_t* data, int length)
 // else add new userconfig then response true
 ByteHolder process_add_light(byte_t* data, int length)
 {
+    // 1(request_type) + remain(new_user_config_data)
     byte_t* response = new byte_t[1];
-    response[0] = 0;
 
-    // check if available slot
-    if (true)// wait for me implement it
-    {
-        // 1(request_type) + remain(new_user_config_data)
-        byte_t* config_data = data + 1;
-        // add to eeprom
+    // add to eeprom and check return value
+    RequestAddLightPackage* request = new RequestAddLightPackage();
+    request->init(data, length);
+    UserConfig* userConfig = request->get_config();
+    bool ok = addUserConfig(userConfig);
+    delete request;
 
-        // update dataConfig
-
-        // set response value is true
-        response[0] = 1;
-
-        log("add new light");
-    }
+    response[0] = ok ? 1 : 0;
 
     ByteHolder holder;
     holder.buff = response;
@@ -241,6 +235,15 @@ void remote_control()
         req = new byte_t[req_len];
         break;
     case COMMAND_ADD_LIGHT:
+        // request_type + new_userconfig_data
+        req_len = 1 + sizeof(UserConfig);
+        req = new byte_t[req_len];
+        for (ubyte i = 1; i < req_len; ++i)
+        {
+            // read actual data is new userconfig_data
+            req[i] = BTSerial.read();
+        }
+        break;
     case COMMAND_REMOVE_LIGHT:
         req_len = 2;
         req = new byte_t[req_len];
