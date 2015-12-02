@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.blogspot.sontx.whitelight">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
@@ -12,16 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.MainActivity">
+
+        </activity>
+        <activity android:name=".ui.LightActivity" />
+        <activity android:name=".ui.LightDetailActivity" />
+        <activity android:name=".ui.DefConfigActivity" />
+        <activity android:name=".ui.DeviceListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.LightActivity" />
-        <activity android:name=".ui.LightDetailActivity" />
-        <activity android:name=".ui.DefConfigActivity" />
-        <activity android:name=".ui.ConnectionActivity"></activity>
     </application>
 
 </manifest>

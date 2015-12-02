@@ -3,6 +3,8 @@ package com.blogspot.sontx.whitelight.ui;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import com.blogspot.sontx.whitelight.bean.Light;
 import com.blogspot.sontx.whitelight.bean.UserConfig;
 import com.blogspot.sontx.whitelight.lib.Config;
 import com.blogspot.sontx.whitelight.lib.SharedObject;
+import com.blogspot.sontx.whitelight.net.RequestPackage;
 import com.blogspot.sontx.whitelight.net.ServerConnection;
 import com.blogspot.sontx.whitelight.ui.helper.ConfigLayout;
 import com.blogspot.sontx.whitelight.ui.helper.DefConfigLayout;
@@ -34,6 +37,17 @@ public class LightDetailActivity extends AppCompatActivity {
     private Light light;
     private int lightId;
     private ConfigLayout currentLayout;
+    private Handler inHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case RequestPackage.COMMAND_EDIT_USERCONFIG:
+                    Toast.makeText(LightDetailActivity.this, "Done!", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return true;
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,13 +141,13 @@ public class LightDetailActivity extends AppCompatActivity {
         Button btnCancel = (Button) dialog.findViewById(R.id.light_detail_setting_btn_cancel);
 
         ArrayAdapter<String> lsAdapter = new ArrayAdapter<String>(this.getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.light_sensor_pins));
+                R.layout.layout_simple_spinner_item, getResources().getStringArray(R.array.light_sensor_pins));
         ArrayAdapter<String> psAdapter = new ArrayAdapter<String>(this.getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.people_sensor_pins));
+                R.layout.layout_simple_spinner_item, getResources().getStringArray(R.array.people_sensor_pins));
         ArrayAdapter<String> lpAdapter = new ArrayAdapter<String>(this.getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.light_pins));
+                R.layout.layout_simple_spinner_item, getResources().getStringArray(R.array.light_pins));
         ArrayAdapter<String> ltAdapter = new ArrayAdapter<String>(this.getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.light_types));
+                R.layout.layout_simple_spinner_item, getResources().getStringArray(R.array.light_types));
 
         spLightSensor.setAdapter(lsAdapter);
         spPeopleSensor.setAdapter(psAdapter);
@@ -158,24 +172,15 @@ public class LightDetailActivity extends AppCompatActivity {
 
                 Toast.makeText(LightDetailActivity.this, "Apply...", Toast.LENGTH_SHORT).show();
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final boolean ok = ServerConnection.getInstance().updateUserConfig(light, lightId);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (ok) {
-                                    Toast.makeText(LightDetailActivity.this, "Done!", Toast.LENGTH_SHORT).show();
-                                    if(currentLayout instanceof DefConfigLayout)
-                                        ((DefConfigLayout) currentLayout).loadDefConfig(lightType - 1);
-                                } else {
-                                    Toast.makeText(LightDetailActivity.this, "Fail!", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
-                }).start();
+                // send request(light sensor, people sensor, pin and light type) to arduino
+                ServerConnection.getInstance().sendRequest(
+                        inHandler,
+                        RequestPackage.COMMAND_EDIT_USERCONFIG,
+                        light.getBytes(lightId));
+
+                // only if current light is config by DEFCONFIG, apply new config(because light type changed)
+                if (currentLayout instanceof DefConfigLayout)
+                    ((DefConfigLayout) currentLayout).loadDefConfig(lightType - 1);
 
                 dialog.dismiss();
             }

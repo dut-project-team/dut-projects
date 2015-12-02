@@ -13,18 +13,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical">
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_centerVertical="true"
+            android:layout_alignEnd="@+id/light_item_ib_remove"
             android:layout_alignRight="@+id/light_item_ib_remove"
-            android:layout_alignEnd="@+id/light_item_ib_remove">
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/light_item_tv_name"
@@ -32,7 +32,8 @@
                 android:layout_height="wrap_content"
                 android:text="Name"
                 android:textAllCaps="true"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:textColor="@android:color/primary_text_light" />
 
             <TextView
                 android:id="@+id/light_item_tv_config"
@@ -40,23 +41,24 @@
                 android:layout_height="wrap_content"
                 android:text="OFF"
                 android:textAllCaps="true"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/secondary_text_light" />
         </LinearLayout>
 
         <ImageView
-            android:layout_margin="1dp"
-            android:background="@drawable/border_room"
+            android:id="@+id/light_item_ib_remove"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:id="@+id/light_item_ib_remove"
-            android:layout_gravity="right"
-            android:src="@drawable/livingroom_icon"
-            android:scaleType="centerCrop"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="5dp" />
+            android:layout_gravity="right"
+            android:layout_margin="1dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/border_room"
+            android:scaleType="centerCrop"
+            android:src="@drawable/livingroom_icon" />
 
     </RelativeLayout>
 </LinearLayout>

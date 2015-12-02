@@ -1,29 +1,29 @@
 package com.blogspot.sontx.whitelight.net;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
-
-import com.blogspot.sontx.libex.net.MixSocket;
-import com.blogspot.sontx.libex.util.Convert;
-import com.blogspot.sontx.whitelight.bean.DefConfig;
-import com.blogspot.sontx.whitelight.bean.Light;
-import com.blogspot.sontx.whitelight.bean.UserConfig;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.UUID;
 
-/**
- * Copyright by NE 2015.
- * Created by noem on 21/11/2015.
- */
 public final class ServerConnection {
+    private static final String TAG = "NOEM";
+    // SPP UUID service - this should work for most devices
+    private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static ServerConnection instance = null;
-    private OnRefreshDataListener mOnRefreshDataListener;
-    private RefreshObject refreshObject = new RefreshObject();
-    private int refreshRate;
-    private Handler handler = new Handler();
-    private MixSocket socket = null;
+    private Activity context;
+    private String mac;
+    private Handler bluetoothIn;
+    private BluetoothAdapter btAdapter = null;
+    private BluetoothSocket btSocket = null;
+    private ConnectedThread mConnectedThread;
 
     public static ServerConnection getInstance() {
         if (instance == null)
@@ -31,148 +31,179 @@ public final class ServerConnection {
         return instance;
     }
 
-    public void setOnRefreshDataListener(OnRefreshDataListener listener) {
-        mOnRefreshDataListener = listener;
+    public void setHandler(Handler handler) {
+        this.bluetoothIn = handler;
     }
 
-    public synchronized void setRefreshRate(int rate) {
-//        refreshRate = rate;
-//        if (socket != null && !socket.isClosed())
-//            handler.postDelayed(refreshObject, rate);
-    }
-
-    public synchronized void connect(String ip, int port) throws IOException {
-        disconnect();
-        socket = new MixSocket(ip, port);
-        setRefreshRate(refreshRate);
-    }
-
-    public synchronized void disconnect() {
-        if (socket == null)
-            return;
-        try {
-            handler.removeCallbacks(refreshObject);
-            socket.close();
-            socket = null;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public synchronized List<Light> getAllLights() {
-        ResponseUserConfigPackage response = new ResponseUserConfigPackage();
-        List<Light> lights = null;
-        if (sendForResult(new RequestGetUserConfigRequestPackage(), response)) {
-            List<UserConfig> userConfigs = response.getUserConfigs();
-            byte[] states = getLightStates();
-            if (userConfigs == null || states == null || userConfigs.size() != states.length)
-                return null;
-            lights = new ArrayList<>(states.length);
-            for (int i = 0; i < states.length; i++) {
-                UserConfig userConfig = userConfigs.get(i);
-                Light light = new Light();
-                light.setState(states[i]);
-                light.setName(userConfig.getName());
-                light.setSensor(userConfig.getSensor());
-                light.setExtra(userConfig.getExtra());
-                light.setLstConfig(userConfig.getLstConfig());
-                light.setLstTime(userConfig.getLstTime());
-                light.setNConfig(userConfig.getNConfig());
-                lights.add(light);
+    private void showToast(final String st) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, st, Toast.LENGTH_LONG).show();
             }
-            return lights;
-        }
-        return lights;
+        });
     }
 
-    public synchronized List<DefConfig> getAllDefConfigs() {
-        ResponseDefConfigPackage response = new ResponseDefConfigPackage();
-        if (sendForResult(new RequestGetDefConfigRequestPackage(), response)) {
-            return response.getDefConfigs();
-        }
-        return null;
-    }
-
-    public synchronized boolean updateUserConfig(UserConfig config, int id) {
-        return true;
-    }
-
-    public synchronized boolean updateDefConfig(DefConfig config, int id) {
-        return true;
-    }
-
-    public synchronized boolean addLight(UserConfig light) {
-        return true;
-    }
-
-    public synchronized boolean removeLight(int id) {
-        return true;
-    }
-
-    private synchronized boolean checkState() {
-        return socket != null && !socket.isClosed();
-    }
-
-    private byte[] getLightStates() {
-        ResponseLightStatePackage response = new ResponseLightStatePackage();
-        if (sendForResult(new RequestGetLightStateRequestPackage(), response))
-            return response.getStates();
-        return null;
-    }
-
-    private synchronized boolean sendForResult(RequestPackage request, ResponsePackage response) {
-        if (!checkState())
-            return false;
+    public boolean connect() {
+        disconnect();
+        boolean ok = true;
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothDevice device = btAdapter.getRemoteDevice(mac);
+        //Attempt to create a bluetooth socket for comms
         try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            btSocket = device.createRfcommSocketToServiceRecord(BTMODULEUUID);
+        } catch (IOException e1) {
+            showToast("ERROR - Could not create Bluetooth socket");
+            ok = false;
         }
-        String line = Convert.base64Encode(request.getBytes());
-        int mid = line.length() / 2;
-        String line1 = line.substring(0, mid);
-        String line2 = line.substring(mid);
-        if (!socket.send(line1 + "\r"))
-            return false;
+
+        // Establish the connection.
         try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            btSocket.connect();
+        } catch (IOException e) {
+            try {
+                btSocket.close();        //If IO exception occurs attempt to close socket
+            } catch (IOException e2) {
+                showToast("ERROR - Could not close Bluetooth socket");
+            }
+            ok = false;
         }
-        if (!socket.send(line2 + "\r"))
-            return false;
-        byte[] buff = new byte[500];
-        int ret = socket.receive(buff, 5000);
-//        String receive = socket.receiveLine(5000);
-        if (ret <= 0)
-            return false;
-        String receive = new String(buff, 0, ret, Charset.forName("ASCII"));
-        if (receive != null) {
-            buff = Convert.base64Decode(receive);
-            response.init(buff);
-            return true;
+        if (ok) {
+            mConnectedThread = new ConnectedThread(btSocket);
+            mConnectedThread.start();
         }
-        return false;
+        return ok;
     }
 
-    public interface OnRefreshDataListener {
-        // refresh light state only(off/on)
-        void refreshLightStates(byte[] lightStates);
+    public void disconnect() {
+        if (mConnectedThread != null) {
+            mConnectedThread.disconnect();
+            mConnectedThread.interrupt();
+            mConnectedThread = null;
+        }
+    }
+
+    public void setMAC(String mac) {
+        this.mac = mac;
+    }
+
+    public void setContext(Activity activity) {
+        this.context = activity;
+    }
+
+    public synchronized void sendRequest(Handler inHandler, int command, byte[] request) {
+        this.setHandler(inHandler);
+        sendRequest(command, request);
+    }
+
+    public synchronized void sendRequest(int command, byte[] request) {
+        byte[] buff = new byte[request.length + 1];
+        buff[0] = (byte) command;
+        System.arraycopy(request, 0, buff, 1, request.length);
+        mConnectedThread.setCommand(command);
+        mConnectedThread.write(buff);
+    }
+
+    //create new class for connect thread
+    private class ConnectedThread extends Thread {
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+        private final BluetoothSocket socket;
+
+        private int command;
+
+        //creation of the connect thread
+        public ConnectedThread(BluetoothSocket socket) {
+            this.socket = socket;
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+            try {
+                //Create I/O streams for connection
+                tmpIn = socket.getInputStream();
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) {
+            }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+        public void setCommand(int command) {
+            this.command = command;
+        }
+
+        public void disconnect() {
+            try {
+                mmInStream.close();
+                mmOutStream.close();
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void run() {
+            byte[] buffer = new byte[256];
+
+            // Keep looping to listen for received messages
+            while (true) {
+                try {
+
+                    if (mmInStream.available() <= 0) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        continue;
+                    }
+
+                    Log.d(TAG, "available! begin read response data...");
+
+                    // get data length
+                    int length = mmInStream.read();
+                    Log.d(TAG, "data length is " + length);
+
+                    // get data with length
+                    for (int i = 0; i < length; i++) {
+                        buffer[i] = (byte) mmInStream.read();
+                        Log.d(TAG, "Received id[" + i + "] = " + buffer[i]);
+                    }
+
+                    Log.d(TAG, "RECEIVED OK");
+
+                    try {
+                        byte[] actual = new byte[length];
+                        System.arraycopy(buffer, 0, actual, 0, length);
+                        // Send the obtained bytes to the UI Activity via handler
+                        bluetoothIn.obtainMessage(command, 0, command, actual).sendToTarget();
+                    } catch (IllegalArgumentException ex) {
+                        ex.printStackTrace();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    showToast("Connection Failure");
+                    break;
+                }
+            }
+        }
+
+        //write method
+        public void write(byte[] input) {
+            try {
+                mmOutStream.write(input);
+                mmOutStream.flush();
+            } catch (IOException e) {
+                //if you cannot write, close the application
+                showToast("Connection Failure");
+            }
+        }
     }
 
     private class RefreshObject implements Runnable {
         @Override
         public void run() {
-            if (mOnRefreshDataListener != null) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        byte[] states = getLightStates();
-                        if (states != null)
-                            mOnRefreshDataListener.refreshLightStates(states);
-                    }
-                }).start();
-            }
+
         }
     }
 }

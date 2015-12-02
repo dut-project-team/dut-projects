@@ -16,4 +16,12 @@ public class Light extends UserConfig {
     public void setState(byte state) {
         this.state = state;
     }
+
+    public byte[] getBytes(int lightId) {
+        byte[] configBuff = getBytes();
+        byte[] lightBuff = new byte[configBuff.length  + 1];
+        lightBuff[0] = (byte) lightId;
+        System.arraycopy(lightBuff, 1, configBuff, 0, configBuff.length);
+        return lightBuff;
+    }
 }

@@ -1,5 +1,7 @@
 package com.blogspot.sontx.whitelight.bean;
 
+import com.blogspot.sontx.libex.util.Convert;
+
 /**
  * Copyright by NE 2015.
  * Created by noem on 12/11/2015.
@@ -26,11 +28,13 @@ public class DefConfig extends Config {
             return null;
         DefConfig config = new DefConfig();
         config.lightThreshold = frame[offset + 0];
-        config.state = bytesToInt32(frame[offset + 1], frame[offset + 2], frame[offset + 3], frame[offset + 4]);
+        config.state = Convert.bytesToInteger(
+                new byte[] {frame[offset + 4], frame[offset + 3], frame[offset + 2], frame[offset + 1]});
         return config;
     }
 
     public Level[] exportState() {
+        //int _state = Convert.endianSwap(state);
         int num = ((state >> 30) & 0x00000003) + 1;// 00 to 11, save max is 4 values
         Level[] levels = new Level[num];
         int offset = 2;
@@ -74,6 +78,14 @@ public class DefConfig extends Config {
         byte[] buff = new byte[getFrameSize()];
         buff[0] = lightThreshold;
         System.arraycopy(int32ToBytes(state), 0, buff, 1, 4);
+        return buff;
+    }
+
+    public byte[] getBytes(int defconfigId) {
+        byte[] configBuff = getBytes();
+        byte[] buff = new byte[configBuff.length  + 1];
+        buff[0] = (byte) defconfigId;
+        System.arraycopy(buff, 1, configBuff, 0, configBuff.length);
         return buff;
     }
 

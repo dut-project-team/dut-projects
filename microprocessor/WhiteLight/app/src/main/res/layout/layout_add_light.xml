@@ -3,50 +3,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="com.blogspot.sontx.whitelight.ui.AddLightActivity">
 
     <TextView
+        android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Add new light to your house:"
-        android:id="@+id/textView7"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Add new light to your house:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_column="0"
                 android:text="Name"
-                android:id="@+id/textView8"
-                android:layout_column="0" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <com.blogspot.sontx.whitelight.ui.view.LimitEditText
+                android:id="@+id/add_light_ed_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/add_light_ed_name"
                 android:layout_column="1"
+                android:ems="10"
                 android:gravity="right"
                 android:hint="light name"
+                android:inputType="textPersonName"
                 android:singleLine="true" />
         </TableRow>
 
@@ -55,20 +55,20 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Mode"
                 android:id="@+id/textView9"
-                android:layout_column="0" />
-
-            <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:text="Mode"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
                 android:id="@+id/add_light_sp_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:spinnerMode="dropdown"
-                android:gravity="right" />
+                android:gravity="right"
+                android:spinnerMode="dropdown" />
         </TableRow>
 
         <TableRow
@@ -76,16 +76,16 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Light type"
-                android:id="@+id/textView10" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/add_light_sp_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="right"
                 android:spinnerMode="dropdown" />
         </TableRow>
@@ -95,16 +95,16 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Light pin"
-                android:id="@+id/textView11" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/add_light_sp_pin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="right"
                 android:spinnerMode="dropdown" />
         </TableRow>
@@ -114,16 +114,16 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Light sensor"
-                android:id="@+id/textView12" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:id="@+id/add_light_sp_lsensor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/add_light_sp_lsensor"
                 android:gravity="right"
                 android:spinnerMode="dropdown" />
         </TableRow>
@@ -133,16 +133,16 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="People sensor"
-                android:id="@+id/textView13" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:id="@+id/add_light_sp_psensor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/add_light_sp_psensor"
                 android:gravity="right"
                 android:spinnerMode="dropdown" />
         </TableRow>
@@ -150,24 +150,24 @@
     </TableLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add"
             android:id="@+id/add_light_btn_add"
-            android:layout_gravity="center_horizontal" />
-
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:id="@+id/add_light_btn_cancel" />
+            android:layout_gravity="center_horizontal"
+            android:text="Add" />
+
+        <Button
+            android:id="@+id/add_light_btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
     </LinearLayout>
 
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.blogspot.sontx.whitelight.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,7 +11,7 @@ import com.blogspot.sontx.whitelight.R;
 import com.blogspot.sontx.whitelight.ui.helper.DefConfigViewer;
 import com.blogspot.sontx.whitelight.ui.view.SimpleSpinner;
 
-public class DefConfigActivity extends Activity implements AdapterView.OnItemSelectedListener {
+public class DefConfigActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private DefConfigViewer viewer;
 
     @Override
@@ -25,7 +26,7 @@ public class DefConfigActivity extends Activity implements AdapterView.OnItemSel
         spinner.setOnItemSelectedListener(this);
         String[] lightTypes = getResources().getStringArray(R.array.light_types);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, lightTypes);
+                R.layout.layout_simple_spinner_item, lightTypes);
         spinner.setAdapter(adapter);
     }
 

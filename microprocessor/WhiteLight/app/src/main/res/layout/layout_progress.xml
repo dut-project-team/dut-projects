@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
     android:padding="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Connecting..."
-        android:id="@+id/progress_tv_text" />
-
     <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
         android:layout_gravity="center_horizontal"
         android:indeterminate="true"
         android:indeterminateBehavior="repeat" />
+
+    <TextView
+        android:id="@+id/progress_tv_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connecting..."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

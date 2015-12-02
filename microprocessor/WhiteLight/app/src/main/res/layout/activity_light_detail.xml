@@ -36,18 +36,18 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:orientation="horizontal"
             android:visibility="gone">
 
             <ImageButton
+                android:id="@+id/light_detail_ib_switchmode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/light_detail_ib_switchmode"
                 android:src="@android:drawable/ic_menu_more" />
 
             <ImageButton

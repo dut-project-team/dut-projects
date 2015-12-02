@@ -6,19 +6,19 @@
     tools:context="com.blogspot.sontx.whitelight.ui.ConnectionActivity">
 
     <TextView
+        android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Server info:"
-        android:id="@+id/textView16" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TableLayout
+        android:id="@+id/tableLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView16"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/tableLayout">
+        android:layout_marginLeft="10dp">
 
         <TableRow
             android:layout_width="match_parent"
@@ -27,16 +27,16 @@
             android:layout_centerHorizontal="true">
 
             <TextView
+                android:id="@+id/textView14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="IP"
-                android:id="@+id/textView14" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
+                android:id="@+id/connection_et_ip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/connection_et_ip"
                 android:singleLine="true" />
         </TableRow>
 
@@ -45,18 +45,18 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textView15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Port"
-                android:id="@+id/textView15" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
+                android:id="@+id/connection_et_port"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:ems="10"
-                android:id="@+id/connection_et_port" />
+                android:inputType="number" />
         </TableRow>
 
         <TableRow
@@ -64,42 +64,42 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textView17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Refresh rate"
-                android:id="@+id/textView17" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <com.blogspot.sontx.whitelight.ui.view.SimpleSpinner
+                android:id="@+id/connection_sp_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/connection_sp_rate"
-                android:spinnerMode="dropdown"
-                android:gravity="right" />
+                android:gravity="right"
+                android:spinnerMode="dropdown" />
         </TableRow>
     </TableLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tableLayout"
         android:layout_alignStart="@+id/tableLayout"
         android:layout_below="@+id/tableLayout"
         android:layout_marginTop="10dp"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <Button
+            android:id="@+id/connection_btn_connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Connect"
-            android:id="@+id/connection_btn_connect" />
+            android:text="Connect" />
 
         <Button
+            android:id="@+id/connection_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:id="@+id/connection_btn_cancel" />
+            android:text="Cancel" />
     </LinearLayout>
 
 

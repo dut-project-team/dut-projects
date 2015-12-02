@@ -20,13 +20,14 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
             android:text="Light type here"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/primary_text_light" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -35,9 +36,9 @@
             android:background="@color/colorAccent" />
 
         <TableLayout
-            android:layout_marginLeft="3dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp">
 
             <TableRow
                 android:layout_width="match_parent"

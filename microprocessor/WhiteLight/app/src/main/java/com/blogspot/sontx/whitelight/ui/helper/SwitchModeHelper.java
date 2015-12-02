@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.blogspot.sontx.whitelight.R;
 import com.blogspot.sontx.whitelight.bean.Light;
+import com.blogspot.sontx.whitelight.net.RequestPackage;
 import com.blogspot.sontx.whitelight.net.ServerConnection;
 import com.blogspot.sontx.whitelight.ui.LightDetailActivity;
 
@@ -23,6 +24,18 @@ public final class SwitchModeHelper implements DialogInterface.OnClickListener{
     private Light light;
     private int lightId;
     private ArrayAdapter<String> adapter;
+
+    private Handler inHanlder = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case RequestPackage.COMMAND_EDIT_USERCONFIG:
+                    Toast.makeText(SwitchModeHelper.this.activity, "Done!", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return true;
+        }
+    });
 
     public SwitchModeHelper(Activity activity, Light light, int lightId) {
         this.activity = activity;
@@ -37,7 +50,7 @@ public final class SwitchModeHelper implements DialogInterface.OnClickListener{
         //builder.setMessage("Switch current mode to");
 
         adapter = new ArrayAdapter<String>(activity.getApplicationContext(),
-                android.R.layout.select_dialog_singlechoice);
+                R.layout.layout_select_singlechoice);
         switch (light.getConfigType()) {
             case Light.CONFIG_TYPE_USER:
                 adapter.add("DEF MODE");
@@ -64,23 +77,6 @@ public final class SwitchModeHelper implements DialogInterface.OnClickListener{
         builder.show();
     }
 
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-                    Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(activity, LightDetailActivity.class);
-                    activity.recreate();
-                    break;
-                case 0:
-                    Toast.makeText(activity, "Fail!", Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            return true;
-        }
-    });
-
     @Override
     public void onClick(DialogInterface dialog, int which) {
         String item = adapter.getItem(which);
@@ -96,13 +92,15 @@ public final class SwitchModeHelper implements DialogInterface.OnClickListener{
                 break;
         }
         Toast.makeText(activity, "Apply...", Toast.LENGTH_SHORT).show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean ok = ServerConnection.getInstance().updateUserConfig(light, lightId);
-                handler.sendEmptyMessage(ok ? 1 : 0);
-            }
-        }).start();
+        // send request(change config type) to arduino
+        ServerConnection.getInstance().sendRequest(
+                inHanlder,
+                RequestPackage.COMMAND_EDIT_USERCONFIG,
+                light.getBytes(lightId)
+        );
+        // update to light detail activity
+        Intent intent = new Intent(activity, LightDetailActivity.class);
+        activity.recreate();
         dialog.dismiss();
     }
 }

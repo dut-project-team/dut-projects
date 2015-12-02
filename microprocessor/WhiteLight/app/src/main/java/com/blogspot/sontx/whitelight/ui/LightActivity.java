@@ -7,6 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +21,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,20 +32,161 @@ import com.blogspot.sontx.whitelight.bean.Light;
 import com.blogspot.sontx.whitelight.bean.UserConfig;
 import com.blogspot.sontx.whitelight.lib.Config;
 import com.blogspot.sontx.whitelight.lib.SharedObject;
+import com.blogspot.sontx.whitelight.net.RequestPackage;
+import com.blogspot.sontx.whitelight.net.ResponseDefConfigPackage;
+import com.blogspot.sontx.whitelight.net.ResponseLightStatePackage;
+import com.blogspot.sontx.whitelight.net.ResponseUserConfigPackage;
 import com.blogspot.sontx.whitelight.net.ServerConnection;
+import com.blogspot.sontx.whitelight.sample.LightSample;
 import com.blogspot.sontx.whitelight.ui.view.LimitEditText;
 import com.blogspot.sontx.whitelight.ui.view.SimpleSpinner;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LightActivity extends AppCompatActivity implements
-        AdapterView.OnItemClickListener, View.OnClickListener, ServerConnection.OnRefreshDataListener {
+        AdapterView.OnItemClickListener, View.OnClickListener {
     private List<Light> lights;
     private List<DefConfig> defConfigs;
     private LightAdapter lightAdapter;
     private ListView listView;
     private SharedPreferences sharedPreferences;
+    private Dialog processDialog;
+    private List<UserConfig> userConfigs = null;// holder temp user configs
+
+    // the first, get user configs -> get light states -> get def configs
+    private Handler inHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case RequestPackage.COMMAND_GET_USERCONFIG:
+                    loadUserConfigs((byte[]) msg.obj);
+                    break;
+                case RequestPackage.COMMAND_GET_LIGHTSTATE:
+                    loadLightStates((byte[]) msg.obj);
+                    break;
+                case RequestPackage.COMMAND_GET_DEFCONFIG:
+                    loadDefConfigs((byte[]) msg.obj);
+                    break;
+                case RequestPackage.COMMAND_ADD_LIGHT:
+                    Toast.makeText(LightActivity.this, "Added!", Toast.LENGTH_SHORT).show();
+                    break;
+                case RequestPackage.COMMAND_REMOVE_LIGHT:
+                    Toast.makeText(LightActivity.this, "Removed!", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return true;
+        }
+    });
+    private Handler outHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case RequestPackage.COMMAND_GET_USERCONFIG:
+                    ServerConnection.getInstance().sendRequest(
+                            inHandler,
+                            RequestPackage.COMMAND_GET_USERCONFIG,
+                            new byte[]{});
+                    break;
+                case RequestPackage.COMMAND_GET_LIGHTSTATE:
+                    ServerConnection.getInstance().sendRequest(
+                            inHandler,
+                            RequestPackage.COMMAND_GET_LIGHTSTATE,
+                            new byte[]{});
+                    break;
+                case RequestPackage.COMMAND_GET_DEFCONFIG:
+                    ServerConnection.getInstance().sendRequest(
+                            inHandler,
+                            RequestPackage.COMMAND_GET_DEFCONFIG,
+                            new byte[]{});
+                    break;
+            }
+            return true;
+        }
+    });
+
+    private void loadUserConfigs(byte[] data) {
+        ResponseUserConfigPackage response = new ResponseUserConfigPackage();
+        response.init(data);
+        userConfigs = response.getUserConfigs();
+
+        getLightStates();
+    }
+
+    private void loadLightStates(byte[] data) {
+        ResponseLightStatePackage response = new ResponseLightStatePackage();
+        response.init(data);
+        byte[] states = response.getStates();
+        lights = new ArrayList<>(states.length);
+        for (int i = 0; i < states.length; i++) {
+            UserConfig userConfig = userConfigs.get(i);
+            Light light = new Light();
+            light.setState(states[i]);
+            light.setName(userConfig.getName());
+            light.setSensor(userConfig.getSensor());
+            light.setExtra(userConfig.getExtra());
+            light.setLstConfig(userConfig.getLstConfig());
+            light.setLstTime(userConfig.getLstTime());
+            light.setNConfig(userConfig.getNConfig());
+            lights.add(light);
+        }
+        userConfigs = null;
+        SharedObject.getInstance().set(Config.SHARED_USERCONFIG, lights);
+        SharedObject.getInstance().set(Config.SHARED_LIGHTS, lights);
+        getDefConfigs();
+    }
+
+    private void loadDefConfigs(byte[] data) {
+        ResponseDefConfigPackage response = new ResponseDefConfigPackage();
+        response.init(data);
+        defConfigs = response.getDefConfigs();
+        SharedObject.getInstance().set(Config.SHARED_DEFCONFIG, defConfigs);
+
+        loadLightToUI();
+
+        closeProcessDialog();
+    }
+
+    private void initLoading() {
+        processDialog = new Dialog(this);
+        processDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        processDialog.setContentView(R.layout.layout_progress);
+        processDialog.setCancelable(false);
+    }
+
+    private boolean isUIThread() {
+        return Looper.myLooper() == Looper.getMainLooper();
+    }
+
+    private void showProcessDialog(final String text) {
+        if (isUIThread()) {
+            TextView textView = (TextView) processDialog.findViewById(R.id.progress_tv_text);
+            textView.setText(text);
+            processDialog.show();
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView textView = (TextView) processDialog.findViewById(R.id.progress_tv_text);
+                    textView.setText(text);
+                    processDialog.show();
+                }
+            });
+        }
+    }
+
+    private void closeProcessDialog() {
+        if (isUIThread()) {
+            processDialog.hide();
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    processDialog.hide();
+                }
+            });
+        }
+    }
 
     private void loadConfig() {
         sharedPreferences = getSharedPreferences("content_saved", MODE_PRIVATE);
@@ -55,32 +198,36 @@ public class LightActivity extends AppCompatActivity implements
                 sharedPreferences.getString(Config.SHARED_IPADDR, ""));
     }
 
+    private void loadLightToUI() {
+        listView.setOnItemClickListener(LightActivity.this);
+        lightAdapter = new LightAdapter(LightActivity.this.getApplicationContext(), lights);
+        lightAdapter.setOnClickListener(LightActivity.this);
+        listView.setAdapter(lightAdapter);
+    }
+
+    private void getUserConfigs() {
+        showProcessDialog("Fetch user configs...");
+        Message msg = Message.obtain();
+        msg.what = RequestPackage.COMMAND_GET_USERCONFIG;
+        outHandler.sendMessageDelayed(msg, 500);
+    }
+
+    private void getLightStates() {
+        showProcessDialog("Fetch lights state...");
+        Message msg = Message.obtain();
+        msg.what = RequestPackage.COMMAND_GET_LIGHTSTATE;
+        outHandler.sendMessageDelayed(msg, 500);
+    }
+
+    private void getDefConfigs() {
+        showProcessDialog("Fetch def configs...");
+        Message msg = Message.obtain();
+        msg.what = RequestPackage.COMMAND_GET_DEFCONFIG;
+        outHandler.sendMessageDelayed(msg, 500);
+    }
+
     private void fetchData() {
-        Toast.makeText(LightActivity.this, "Fetching...", Toast.LENGTH_SHORT).show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                lights = ServerConnection.getInstance().getAllLights();
-                defConfigs = ServerConnection.getInstance().getAllDefConfigs();
-                SharedObject.getInstance().set(Config.SHARED_USERCONFIG, lights);
-                SharedObject.getInstance().set(Config.SHARED_LIGHTS, lights);
-                SharedObject.getInstance().set(Config.SHARED_DEFCONFIG, defConfigs);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (lights != null) {
-                            listView.setOnItemClickListener(LightActivity.this);
-                            lightAdapter = new LightAdapter(LightActivity.this.getApplicationContext(), lights);
-                            lightAdapter.setOnClickListener(LightActivity.this);
-                            listView.setAdapter(lightAdapter);
-                            Toast.makeText(LightActivity.this, "Done!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LightActivity.this, "Fail!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        }).start();
+        getUserConfigs();
     }
 
     @Override
@@ -88,43 +235,54 @@ public class LightActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light);
 
+        initLoading();
+
         listView = (ListView) findViewById(R.id.light_lv_lights);
         View tvHeader = getLayoutInflater().inflate(R.layout.layout_light_header, null);
         listView.addHeaderView(tvHeader);
 
-        ServerConnection.getInstance().setOnRefreshDataListener(this);
+        ServerConnection.getInstance().setContext(this);
+        Intent intent = getIntent();
+        //Get the MAC address from the DeviceListActivty via EXTRA
+        String address =intent.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+        ServerConnection.getInstance().setMAC(address);
+
+        showProcessDialog("Connecting...");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final boolean ok = ServerConnection.getInstance().connect();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closeProcessDialog();
+
+                        loadConfig();
+
+                        if (ok)
+                            fetchData();
+                    }
+                });
+            }
+        }).start();
 
         // for test only
-        /*
-        Toast.makeText(LightActivity.this, "Loading", Toast.LENGTH_SHORT).show();
 
-        lights = LightSample.getLights();
-        defConfigs = LightSample.getAllDefConfigs();
-        SharedObject.getInstance().set(Config.SHARED_USERCONFIG, lights);
-        SharedObject.getInstance().set(Config.SHARED_LIGHTS, lights);
-        SharedObject.getInstance().set(Config.SHARED_DEFCONFIG, defConfigs);
+//        Toast.makeText(LightActivity.this, "Loading", Toast.LENGTH_SHORT).show();
+//
+//        lights = LightSample.getLights();
+//        defConfigs = LightSample.getAllDefConfigs();
+//        SharedObject.getInstance().set(Config.SHARED_USERCONFIG, lights);
+//        SharedObject.getInstance().set(Config.SHARED_LIGHTS, lights);
+//        SharedObject.getInstance().set(Config.SHARED_DEFCONFIG, defConfigs);
+//
+//        listView.setOnItemClickListener(this);
+//
+//        lightAdapter = new LightAdapter(this.getApplicationContext(), lights);
+//        lightAdapter.setOnClickListener(this);
+//        listView.setAdapter(lightAdapter);
+//        Toast.makeText(this, "Loaded!", Toast.LENGTH_SHORT).show();
 
-        listView.setOnItemClickListener(this);
-
-        lightAdapter = new LightAdapter(this.getApplicationContext(), lights);
-        lightAdapter.setOnClickListener(this);
-        listView.setAdapter(lightAdapter);
-        Toast.makeText(this, "Loaded!", Toast.LENGTH_SHORT).show();
-        */
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        loadConfig();
-
-        String ip = (String) SharedObject.getInstance().get(Config.SHARED_IPADDR);
-        if (ip != null && ip.length() > 0) {
-            int port = (int) SharedObject.getInstance().get(Config.SHARED_PORTNUM);
-            performConnect(ip, port);
-        } else {
-            showConnectionDialog();
-        }
     }
 
     @Override
@@ -137,7 +295,22 @@ public class LightActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.light_menu_connect:
-                showConnectionDialog();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (ServerConnection.getInstance().connect()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LightActivity.this, "Connected!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                }).start();
+                break;
+            case R.id.light_menu_disconnect:
+                ServerConnection.getInstance().disconnect();
                 break;
             case R.id.light_menu_defconfig:
                 startActivity(new Intent(this, DefConfigActivity.class));
@@ -150,8 +323,8 @@ public class LightActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(position == 0) {
-            if(lights.size() >= Config.MAX_SUPPORT_LIGHTS)
+        if (position == 0) {
+            if (lights.size() >= Config.MAX_SUPPORT_LIGHTS)
                 Toast.makeText(LightActivity.this, String.format("Support only %d lights", Config.MAX_SUPPORT_LIGHTS), Toast.LENGTH_SHORT).show();
             else
                 showAddLightDialog();
@@ -179,15 +352,15 @@ public class LightActivity extends AppCompatActivity implements
         Button btnCancel = (Button) dialog.findViewById(R.id.add_light_btn_cancel);
 
         ArrayAdapter<String> lsAdapter = new ArrayAdapter<String>(this.getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.light_sensor_pins));
+                R.layout.layout_simple_spinner_item, getResources().getStringArray(R.array.light_sensor_pins));
         ArrayAdapter<String> psAdapter = new ArrayAdapter<String>(this.getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.people_sensor_pins));
+                R.layout.layout_simple_spinner_item, getResources().getStringArray(R.array.people_sensor_pins));
         ArrayAdapter<String> lpAdapter = new ArrayAdapter<String>(this.getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.light_pins));
+                R.layout.layout_simple_spinner_item, getResources().getStringArray(R.array.light_pins));
         ArrayAdapter<String> ltAdapter = new ArrayAdapter<String>(this.getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.light_types));
+                R.layout.layout_simple_spinner_item, getResources().getStringArray(R.array.light_types));
         ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(this.getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.light_modes));
+                R.layout.layout_simple_spinner_item, getResources().getStringArray(R.array.light_modes));
 
         spLightSensor.setAdapter(lsAdapter);
         spPeopleSensor.setAdapter(psAdapter);
@@ -207,14 +380,14 @@ public class LightActivity extends AppCompatActivity implements
                 byte lightPin = Byte.parseByte(spPin.getSelectedItem().toString());
                 final byte lightType = (byte) (spType.getSelectedItemPosition() + 1);
                 byte mode = (byte) spMode.getSelectedItemPosition();
-                if(mode == 1)
+                if (mode == 1)
                     mode = UserConfig.CONFIG_TYPE_DEF;
-                else if(mode == 2)
+                else if (mode == 2)
                     mode = UserConfig.CONFIG_TYPE_OFF;
                 else
                     mode = UserConfig.CONFIG_TYPE_USER;
                 // check values...
-                if(name.length() == 0 || name.length() > 10) {
+                if (name.length() == 0 || name.length() > 10) {
                     Toast.makeText(LightActivity.this, "Light name must have 1 to 10 characters", Toast.LENGTH_SHORT).show();
                 } else {
                     final Light light = new Light();
@@ -224,25 +397,18 @@ public class LightActivity extends AppCompatActivity implements
                     light.setName(name);
                     light.setState((byte) Light.STATE_LIGHT_OFF);
                     Toast.makeText(LightActivity.this, "Adding...", Toast.LENGTH_SHORT).show();
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            final boolean ok = ServerConnection.getInstance().addLight(light);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (ok) {
-                                        lights.add(light);
-                                        lightAdapter.notifyDataSetChanged();
-                                        listView.invalidateViews();
-                                        Toast.makeText(LightActivity.this, "Added!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(LightActivity.this, "Fail!", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        }
-                    }).start();
+
+                    // send request(add new light) to arduino
+                    ServerConnection.getInstance().sendRequest(
+                            inHandler,
+                            RequestPackage.COMMAND_ADD_LIGHT,
+                            light.getBytes()
+                    );
+
+                    // update to UI
+                    lights.add(light);
+                    lightAdapter.notifyDataSetChanged();
+                    listView.invalidateViews();
                 }
 
                 dialog.dismiss();
@@ -257,104 +423,11 @@ public class LightActivity extends AppCompatActivity implements
         dialog.show();
     }
 
-    private void showConnectionDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.layout_connection);
-        setTitle(R.string.app_name);
-
-        final EditText etIP = (EditText) dialog.findViewById(R.id.connection_et_ip);
-        final EditText etPort = (EditText) dialog.findViewById(R.id.connection_et_port);
-        final SimpleSpinner spRefresh = (SimpleSpinner) dialog.findViewById(R.id.connection_sp_rate);
-        Button btnOK = (Button) dialog.findViewById(R.id.connection_btn_connect);
-        Button btnCancel = (Button) dialog.findViewById(R.id.connection_btn_cancel);
-
-        String[] refreshRates = getResources().getStringArray(R.array.refresh_rates);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, refreshRates);
-        spRefresh.setAdapter(adapter);
-
-        etIP.setText("192.168.1.10");
-        etPort.setText("80");
-        //etIP.setText(SharedObject.getInstance().get(Config.SHARED_IPADDR).toString());
-        //etPort.setText(SharedObject.getInstance().get(Config.SHARED_PORTNUM).toString());
-        spRefresh.setSelectionText(SharedObject.getInstance().get(Config.SHARED_REFRESH_RATE).toString());
-
-        btnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                String st_ip = etIP.getText().toString();
-                String st_port = etPort.getText().toString();
-                if (st_ip.length() == 0) {
-                    Toast.makeText(LightActivity.this, "IP is empty", Toast.LENGTH_SHORT).show();
-                } else if (st_port.length() == 0) {
-                    Toast.makeText(LightActivity.this, "Port is empty", Toast.LENGTH_SHORT).show();
-                } else {
-                    int port = Integer.parseInt(st_port);
-                    String refreshRate = spRefresh.getSelectedItem().toString();
-                    SharedObject.getInstance().set(Config.SHARED_REFRESH_RATE, refreshRate);
-                    ServerConnection.getInstance().setRefreshRate(Integer.parseInt(refreshRate));
-                    performConnect(st_ip, port);
-                }
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
-    private void performConnect(final String ip, final int port) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.layout_progress);
-        ViewGroup.LayoutParams params = dialog.getWindow().getAttributes();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        dialog.getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
-        dialog.setCancelable(false);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final StringBuilder sbuilder = new StringBuilder();
-                try {
-                    int refreshRate = Integer.parseInt(SharedObject.getInstance().get(Config.SHARED_REFRESH_RATE).toString());
-                    ServerConnection.getInstance().setRefreshRate(refreshRate);
-                    ServerConnection.getInstance().connect(ip, port);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    sbuilder.append(e.getMessage());
-                }
-                SharedObject.getInstance().set(Config.SHARED_IPADDR, ip);
-                SharedObject.getInstance().set(Config.SHARED_PORTNUM, port);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-                        // some error
-                        if (sbuilder.length() > 0) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(LightActivity.this);
-                            builder.setTitle(R.string.app_name);
-                            builder.setMessage(sbuilder.toString());
-                            builder.setIcon(android.R.drawable.ic_dialog_alert);
-                            builder.show();
-                        } else {
-                            Toast.makeText(LightActivity.this, "Connected!", Toast.LENGTH_SHORT).show();
-                            fetchData();
-                        }
-                    }
-                });
-            }
-        }).start();
-        dialog.show();
-    }
-
+    // remove light
     @Override
     public void onClick(View v) {
         final LightHolder holder = (LightHolder) v.getTag();
-        if(holder == null)
+        if (holder == null)
             return;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name);
@@ -364,25 +437,16 @@ public class LightActivity extends AppCompatActivity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(LightActivity.this, "removing..", Toast.LENGTH_SHORT).show();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final boolean ok = ServerConnection.getInstance().removeLight(holder.lightId);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(ok) {
-                                    lights.remove(holder.light);
-                                    lightAdapter.notifyDataSetChanged();
-                                    listView.invalidateViews();
-                                    Toast.makeText(LightActivity.this, "Removed", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(LightActivity.this, "Fail!", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
-                }).start();
+                // send request(remove light by id) to arduino
+                ServerConnection.getInstance().sendRequest(
+                        inHandler,
+                        RequestPackage.COMMAND_REMOVE_LIGHT,
+                        new byte[] {(byte) holder.lightId}
+                );
+                // update to UI
+                lights.remove(holder.light);
+                lightAdapter.notifyDataSetChanged();
+                listView.invalidateViews();
                 dialog.dismiss();
             }
         });
@@ -396,17 +460,12 @@ public class LightActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         ServerConnection.getInstance().disconnect();
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(Config.SHARED_REFRESH_RATE, (int) SharedObject.getInstance().get(Config.SHARED_REFRESH_RATE));
-        editor.putInt(Config.SHARED_PORTNUM, (int) SharedObject.getInstance().get(Config.SHARED_PORTNUM));
-        editor.putString(Config.SHARED_IPADDR, (String) SharedObject.getInstance().get(Config.SHARED_IPADDR));
-        editor.commit();
-        super.onStop();
+        super.onDestroy();
     }
 
-    @Override
+    //@Override
     public void refreshLightStates(byte[] lightStates) {
         for (int i = 0; i < lightStates.length; i++) {
             lights.get(i).setState(lightStates[i]);
@@ -429,6 +488,7 @@ public class LightActivity extends AppCompatActivity implements
     private static class LightHolder {
         public final Light light;
         public final int lightId;
+
         public LightHolder(Light light, int lightId) {
             this.light = light;
             this.lightId = lightId;

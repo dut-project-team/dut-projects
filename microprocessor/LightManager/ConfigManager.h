@@ -78,7 +78,7 @@ DataConfig* readDtConfig();
 * @note you must delete config which has been returned
 *       when it's not used
 */
-const DefConfig* getCfgDef(ubyte lightType);
+DefConfig* getCfgDef(ubyte lightType);
 /**
 * add new user config to eeprom
 * @param config a user config structure which

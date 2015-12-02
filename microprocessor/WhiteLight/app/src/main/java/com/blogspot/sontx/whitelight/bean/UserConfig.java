@@ -38,7 +38,7 @@ public class UserConfig extends Config {
 
         config.lstTime = new short[MAX_NUM_CONFIG];
         for (int i = 0; i <= MAX_NUM_CONFIG; i += 2) {
-            short time = bytesToInt16(frame[offset + _offset + i], frame[offset + _offset + i + 1]);
+            short time = bytesToInt16(frame, offset + _offset + i);
             config.lstTime[i / 2] = time;
         }
         _offset += MAX_NUM_CONFIG * 2;
@@ -58,9 +58,11 @@ public class UserConfig extends Config {
     }
 
     public static String shortToTimeString(short time) {
-        if (time == 1440)
+        int _time = time;
+        _time &= 0x0000FFFF;
+        if (_time == 1440)
             return "00:00";
-        return String.format("%02d:%02d", time / 60, time % 60);
+        return String.format("%02d:%02d", _time / 60, _time % 60);
     }
 
     private static byte[] getFixedBytes(String st, int count) {

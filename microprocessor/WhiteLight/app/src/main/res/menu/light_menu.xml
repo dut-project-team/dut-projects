@@ -4,6 +4,9 @@
         android:id="@+id/light_menu_connect"
         android:title="Connect" />
     <item
+        android:id="@+id/light_menu_disconnect"
+        android:title="Disconnect" />
+    <item
         android:id="@+id/light_menu_defconfig"
         android:title="Change Default Config" />
     <item

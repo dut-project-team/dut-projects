@@ -1,5 +1,7 @@
 #pragma once
 
+#define M_BAUD_RATE                         9600
+
 /**
 * config mode
 */

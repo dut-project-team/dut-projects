@@ -16,5 +16,6 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:text="00:00"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/primary_text_light" />
 </LinearLayout>

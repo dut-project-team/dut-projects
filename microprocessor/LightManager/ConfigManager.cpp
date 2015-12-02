@@ -140,7 +140,7 @@ DataConfig* readDtConfig()
     return config;
 }
 
-const DefConfig* getCfgDef(ubyte lightType)
+DefConfig* getCfgDef(ubyte lightType)
 {
     DefConfig* defConfig = new DefConfig();
     switch(lightType)

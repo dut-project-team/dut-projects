@@ -4,7 +4,7 @@
 typedef char byte_t;
 
 String CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.";
-
+extern void log(String, String);
 byte_t* base64Decode(String input, int* out_length)
 {
     int length = input.length();
@@ -38,53 +38,55 @@ byte_t* base64Decode(String input, int* out_length)
     return decoded;
 }
 
-void Log(String tag, long val);
-void Log(String tag, String val);
-
 String base64Encode(const byte_t* in, int length)
 {
-    Log("==>", length);
     int buff_size = (length * 4) / 3 + 4;
-    char* buff = new char[buff_size];
-    buff[buff_size - 1] = '\0';
-    buff[buff_size - 2] = '\0';
-    buff[buff_size - 3] = '\0';
-    buff[buff_size - 4] = '\0';
+//    char* buff = new char[buff_size];
+//    buff[buff_size - 1] = '\0';
+//    buff[buff_size - 2] = '\0';
+//    buff[buff_size - 3] = '\0';
+//    buff[buff_size - 4] = '\0';
+    String ret = "";
     int b;
     for (int i = 0, j = 0; i < length; i += 3)
     {
         b = (in[i] & 0xFC) >> 2;
-        buff[j++] = CODES[b];
+        //buff[j++] = CODES[b];
+        ret += CODES[b];
         b = (in[i] & 0x03) << 4;
         if (i + 1 < length)
         {
             b |= (in[i + 1] & 0xF0) >> 4;
-            buff[j++] = CODES[b];
+            //buff[j++] = CODES[b];
+            ret += CODES[b];
             b = (in[i + 1] & 0x0F) << 2;
             if (i + 2 < length)
             {
                 b |= (in[i + 2] & 0xC0) >> 6;
-                buff[j++] = CODES[b];
+                //buff[j++] = CODES[b];
+                ret += CODES[b];
                 b = in[i + 2] & 0x3F;
-                buff[j++] = CODES[b];
+                //buff[j++] = CODES[b];
+                ret += CODES[b];
             }
             else
             {
-                buff[j++] = CODES[b];
-                buff[j++] = '.';
+                //buff[j++] = CODES[b];
+                ret += CODES[b];
+                //buff[j++] = '.';
+                ret += '.';
             }
         }
         else
         {
-            buff[j++] = CODES[b];
-            buff[j++] = '.';
-            buff[j++] = '.';
+//            buff[j++] = CODES[b];
+//            buff[j++] = '.';
+//            buff[j++] = '.';
+              ret += CODES[b];
+              ret += "..";
         }
     }
-    Log("=>", buff_size);
-    Log("->",buff[buff_size-1]);
-    String ret(buff);
-    Log("ok = ", ret.length());
-    delete[] buff;
+    //String ret(buff);
+    //delete[] buff;
     return ret;
 }

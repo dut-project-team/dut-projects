@@ -1,7 +1,9 @@
 package com.blogspot.sontx.whitelight.ui.helper;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -21,34 +23,25 @@ import android.widget.Toast;
 import com.blogspot.sontx.whitelight.R;
 import com.blogspot.sontx.whitelight.bean.Light;
 import com.blogspot.sontx.whitelight.bean.UserConfig;
+import com.blogspot.sontx.whitelight.net.RequestPackage;
 import com.blogspot.sontx.whitelight.net.ServerConnection;
 
 /**
  * Copyright by NE 2015.
  * Created by noem on 23/11/2015.
+ * Display time list, each it changed we will update to arduino
  */
 public class UserConfigLayout extends ConfigLayout implements AdapterView.OnItemClickListener {
     private Light light;
     private TimeAdapter adapter;
     private ListView listView;
     private int lightId;
-    private Handler handler = new Handler(new Handler.Callback() {
+    private Handler inHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
-                case 2:
-                    adapter.notifyDataSetChanged();
-                    listView.invalidateViews();
-                    Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
-                    break;
-                case 1:// update ok
-                    adapter.add();
-                    adapter.notifyDataSetChanged();
-                    listView.invalidateViews();
-                    Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
-                    break;
-                case 0:// update fail
-                    Toast.makeText(context, "Fail", Toast.LENGTH_SHORT).show();
+                case RequestPackage.COMMAND_EDIT_USERCONFIG:
+                    Toast.makeText(context, "Done!", Toast.LENGTH_SHORT).show();
                     break;
             }
             return true;
@@ -88,34 +81,81 @@ public class UserConfigLayout extends ConfigLayout implements AdapterView.OnItem
                         light.getLstConfig()[index] = (byte) (turnON ? 1 : 0);
                         light.getLstTime()[index] = time;
                         light.setNConfig((byte) (index + 1));
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                boolean ok = ServerConnection.getInstance().updateUserConfig(light, lightId);
-                                handler.sendEmptyMessage(ok ? 1 : 0);
-                            }
-                        }).start();
+
+                        adapter.add();
+
+                        // send request update user config to arduino
+                        ServerConnection.getInstance().sendRequest(
+                                inHandler,
+                                RequestPackage.COMMAND_EDIT_USERCONFIG,
+                                light.getBytes(lightId));
+
+                        listView.invalidateViews();
                     }
                 });
         } else {
-            short time = light.getLstTime()[position - 1];
-            byte config = light.getLstConfig()[position - 1];
-            showDialog("Edit current user config", config != UserConfig.CONFIG_LIGHT_OFF, time, new WhenOK() {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(R.string.app_name);
+            builder.setIcon(android.R.drawable.ic_dialog_info);
+            builder.setMessage("Select option what you want to");
+            builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
                 @Override
-                public void onWhenOK(boolean turnON, short time) {
-                    byte index = (byte) (position - 1);
-                    light.getLstConfig()[index] = (byte) (turnON ? 1 : 0);
-                    light.getLstTime()[index] = time;
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            boolean ok = ServerConnection.getInstance().updateUserConfig(light, lightId);
-                            handler.sendEmptyMessage(ok ? 2 : 0);
-                        }
-                    }).start();
+                public void onClick(DialogInterface dialog, int which) {
+                    editConfig(position);
+                    dialog.dismiss();
                 }
             });
+            builder.setNegativeButton("Remove", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    removeConfig(position);
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
         }
+    }
+
+    private void editConfig(final int position) {
+        short time = light.getLstTime()[position - 1];
+        byte config = light.getLstConfig()[position - 1];
+        showDialog("Edit current user config", config != UserConfig.CONFIG_LIGHT_OFF, time, new WhenOK() {
+            @Override
+            public void onWhenOK(boolean turnON, short time) {
+                byte index = (byte) (position - 1);
+                light.getLstConfig()[index] = (byte) (turnON ? 1 : 0);
+                light.getLstTime()[index] = time;
+
+                // send request update user config to arduino
+                ServerConnection.getInstance().sendRequest(
+                        inHandler,
+                        RequestPackage.COMMAND_EDIT_USERCONFIG,
+                        light.getBytes(lightId));
+
+                listView.invalidateViews();
+            }
+        });
+    }
+
+    private void removeConfig(final int position) {
+        int count = light.getNConfig();
+        int index = position - 1;
+        byte[] data1 = light.getLstConfig();
+        short[] data2 = light.getLstTime();
+        for (int i = index; i < count - 1; i++) {
+            data1[i] = data1[i + 1];
+            data2[i] = data2[i + 1];
+        }
+        light.setNConfig((byte) (count - 1));
+        adapter.remove();
+
+        // send request update user config to arduino
+        ServerConnection.getInstance().sendRequest(
+                inHandler,
+                RequestPackage.COMMAND_EDIT_USERCONFIG,
+                light.getBytes(lightId));
+
+        listView.invalidateViews();
     }
 
     private void showDialog(String message, boolean turnON, short time, final WhenOK whenOK) {
@@ -136,12 +176,18 @@ public class UserConfigLayout extends ConfigLayout implements AdapterView.OnItem
                 short time = (short) (picker.getCurrentHour() * 60 + picker.getCurrentMinute());
                 if (whenOK != null)
                     whenOK.onWhenOK(turnOn, time);
+                swState.setOnCheckedChangeListener(null);
+                btnCancel.setOnClickListener(null);
+                btnOK.setOnClickListener(null);
                 dialog.dismiss();
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                swState.setOnCheckedChangeListener(null);
+                btnCancel.setOnClickListener(null);
+                btnOK.setOnClickListener(null);
                 dialog.dismiss();
             }
         });
@@ -185,6 +231,12 @@ public class UserConfigLayout extends ConfigLayout implements AdapterView.OnItem
 
         public void add() {
             nConfig++;
+            notifyDataSetChanged();
+        }
+
+        public void remove() {
+            nConfig--;
+            notifyDataSetChanged();
         }
 
         @Override

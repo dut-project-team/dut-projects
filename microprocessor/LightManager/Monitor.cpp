@@ -1,14 +1,11 @@
 #include "Monitor.h"
 #include "Sensor.h"
 #include <Arduino.h>
-#include "LibDemo.h"
 #include "CfgDef.h"
-#include "LibDemo.h"
 
 uint getCurrentTime()
 {
-    //return 25;// just for example
-    return getSystemTimeDemo();
+    return 25;// just for example
 }
 
 uint getRelativelyTime(uint time)

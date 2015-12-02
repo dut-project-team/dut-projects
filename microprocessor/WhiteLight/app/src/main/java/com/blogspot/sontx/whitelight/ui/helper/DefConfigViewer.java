@@ -18,6 +18,7 @@ import com.blogspot.sontx.whitelight.bean.DefConfig;
 import com.blogspot.sontx.whitelight.bean.UserConfig;
 import com.blogspot.sontx.whitelight.lib.Config;
 import com.blogspot.sontx.whitelight.lib.SharedObject;
+import com.blogspot.sontx.whitelight.net.RequestPackage;
 import com.blogspot.sontx.whitelight.net.ServerConnection;
 import com.blogspot.sontx.whitelight.ui.view.SimpleSpinner;
 
@@ -35,16 +36,12 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
     private Button btnApply;
     private Context context;
     private int hackSelectionState = 0;
-    private Handler handler = new Handler(new Handler.Callback() {
+    private Handler inHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
-                case 1:
+                case RequestPackage.COMMAND_EDIT_DEFCONFIG:
                     Toast.makeText(context, "Done!", Toast.LENGTH_SHORT).show();
-                    break;
-                case 0:
-                    Toast.makeText(context, "Fail!", Toast.LENGTH_SHORT).show();
-                    btnApply.setEnabled(true);
                     break;
             }
             return true;
@@ -103,7 +100,7 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
             if (adapter != null)
                 adapter.setSpecialItemOnClickListener(null, -1);
             // init new adapter
-            adapter = new LevelAdapter(context, android.R.layout.simple_spinner_dropdown_item, items);
+            adapter = new LevelAdapter(context, R.layout.layout_simple_spinner_item, items);
             DefConfig.Level level = levels[i];
             int position = level.value;
             if (level.isTime) {
@@ -214,13 +211,10 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
         if (v.equals(btnApply)) {
             btnApply.setEnabled(false);
             Toast.makeText(context, "Apply...", Toast.LENGTH_SHORT).show();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    boolean ok = ServerConnection.getInstance().updateDefConfig(defConfig, defConfigId);
-                    handler.sendEmptyMessage(ok ? 1 : 0);
-                }
-            }).start();
+            ServerConnection.getInstance().sendRequest(
+                    inHandler,
+                    RequestPackage.COMMAND_EDIT_DEFCONFIG,
+                    defConfig.getBytes(defConfigId));
         } else {
             // spinner item clicked, only with time off
             View parent = (View) v.getParent();
@@ -246,14 +240,14 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
         private View.OnClickListener mOnClickListener = null;
         private int specialId;
 
-        public void setSpecialItemOnClickListener(View.OnClickListener listener, int specialId) {
-            mOnClickListener = listener;
-            this.specialId = specialId;
-        }
-
         public LevelAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
             this.objects = objects.clone();
+        }
+
+        public void setSpecialItemOnClickListener(View.OnClickListener listener, int specialId) {
+            mOnClickListener = listener;
+            this.specialId = specialId;
         }
 
         @Override

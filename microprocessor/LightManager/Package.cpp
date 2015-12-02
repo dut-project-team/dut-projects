@@ -2,7 +2,7 @@
 #include <string.h>
 
 ///-------------------------------------------------------------
-bool RequestEditUCPackage::init(const byte_t* st, int length)
+bool RequestEditUCPackage::init( byte_t* st, int length)
 {
     int sz_uconfig = sizeof(UserConfig);
     // skip 1 byte for command
@@ -17,7 +17,7 @@ bool RequestEditUCPackage::init(const byte_t* st, int length)
     return true;
 }
 ///-------------------------------------------------------------
-bool RequestAddLightPackage::init(const byte_t* st, int length)
+bool RequestAddLightPackage::init( byte_t* st, int length)
 {
     int sz_uconfig = sizeof(UserConfig);
     // skip 1 byte for command
@@ -30,7 +30,7 @@ bool RequestAddLightPackage::init(const byte_t* st, int length)
     return true;
 }
 ///-------------------------------------------------------------
-bool RequestRemoveLightPackage::init(const byte_t* st, int length)
+bool RequestRemoveLightPackage::init( byte_t* st, int length)
 {
     if(length != 2)
         return false;
@@ -39,7 +39,7 @@ bool RequestRemoveLightPackage::init(const byte_t* st, int length)
     return true;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponsePackage::get_bytes(uint& length)
+byte_t* ResponsePackage::get_bytes(uint& length)
 {
     byte_t* st = new byte_t[1];
     st[0] = m_success;
@@ -47,9 +47,9 @@ const byte_t* ResponsePackage::get_bytes(uint& length)
     return st;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponseUserConfigPackage::get_bytes(uint& length)
+byte_t* ResponseUserConfigPackage::get_bytes(uint& length)
 {
-    const byte_t* header = ResponsePackage::get_bytes(length);
+    byte_t* header = ResponsePackage::get_bytes(length);
     int sz_uconfig = sizeof(UserConfig);
     int sz_extra = sz_uconfig * m_count;
     // header + count + configs
@@ -65,9 +65,9 @@ const byte_t* ResponseUserConfigPackage::get_bytes(uint& length)
     return bytes;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponseDefConfigPackage::get_bytes(uint& length)
+byte_t* ResponseDefConfigPackage::get_bytes(uint& length)
 {
-    const byte_t* header = ResponsePackage::get_bytes(length);
+    byte_t* header = ResponsePackage::get_bytes(length);
     int sz_dconfig = sizeof(DefConfig);
     int sz_extra = sz_dconfig * m_count;
     // header + count + configs
@@ -83,9 +83,9 @@ const byte_t* ResponseDefConfigPackage::get_bytes(uint& length)
     return bytes;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponseLightStatePackage::get_bytes(uint& length)
+byte_t* ResponseLightStatePackage::get_bytes(uint& length)
 {
-    const byte_t* header = ResponsePackage::get_bytes(length);
+    byte_t* header = ResponsePackage::get_bytes(length);
     byte_t* bytes = new byte_t[length + 1 + m_count];
     memcpy(bytes, header, length);
     delete[] header;
@@ -95,9 +95,9 @@ const byte_t* ResponseLightStatePackage::get_bytes(uint& length)
     return bytes;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponseAvailableConfigsPackage::get_bytes(uint& length)
+byte_t* ResponseAvailableConfigsPackage::get_bytes(uint& length)
 {
-    const byte_t* header = ResponsePackage::get_bytes(length);
+    byte_t* header = ResponsePackage::get_bytes(length);
     byte_t sz_total = length + 3 + m_pin_count + m_ls_count + m_ps_count;
     byte_t* bytes = new byte_t[sz_total];
     // header
@@ -124,9 +124,9 @@ const byte_t* ResponseAvailableConfigsPackage::get_bytes(uint& length)
     return bytes;
 }
 ///-------------------------------------------------------------
-const byte_t* ResponseAddLightPackage::get_bytes(uint& length)
+byte_t* ResponseAddLightPackage::get_bytes(uint& length)
 {
-    const byte_t* header = ResponsePackage::get_bytes(length);
+    byte_t* header = ResponsePackage::get_bytes(length);
     byte_t* bytes = new byte_t[length + 1];
     memcpy(bytes, header, length);
     delete[] header;

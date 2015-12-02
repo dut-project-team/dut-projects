@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 log("Sent is " + (ret ? "OK" : "FAIL"));
 
                 log("Waiting for server...");
-                base64 = client.receiveString();
+                base64 = client.receiveLine();
                 if (base64 != null) {
                     log("Received: " + base64);
                 } else {

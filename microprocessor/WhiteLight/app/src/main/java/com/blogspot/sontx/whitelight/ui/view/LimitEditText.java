@@ -12,17 +12,6 @@ import android.widget.EditText;
 public class LimitEditText extends EditText {
     private int maxCharacters;
 
-    public void setMaxCharacters(int maxCharacters) {
-        this.maxCharacters = maxCharacters;
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(getText().length() >= maxCharacters)
-            return true;
-        return super.onKeyDown(keyCode, event);
-    }
-
     public LimitEditText(Context context) {
         super(context);
     }
@@ -33,5 +22,16 @@ public class LimitEditText extends EditText {
 
     public LimitEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setMaxCharacters(int maxCharacters) {
+        this.maxCharacters = maxCharacters;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(getText().length() >= maxCharacters)
+            return true;
+        return super.onKeyDown(keyCode, event);
     }
 }

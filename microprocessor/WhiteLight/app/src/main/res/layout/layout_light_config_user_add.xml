@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add new user config"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/primary_text_light" />
 
     <TimePicker
         android:id="@+id/light_config_user_add_tp_picker"
@@ -24,7 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:checked="false"
-        android:text="Turn OFF" />
+        android:text="Turn OFF"
+        android:textColor="@android:color/primary_text_light" />
 
     <LinearLayout
         android:layout_width="match_parent"

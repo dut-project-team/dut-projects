@@ -42,11 +42,27 @@
 		<Unit filename="Config.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="ConfigManager.cpp" />
+		<Unit filename="ConfigManager.h" />
 		<Unit filename="Lib.cpp" />
 		<Unit filename="Lib.h" />
+		<Unit filename="LightManager.ino" />
+		<Unit filename="Monitor.cpp" />
+		<Unit filename="Monitor.h" />
 		<Unit filename="Package.cpp" />
 		<Unit filename="Package.h" />
-		<Unit filename="main.cpp" />
+		<Unit filename="Sensor.cpp" />
+		<Unit filename="Sensor.h" />
+		<Unit filename="base64.cpp" />
+		<Unit filename="base64.h" />
+		<Unit filename="main.h">
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
+		<Unit filename="wserver.cpp" />
+		<Unit filename="wserver.h" />
+		<Unit filename="wshell.cpp" />
+		<Unit filename="wshell.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

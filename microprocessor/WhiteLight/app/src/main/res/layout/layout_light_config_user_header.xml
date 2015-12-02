@@ -10,5 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Add..."
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/primary_text_light" />
 </LinearLayout>

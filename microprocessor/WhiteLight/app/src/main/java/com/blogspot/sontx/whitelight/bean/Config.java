@@ -12,8 +12,10 @@ public abstract class Config {
         return bytes;
     }
 
-    protected static short bytesToInt16(byte b1, byte b2) {
-        return (short) (((short) b1) << 8 | (short) b2);
+    protected static short bytesToInt16(byte[] b, int offset) {
+        short ret1 = b[offset];
+        short ret2 = b[offset + 1];
+        return (short) ((ret1 & 0x00FF) | ((ret2 & 0x00FF) << 8));
     }
 
     protected static byte[] int32ToBytes(int int32) {
@@ -26,7 +28,7 @@ public abstract class Config {
     }
 
     protected static int bytesToInt32(int b1, int b2, int b3, int b4) {
-        return b1 << 24 | b2 << 16 | b3 << 8 | b4;
+        return b4 << 24 | b3 << 16 | b2 << 8 | b1;
     }
 
     public abstract byte[] getBytes();
