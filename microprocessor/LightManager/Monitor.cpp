@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include "CfgDef.h"
 
+uint __lights_state = 0;// left <- right
+
 uint getCurrentTime()
 {
     return 25;// just for example
@@ -34,7 +36,7 @@ ubyte getTimeType()
 void setupLights()
 {
     // use pins: 10, 11, 12 and 13 for lights
-    for(int i = 10; i < 14; ++i)
+    for(int i = LIGHT_PIN_FROM; i < 14; ++i)
     {
         pinMode(i, OUTPUT);
     }
@@ -51,16 +53,18 @@ void setupSensors()
     // setup something for sensors here!
 }
 
-void turnOnLight(ubyte pin)
+void turnOnLight(ubyte lightId)
 {
     // start at 10
-    digitalWrite(pin, HIGH);
+    digitalWrite(LIGHT_PIN_FROM + lightId, HIGH);
+    setLightState(lightId, 1);
 }
 
-void turnOffLight(ubyte pin)
+void turnOffLight(ubyte lightId)
 {
     // start at 10
-    digitalWrite(pin, LOW);
+    digitalWrite(LIGHT_PIN_FROM + lightId, LOW);
+    setLightState(lightId, 0);
 }
 
 void applyConfigs()
@@ -198,4 +202,19 @@ void applyUsrConfig(ubyte pin,
             break;// ensure only config each light has active
         }
     }
+}
+
+ubyte getLightState(ubyte id)
+{
+    uint state = __lights_state >> id;
+    return state & 1;
+}
+
+void setLightState(ubyte id, ubyte state)
+{
+    uint mask = 1;
+    uint vmask = state & 1;
+    mask <<= id;
+    vmask <<= id;
+    __lights_state = (__lights_state & (~mask)) | vmask;
 }
