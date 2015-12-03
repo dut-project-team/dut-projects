@@ -8,7 +8,10 @@
         android:title="Disconnect" />
     <item
         android:id="@+id/light_menu_defconfig"
-        android:title="Change Default Config" />
+        android:title="Default Config" />
+    <item
+        android:id="@+id/light_menu_time"
+        android:title="Update Time" />
     <item
         android:id="@+id/light_menu_about"
         android:title="About" />

@@ -10,6 +10,7 @@
 #define COMMAND_GET_LIGHTSTATE			6
 #define COMMAND_GET_AVAILABLE_CONFIG	7
 #define COMMAND_EDIT_DEFCONFIG          8
+#define COMMAND_UPDATE_TIME             9
 
 class Package
 {

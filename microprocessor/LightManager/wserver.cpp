@@ -1,6 +1,7 @@
 #include "wserver.h"
 #include "ConfigManager.h"
 #include "Monitor.h"
+#include "ds1307.h"
 #include <SoftwareSerial.h>
 
 SoftwareSerial BTSerial(2, 3);
@@ -9,6 +10,20 @@ void log(String st)
 {
     Serial.println(st);
     Serial.flush();
+}
+
+ByteHolder process_update_time(byte_t* decode, int length)
+{
+    byte_t hour = decode[1];
+    byte_t minute = decode[2];
+    byte_t second = decode[3];
+    initDS1307(hour, minute, second);
+    byte_t* response = new byte_t[1];
+    response[0] = 1;// always true
+    ByteHolder holder;
+    holder.buff = response;
+    holder.length = 1;
+    return holder;
 }
 
 // overwrite data to eeprom from def_config_od
@@ -192,6 +207,8 @@ ByteHolder process_request(byte_t* decode, int length)
 {
     switch (decode[0])
     {
+    case COMMAND_UPDATE_TIME:
+        return process_update_time(decode, length);
     case COMMAND_EDIT_DEFCONFIG:
         return process_edit_defconfig(decode, length);
         break;
@@ -227,6 +244,7 @@ void remote_control()
     char c_ctrl = BTSerial.read();
     byte_t* req = NULL;
     int req_len = 0;
+    // receive full package
     switch (c_ctrl)
     {
     case COMMAND_GET_USERCONFIG:
@@ -270,7 +288,17 @@ void remote_control()
             req[i] = BTSerial.read();
         }
         break;
+    case COMMAND_UPDATE_TIME:
+        req_len = 1 + 3;// request_type + hour + minute + second
+        req = new byte_t[req_len];
+        for (ubyte i = 1; i < req_len; ++i)
+        {
+            // read actual data include hour, minute and second
+            req[i] = BTSerial.read();
+        }
+        break;
     }
+    // process and response package
     if (req_len)
     {
         // save request type to request_data

@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blogspot.sontx.libex.DateTime;
 import com.blogspot.sontx.whitelight.R;
 import com.blogspot.sontx.whitelight.bean.DefConfig;
 import com.blogspot.sontx.whitelight.bean.Light;
@@ -75,6 +76,9 @@ public class LightActivity extends AppCompatActivity implements
                     break;
                 case RequestPackage.COMMAND_REMOVE_LIGHT:
                     Toast.makeText(LightActivity.this, "Removed!", Toast.LENGTH_SHORT).show();
+                    break;
+                case RequestPackage.COMMAND_UPDATE_TIME:
+                    Toast.makeText(LightActivity.this, "Updated!!", Toast.LENGTH_SHORT).show();
                     break;
             }
             return true;
@@ -317,10 +321,26 @@ public class LightActivity extends AppCompatActivity implements
             case R.id.light_menu_defconfig:
                 startActivity(new Intent(this, DefConfigActivity.class));
                 break;
+            case R.id.light_menu_time:
+                updateTime();
+                break;
             case R.id.light_menu_about:
                 break;
         }
         return true;
+    }
+
+    private void updateTime() {
+        DateTime now = DateTime.now();
+        byte hour = (byte) now.getHours();
+        byte minute = (byte) now.getMinutes();
+        byte second = (byte) now.getSeconds();
+        byte[] buff = new byte[3];
+        buff[0] = hour;
+        buff[1] = minute;
+        buff[2] = second;
+        Toast.makeText(LightActivity.this, String.format("Updating time: %02d:%02d:%02d", hour, minute, second), Toast.LENGTH_SHORT).show();
+        ServerConnection.getInstance().sendRequest(inHandler, RequestPackage.COMMAND_UPDATE_TIME, buff);
     }
 
     @Override

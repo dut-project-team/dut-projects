@@ -12,6 +12,7 @@ struct ByteHolder
 void setup_bluetooth();
 void remote_control();
 ByteHolder process_request(byte_t* decode, int length);
+ByteHolder process_update_time(byte_t* decode, int length);
 ByteHolder process_edit_defconfig(byte_t* data, int length);
 ByteHolder process_edit_userconfig(byte_t* data, int length);
 ByteHolder process_add_light(byte_t* data, int length);

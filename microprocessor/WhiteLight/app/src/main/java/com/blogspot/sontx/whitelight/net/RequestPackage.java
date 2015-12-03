@@ -13,6 +13,7 @@ public abstract class RequestPackage {
     public static final byte COMMAND_GET_LIGHTSTATE = 6;
     public static final byte COMMAND_GET_AVAILABLE_CONFIG = 7;
     public static final byte COMMAND_EDIT_DEFCONFIG = 8;
+    public static final byte COMMAND_UPDATE_TIME = 9;
 
     protected byte mCommand;
 
