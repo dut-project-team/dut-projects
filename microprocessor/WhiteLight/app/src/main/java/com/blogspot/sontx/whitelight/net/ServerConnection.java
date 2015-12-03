@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ import java.util.UUID;
 
 public final class ServerConnection {
     private static final String TAG = "NOEM";
+    private static final int REFRESH_STATE = 1;
+    private static final int REFRESH_DELAY = 3000;// 3s
     // SPP UUID service - this should work for most devices
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static ServerConnection instance = null;
@@ -24,6 +27,35 @@ public final class ServerConnection {
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
     private ConnectedThread mConnectedThread;
+    private OnRefreshLightStateListener mOnRefreshLightStateListener = null;
+
+    private Handler refreshHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == REFRESH_STATE && mConnectedThread != null) {
+                sendRequest(refreshInHandler, RequestPackage.COMMAND_GET_LIGHTSTATE, new byte[] { });
+                refreshHandler.sendEmptyMessageDelayed(REFRESH_STATE, REFRESH_DELAY);
+            }
+            return true;
+        }
+    });
+    private Handler refreshInHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (mOnRefreshLightStateListener != null)
+                mOnRefreshLightStateListener.onRefreshLightState((byte[]) msg.obj);
+            return true;
+        }
+    });
+
+    public void autoRefreshLightState() {
+        if (mConnectedThread != null)
+            refreshHandler.sendEmptyMessageDelayed(REFRESH_STATE, REFRESH_DELAY);
+    }
+
+    public void setOnRefreshLightStateListener(OnRefreshLightStateListener listener) {
+        mOnRefreshLightStateListener = listener;
+    }
 
     public static ServerConnection getInstance() {
         if (instance == null)
@@ -77,6 +109,7 @@ public final class ServerConnection {
 
     public void disconnect() {
         if (mConnectedThread != null) {
+            refreshHandler.removeMessages(REFRESH_STATE);
             mConnectedThread.disconnect();
             mConnectedThread.interrupt();
             mConnectedThread = null;
@@ -92,6 +125,16 @@ public final class ServerConnection {
     }
 
     public synchronized void sendRequest(Handler inHandler, int command, byte[] request) {
+        if (mConnectedThread.isBusy()) {
+            showToast("Service connection is busy, wait for process!");
+            while (mConnectedThread.isBusy()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         this.setHandler(inHandler);
         sendRequest(command, request);
     }
@@ -109,7 +152,7 @@ public final class ServerConnection {
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
         private final BluetoothSocket socket;
-
+        private boolean busy = false;
         private int command;
 
         //creation of the connect thread
@@ -126,6 +169,10 @@ public final class ServerConnection {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+        }
+
+        public boolean isBusy() {
+            return busy;
         }
 
         public void setCommand(int command) {
@@ -167,7 +214,6 @@ public final class ServerConnection {
                     // get data with length
                     for (int i = 0; i < length; i++) {
                         buffer[i] = (byte) mmInStream.read();
-                        Log.d(TAG, "Received id[" + i + "] = " + buffer[i]);
                     }
 
                     Log.d(TAG, "RECEIVED OK");
@@ -175,6 +221,7 @@ public final class ServerConnection {
                     try {
                         byte[] actual = new byte[length];
                         System.arraycopy(buffer, 0, actual, 0, length);
+                        busy = false;
                         // Send the obtained bytes to the UI Activity via handler
                         bluetoothIn.obtainMessage(command, 0, command, actual).sendToTarget();
                     } catch (IllegalArgumentException ex) {
@@ -183,6 +230,7 @@ public final class ServerConnection {
                 } catch (IOException e) {
                     e.printStackTrace();
                     showToast("Connection Failure");
+                    refreshHandler.removeMessages(REFRESH_STATE);
                     break;
                 }
             }
@@ -190,20 +238,19 @@ public final class ServerConnection {
 
         //write method
         public void write(byte[] input) {
+            busy = true;
             try {
                 mmOutStream.write(input);
                 mmOutStream.flush();
             } catch (IOException e) {
                 //if you cannot write, close the application
                 showToast("Connection Failure");
+                refreshHandler.removeMessages(REFRESH_STATE);
             }
         }
     }
 
-    private class RefreshObject implements Runnable {
-        @Override
-        public void run() {
-
-        }
+    public interface OnRefreshLightStateListener {
+        void onRefreshLightState(byte[] states);
     }
 }

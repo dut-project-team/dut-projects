@@ -46,7 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LightActivity extends AppCompatActivity implements
-        AdapterView.OnItemClickListener, View.OnClickListener {
+        AdapterView.OnItemClickListener, View.OnClickListener,
+        ServerConnection.OnRefreshLightStateListener {
     private List<Light> lights;
     private List<DefConfig> defConfigs;
     private LightAdapter lightAdapter;
@@ -209,6 +210,8 @@ public class LightActivity extends AppCompatActivity implements
         lightAdapter = new LightAdapter(LightActivity.this.getApplicationContext(), lights);
         lightAdapter.setOnClickListener(LightActivity.this);
         listView.setAdapter(lightAdapter);
+
+        ServerConnection.getInstance().autoRefreshLightState();
     }
 
     private void getUserConfigs() {
@@ -267,6 +270,8 @@ public class LightActivity extends AppCompatActivity implements
 
                         if (ok)
                             fetchData();
+                        else
+                            Toast.makeText(LightActivity.this, "Can not connect to device!", Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -482,7 +487,18 @@ public class LightActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        ServerConnection.getInstance().setOnRefreshLightStateListener(null);
+        if (processDialog != null) {
+            processDialog.dismiss();
+            processDialog = null;
+        }
+    }
+
+    @Override
     protected void onDestroy() {
+        ServerConnection.getInstance().setOnRefreshLightStateListener(null);
         ServerConnection.getInstance().disconnect();
         super.onDestroy();
     }
@@ -490,6 +506,9 @@ public class LightActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        if (processDialog == null)
+            initLoading();
+        ServerConnection.getInstance().setOnRefreshLightStateListener(LightActivity.this);
         String requestUpdate = (String) SharedObject.getInstance().pop(Config.SHARED_REQUEST_UPDATE);
         if (requestUpdate != null) {
             int update = Integer.parseInt(requestUpdate);
@@ -510,6 +529,20 @@ public class LightActivity extends AppCompatActivity implements
                 listView.invalidateViews();
             }
         });
+    }
+
+    @Override
+    public void onRefreshLightState(byte[] _states) {
+        if (_states != null) {
+            ResponseLightStatePackage response = new ResponseLightStatePackage();
+            response.init(_states);
+            byte[] states = response.getStates();
+            for (int i = 0; i < states.length; i++) {
+                lights.get(i).setState(states[i]);
+            }
+            lightAdapter.notifyDataSetChanged();
+            listView.invalidateViews();
+        }
     }
 
     private static class ViewHolder {
