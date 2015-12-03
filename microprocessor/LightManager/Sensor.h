@@ -1,5 +1,5 @@
 #pragma once
 #include "Lib.h"
 
-byte_t getLightSensor(ubyte id);
-ubyte getPeopleSensor(ubyte id);
+byte_t getLightSensor(ubyte pin);
+ubyte getPeopleSensor(ubyte pin);

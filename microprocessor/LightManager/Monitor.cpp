@@ -66,7 +66,7 @@ void setupSensors()
 
 void turnOnLight(ubyte pin)
 {
-    Serial.println("*Turn on " + String((int)pin));
+    //Serial.println("*Turn on " + String((int)pin));
     // start at 10
     digitalWrite(pin, HIGH);
     setLightState(pin, 1);
@@ -74,7 +74,7 @@ void turnOnLight(ubyte pin)
 
 void turnOffLight(ubyte pin)
 {
-    Serial.println("*Turn off " + String((int)pin));
+    //Serial.println("*Turn off " + String((int)pin));
     // start at 10
     digitalWrite(pin, LOW);
     setLightState(pin, 0);

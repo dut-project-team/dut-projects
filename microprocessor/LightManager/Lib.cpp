@@ -86,3 +86,13 @@ uint readDefConfig(ubyte* offset, ulong state, bool* isTime)
         }
     }
 }
+
+ubyte to_sensor(ubyte light_sensor_id, ubyte people_sensor_id)
+{
+    return m_toextra(people_sensor_id, light_sensor_id);
+}
+
+ubyte to_extra(ubyte light_type, ubyte light_pin)
+{
+    return m_toextra(light_pin, light_type);
+}

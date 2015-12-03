@@ -1,12 +1,12 @@
 #include "Sensor.h"
 #include <Arduino.h>
 
-byte_t getLightSensor(ubyte id)
+byte_t getLightSensor(ubyte pin)
 {
-    return digitalRead(id) == HIGH ? 5 : 100;
+    return digitalRead(pin) == HIGH ? 0 : 100;
 }
 
-ubyte getPeopleSensor(ubyte id)
+ubyte getPeopleSensor(ubyte pin)
 {
-    return digitalRead(id) == HIGH ? 1 : 0;
+    return digitalRead(pin) == HIGH ? 1 : 0;
 }

@@ -63,3 +63,5 @@ struct DataConfig
 
 ulong to_state(ubyte n, int l0, int l1 = 0, int l2 = 0, int l3 = 0);
 uint readDefConfig(ubyte* offset, ulong state, bool* isTime);
+ubyte to_sensor(ubyte light_sensor_id, ubyte people_sensor_id);
+ubyte to_extra(ubyte light_type, ubyte light_pin);
