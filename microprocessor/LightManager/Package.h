@@ -32,6 +32,28 @@ public:
     RequestPackage() {}
 };
 
+// defconfig_id + config
+class RequestEditDCPackage: public RequestPackage
+{
+private:
+    DefConfig* m_pconfig = NULL;
+    byte_t m_id = -1;
+public:
+    DefConfig* get_config()
+    {
+        return m_pconfig;
+    }
+    byte_t get_id()
+    {
+        return m_id;
+    }
+    virtual bool init( byte_t* st, int length);
+    virtual ~RequestEditDCPackage()
+    {
+        m_safefree(m_pconfig)
+    }
+};
+
 // light_id + config
 class RequestEditUCPackage: public RequestPackage
 {

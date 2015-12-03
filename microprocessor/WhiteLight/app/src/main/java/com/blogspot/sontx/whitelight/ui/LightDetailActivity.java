@@ -182,6 +182,9 @@ public class LightDetailActivity extends AppCompatActivity {
                 if (currentLayout instanceof DefConfigLayout)
                     ((DefConfigLayout) currentLayout).loadDefConfig(lightType - 1);
 
+                // request light activity update for new light display surface changed
+                SharedObject.getInstance().set(Config.SHARED_REQUEST_UPDATE, "1");
+
                 dialog.dismiss();
             }
         });

@@ -2,6 +2,21 @@
 #include <string.h>
 
 ///-------------------------------------------------------------
+bool RequestEditDCPackage::init( byte_t* st, int length)
+{
+    int sz_dconfig = sizeof(DefConfig);
+    // skip 1 byte for command
+    // skip 1 byte for defconfig id(next byte)
+    if(sz_dconfig + 2 != length)
+        return false;
+
+    m_id = *(st + 1);
+    m_pconfig = new DefConfig();
+    memcpy(m_pconfig, st + 2, sz_dconfig);
+
+    return true;
+}
+///-------------------------------------------------------------
 bool RequestEditUCPackage::init( byte_t* st, int length)
 {
     int sz_uconfig = sizeof(UserConfig);

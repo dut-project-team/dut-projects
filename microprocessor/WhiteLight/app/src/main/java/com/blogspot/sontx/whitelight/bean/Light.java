@@ -19,9 +19,9 @@ public class Light extends UserConfig {
 
     public byte[] getBytes(int lightId) {
         byte[] configBuff = getBytes();
-        byte[] lightBuff = new byte[configBuff.length  + 1];
+        byte[] lightBuff = new byte[configBuff.length + 1];
         lightBuff[0] = (byte) lightId;
-        System.arraycopy(lightBuff, 1, configBuff, 0, configBuff.length);
+        System.arraycopy(configBuff, 0, lightBuff, 1, configBuff.length);
         return lightBuff;
     }
 }

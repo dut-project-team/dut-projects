@@ -11,5 +11,6 @@ public final class Config {
     public static final String SHARED_REFRESH_RATE = "refresh_rate";
     public static final String SHARED_IPADDR = "ip_addr";
     public static final String SHARED_PORTNUM = "port_numb";
+    public static final String SHARED_REQUEST_UPDATE = "request_update";
     public static final int MAX_SUPPORT_LIGHTS = 10;
 }

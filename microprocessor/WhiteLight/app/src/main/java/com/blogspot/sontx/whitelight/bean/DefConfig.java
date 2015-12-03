@@ -58,10 +58,10 @@ public class DefConfig extends Config {
     }
 
     public void importState(Level[] levels) {
-        state = levels.length - 1;
+        state = 4 - 1;// count of setting level, hardcode :|
         state <<= 30;
         int offset = 30;
-        for(int i = 0; i < levels.length; i++) {
+        for(int i = 0; i < 4; i++) {
             Level level = levels[i];
             if(level.isTime) {
                 offset -= 12;
@@ -77,7 +77,13 @@ public class DefConfig extends Config {
     public byte[] getBytes() {
         byte[] buff = new byte[getFrameSize()];
         buff[0] = lightThreshold;
-        System.arraycopy(int32ToBytes(state), 0, buff, 1, 4);
+        byte[] holder = Convert.integerToBytes(state);
+        for (int i = 0, j = holder.length - 1; i < holder.length / 2; i++, j--) {
+            byte temp = holder[i];
+            holder[i] = holder[j];
+            holder[j] = temp;
+        }
+        System.arraycopy(holder, 0, buff, 1, 4);
         return buff;
     }
 
@@ -85,7 +91,7 @@ public class DefConfig extends Config {
         byte[] configBuff = getBytes();
         byte[] buff = new byte[configBuff.length  + 1];
         buff[0] = (byte) defconfigId;
-        System.arraycopy(buff, 1, configBuff, 0, configBuff.length);
+        System.arraycopy(configBuff, 0, buff, 1, configBuff.length);
         return buff;
     }
 

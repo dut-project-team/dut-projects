@@ -7,8 +7,8 @@ package com.blogspot.sontx.whitelight.bean;
 public abstract class Config {
     protected static byte[] int16ToBytes(short int16) {
         byte[] bytes = new byte[2];
-        bytes[0] = (byte) (int16 >> 8);
-        bytes[1] = (byte) (int16 & 0x00ff);
+        bytes[0] = (byte) (int16 & 0x00FF);
+        bytes[1] = (byte) (int16 >> 8);
         return bytes;
     }
 

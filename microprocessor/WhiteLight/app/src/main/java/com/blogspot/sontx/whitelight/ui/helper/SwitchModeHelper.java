@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.blogspot.sontx.whitelight.R;
 import com.blogspot.sontx.whitelight.bean.Light;
+import com.blogspot.sontx.whitelight.lib.Config;
+import com.blogspot.sontx.whitelight.lib.SharedObject;
 import com.blogspot.sontx.whitelight.net.RequestPackage;
 import com.blogspot.sontx.whitelight.net.ServerConnection;
 import com.blogspot.sontx.whitelight.ui.LightDetailActivity;
@@ -98,6 +100,8 @@ public final class SwitchModeHelper implements DialogInterface.OnClickListener{
                 RequestPackage.COMMAND_EDIT_USERCONFIG,
                 light.getBytes(lightId)
         );
+        // request light activity update for new light display surface changed
+        SharedObject.getInstance().set(Config.SHARED_REQUEST_UPDATE, "1");
         // update to light detail activity
         Intent intent = new Intent(activity, LightDetailActivity.class);
         activity.recreate();

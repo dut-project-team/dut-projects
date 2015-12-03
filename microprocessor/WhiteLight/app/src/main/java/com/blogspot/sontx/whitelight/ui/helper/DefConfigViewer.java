@@ -118,7 +118,7 @@ public class DefConfigViewer implements View.OnClickListener, AdapterView.OnItem
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (hackSelectionState < 5) {
+        if (hackSelectionState < 4) {
             hackSelectionState++;
             return;
         }

@@ -58,6 +58,7 @@ public class LightActivity extends AppCompatActivity implements
     private Handler inHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
+            byte[] buff;
             switch (msg.what) {
                 case RequestPackage.COMMAND_GET_USERCONFIG:
                     loadUserConfigs((byte[]) msg.obj);
@@ -69,7 +70,8 @@ public class LightActivity extends AppCompatActivity implements
                     loadDefConfigs((byte[]) msg.obj);
                     break;
                 case RequestPackage.COMMAND_ADD_LIGHT:
-                    Toast.makeText(LightActivity.this, "Added!", Toast.LENGTH_SHORT).show();
+                    buff = (byte[]) msg.obj;
+                    Toast.makeText(LightActivity.this, buff[0] != 0 ? "Added!" : "FAIL", Toast.LENGTH_SHORT).show();
                     break;
                 case RequestPackage.COMMAND_REMOVE_LIGHT:
                     Toast.makeText(LightActivity.this, "Removed!", Toast.LENGTH_SHORT).show();
@@ -463,6 +465,18 @@ public class LightActivity extends AppCompatActivity implements
     protected void onDestroy() {
         ServerConnection.getInstance().disconnect();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String requestUpdate = (String) SharedObject.getInstance().pop(Config.SHARED_REQUEST_UPDATE);
+        if (requestUpdate != null) {
+            int update = Integer.parseInt(requestUpdate);
+            if (update != 0) {
+                listView.invalidateViews();
+            }
+        }
     }
 
     //@Override

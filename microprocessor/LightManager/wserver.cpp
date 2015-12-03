@@ -15,9 +15,13 @@ void log(String st)
 ByteHolder process_edit_defconfig(byte_t* data, int length)
 {
     // 1(request_type) + 1(defconfig_id) + remain(defconfig_data)
-    ubyte defconfig_id = data[1];
-    byte_t* defconfig_data = data + 2;
     // update to eeprom
+    RequestEditDCPackage* request = new RequestEditDCPackage();
+    request->init(data, length);
+    DefConfig* defConfig = request->get_config();
+    writeDefConfig(request->get_id() + M_LIGHT_LIVINGROOM, defConfig);
+    Serial.println();
+    delete request;
 
     // response is true(always)
     byte_t* response = new byte_t[1];
@@ -32,10 +36,12 @@ ByteHolder process_edit_defconfig(byte_t* data, int length)
 ByteHolder process_edit_userconfig(byte_t* data, int length)
 {
     // 1(request_type) + 1(light_id) + remain(user_config_data)
-    ubyte light_id = data[1];
-    byte_t* config_data = data + 2;
     // update to eeprom
-
+    RequestEditUCPackage* request = new RequestEditUCPackage();
+    request->init(data, length);
+    UserConfig* userConfig = request->get_config();
+    writeUserConfig(request->get_id(), userConfig);
+    delete request;
     // response is true(always)
     byte_t* response = new byte_t[1];
     response[0] = 1;// always true
@@ -73,19 +79,11 @@ ByteHolder process_remove_light(byte_t* data, int length)
     byte_t* response = new byte_t[1];
     response[0] = 0;
 
-    // check if light_id is alive
-    if (true)// wait for me implement it
-    {
-        // 1(request_type) + 1(remove_light_id)
-        ubyte light_id = data[1];
-        // remove from eeprom
-
-        // update dataConfig
-
-        // set response value is true
-        response[0] = 1;
-        log("remove light id " + String((int)light_id));
-    }
+    // 1(request_type) + 1(remove_light_id)
+    ubyte light_id = data[1];
+    bool ok = remUserConfig(light_id);
+    response[0] = ok ? 1 : 0;
+    log("remove light id " + String((int)light_id));
 
     ByteHolder holder;
     holder.buff = response;
@@ -194,6 +192,9 @@ ByteHolder process_request(byte_t* decode, int length)
 {
     switch (decode[0])
     {
+    case COMMAND_EDIT_DEFCONFIG:
+        return process_edit_defconfig(decode, length);
+        break;
     case COMMAND_EDIT_USERCONFIG:
         return process_edit_userconfig(decode, length);
     case COMMAND_ADD_LIGHT:
