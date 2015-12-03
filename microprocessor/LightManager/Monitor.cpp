@@ -1,13 +1,16 @@
 #include "Monitor.h"
 #include "Sensor.h"
 #include <Arduino.h>
+#include <SoftwareSerial.h>
 #include "CfgDef.h"
 
 uint __lights_state = 0;// left <- right
 
+extern uint currentTime();
+
 uint getCurrentTime()
 {
-    return 25;// just for example
+    return currentTime();// just for example
 }
 
 uint getRelativelyTime(uint time)
@@ -36,11 +39,19 @@ ubyte getTimeType()
 void setupLights()
 {
     // use pins: 10, 11, 12 and 13 for lights
-    for(int i = LIGHT_PIN_FROM; i < 14; ++i)
+    for(int i = 10; i < 14; ++i)
     {
         pinMode(i, OUTPUT);
     }
-    // setup something for lights here!
+    for (int i = 10; i < 14; ++i)
+    {
+        digitalWrite(i, HIGH);
+    }
+    delay(500);
+    for (int i = 10; i < 14; ++i)
+    {
+        digitalWrite(i, LOW);
+    }
 }
 
 void setupSensors()
@@ -53,25 +64,26 @@ void setupSensors()
     // setup something for sensors here!
 }
 
-void turnOnLight(ubyte lightId)
+void turnOnLight(ubyte pin)
 {
+    Serial.println("*Turn on " + String((int)pin));
     // start at 10
-    digitalWrite(LIGHT_PIN_FROM + lightId, HIGH);
-    setLightState(lightId, 1);
+    digitalWrite(pin, HIGH);
+    setLightState(pin, 1);
 }
 
-void turnOffLight(ubyte lightId)
+void turnOffLight(ubyte pin)
 {
+    Serial.println("*Turn off " + String((int)pin));
     // start at 10
-    digitalWrite(LIGHT_PIN_FROM + lightId, LOW);
-    setLightState(lightId, 0);
+    digitalWrite(pin, LOW);
+    setLightState(pin, 0);
 }
 
 void applyConfigs()
 {
     DataConfig* config = readDtConfig();
     ubyte n_lights = config->n_userConfigs;
-
     delete config;
     for(ubyte i = 0; i < n_lights; ++i)
     {
@@ -165,7 +177,7 @@ void applyDefConfig(ubyte pin,
                 break;
             case M_BOTHSENSOR_EVERYTIME:
                 if((getLightSensor(lightSensor) <= config->lightThreshold) &&
-                    (getPeopleSensor(peopleSensor)))
+                        (getPeopleSensor(peopleSensor)))
                 {
                     turnOnLight(pin);
                     return;
@@ -173,8 +185,8 @@ void applyDefConfig(ubyte pin,
                 break;
             case M_BOTHSENSOR_NIGHT:
                 if((timeType == M_TIME_NIGHT) &&
-                    (getLightSensor(lightSensor) <= config->lightThreshold) &&
-                    (getPeopleSensor(peopleSensor)))
+                        (getLightSensor(lightSensor) <= config->lightThreshold) &&
+                        (getPeopleSensor(peopleSensor)))
                 {
                     turnOnLight(pin);
                     return;
@@ -204,17 +216,17 @@ void applyUsrConfig(ubyte pin,
     }
 }
 
-ubyte getLightState(ubyte id)
+ubyte getLightState(ubyte pin)
 {
-    uint state = __lights_state >> id;
+    uint state = __lights_state >> pin;
     return state & 1;
 }
 
-void setLightState(ubyte id, ubyte state)
+void setLightState(ubyte pin, ubyte state)
 {
     uint mask = 1;
     uint vmask = state & 1;
-    mask <<= id;
-    vmask <<= id;
+    mask <<= pin;
+    vmask <<= pin;
     __lights_state = (__lights_state & (~mask)) | vmask;
 }

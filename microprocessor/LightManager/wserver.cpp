@@ -183,8 +183,8 @@ ByteHolder process_get_lightstates()
     {
         UserConfig* userConfig;
         readUserConfig(i, userConfig);
-        ubyte lightId = m_highof(userConfig->extra);
-        states[i] = getLightState(lightId);
+        ubyte pin = m_highof(userConfig->extra);
+        states[i] = getLightState(pin);
         delete userConfig;
     }
 
