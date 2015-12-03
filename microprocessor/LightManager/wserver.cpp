@@ -8,8 +8,10 @@ SoftwareSerial BTSerial(2, 3);
 
 void log(String st)
 {
+#ifdef DEBUG_MODE
     Serial.println(st);
     Serial.flush();
+#endif // DEBUG_MODE
 }
 
 ByteHolder process_update_time(byte_t* decode, int length)

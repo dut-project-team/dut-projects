@@ -1,5 +1,7 @@
 #pragma once
 
+#define DEBUG_MODE
+
 #define M_BAUD_RATE                         9600
 
 /**

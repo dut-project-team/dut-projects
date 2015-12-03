@@ -3,14 +3,23 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include "CfgDef.h"
+#ifndef DEBUG_MODE
+#include "ds1307.h"
+#endif // DEBUG_MODE
 
 uint __lights_state = 0;// left <- right
 
+#ifdef DEBUG_MODE
 extern uint currentTime();
+#endif // DEBUG_MODE
 
 uint getCurrentTime()
 {
+#ifdef DEBUG_MODE
     return currentTime();// just for example
+#else
+    return getTime();
+#endif // DEBUG_MODE
 }
 
 uint getRelativelyTime(uint time)

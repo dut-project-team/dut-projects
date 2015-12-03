@@ -17,7 +17,7 @@ const ulong G_LIGHT_LIVINGROOM_STATE =
 *   this lights will auto turn off after 22h00m
 */
 const ulong G_LIGHT_BEDROOM_STATE =
-    to_state(4, M_BOTHSENSOR_EVERYTIME, -2760, 0, 0);
+    to_state(4, M_BOTHSENSOR_EVERYTIME, -1320, 0, 0);
 
 /**
 *   the lights in kitchen will turn on when:
