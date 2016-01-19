@@ -1,11 +1,18 @@
 package com.blogspot.sontx.dut.game.obj;
 
+import android.graphics.RectF;
+
 /**
  * Created by Noem on 16/1/2016.
  */
 public abstract class MovableObject extends GameObject {
     protected float mSpeedX;
     protected float mSpeedY;
+    protected RectF mMovableBound = new RectF(0.0f, 0.0f, 0.0f, 0.0f);
+
+    public void setMovableBound(RectF rect) {
+        mMovableBound = rect;
+    }
 
     public float getSpeedX() {
         return mSpeedX;

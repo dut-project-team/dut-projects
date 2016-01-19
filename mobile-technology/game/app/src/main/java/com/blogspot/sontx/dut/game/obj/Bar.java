@@ -10,17 +10,10 @@ import com.blogspot.sontx.dut.game.lib.InputManager;
  */
 public class Bar extends MovableObject {
     private boolean mLastTouchDown = false;
-    private float mLeftBound = 0.0f;
-    private float mRightBound = 0.0f;
     private float mExtendWidth = 0.0f;
 
     public Bar(float x, float y, int color) {
         super(x, y, color);
-    }
-
-    public void setBound(float left, float right) {
-        mLeftBound = left;
-        mRightBound = right;
     }
 
     public void setExtendWidth(float width) {
@@ -39,10 +32,10 @@ public class Bar extends MovableObject {
     }
 
     private void ensureInsideBound() {
-        if (mRect.left < mLeftBound)
-            horizontalMove(mLeftBound - mRect.left);
-        if (mRect.right > mRightBound)
-            horizontalMove(mRightBound - mRect.right);
+        if (mRect.left < mMovableBound.left)
+            horizontalMove(mMovableBound.left - mRect.left);
+        if (mRect.right > mMovableBound.right)
+            horizontalMove(mMovableBound.right - mRect.right);
     }
 
     @Override

@@ -44,8 +44,8 @@ public final class WindowSurface extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         if (mWindowEventListener != null) {
-            mWindowEventListener.onDraw(canvas);
             mWindowEventListener.onUpdate();
+            mWindowEventListener.onDraw(canvas);
         }
         invalidate();
     }
