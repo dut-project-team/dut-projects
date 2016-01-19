@@ -18,6 +18,7 @@ public final class BricksHolder {
     private static final float BRICK_SIZE_RATIO = 2.8f;// w:h
     private static final float BRICK_MARGIN = 85.0f;
 
+    private RectF mBound;
     private float mBrickWidth;
     private float mBrickHeight;
     private boolean[][] mMatrix;
@@ -40,8 +41,8 @@ public final class BricksHolder {
 
     private PointF retrieveCoord(Point point) {
         PointF _point = new PointF(
-                point.y * mBrickWidth + BRICK_MARGIN * (point.y + 1),
-                point.x * mBrickHeight + BRICK_MARGIN * (point.x + 1));
+                point.y * mBrickWidth + BRICK_MARGIN * (point.y + 1) + mBound.left,
+                point.x * mBrickHeight + BRICK_MARGIN * (point.x + 1) + mBound.top);
         mMatrix[point.x][point.y] = true;
         return _point;
     }
@@ -63,10 +64,11 @@ public final class BricksHolder {
         return brick;
     }
 
-    public BricksHolder(int cols, RectF rect) {
-        mBrickWidth = (rect.width() - BRICK_MARGIN * (cols + 1)) / cols;
+    public BricksHolder(int cols, RectF bound) {
+        mBound = bound;
+        mBrickWidth = (bound.width() - BRICK_MARGIN * (cols + 1)) / cols;
         mBrickHeight = mBrickWidth / BRICK_SIZE_RATIO;
-        int m = (int) ((rect.height() - BRICK_MARGIN) / (mBrickHeight + BRICK_MARGIN));
+        int m = (int) ((bound.height() - BRICK_MARGIN) / (mBrickHeight + BRICK_MARGIN));
         mMatrix = new boolean[m][cols];
     }
 }
