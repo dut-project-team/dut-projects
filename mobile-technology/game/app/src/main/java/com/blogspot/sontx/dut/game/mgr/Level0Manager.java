@@ -20,8 +20,8 @@ public class Level0Manager extends PlayingManager {
         generateBricks(2);
         generateBall();
 
-        Hole hole = new Hole(DRAWABLE_X + DRAWABLE_WIDTH / 2.0f - HOLE_RADIUS, DRAWABLE_Y, Color.BLACK);
-        hole.setMovableBound(new RectF(DRAWABLE_X, DRAWABLE_Y, DRAWABLE_X + DRAWABLE_WIDTH, DRAWABLE_Y + DRAWABLE_HEIGHT));
+        Hole hole = new Hole(mPlayableBound.left + mPlayableBound.width() / 2.0f - HOLE_RADIUS, mPlayableBound.top, Color.BLACK);
+        hole.setMovableBound(mPlayableBound);
         hole.setWidth(HOLE_RADIUS * 2.0f);
         hole.setHeight(HOLE_HEIGHT);
         hole.setSpeedX(5.5f);

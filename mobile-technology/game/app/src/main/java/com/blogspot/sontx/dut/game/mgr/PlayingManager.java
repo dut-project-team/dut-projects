@@ -1,18 +1,13 @@
 package com.blogspot.sontx.dut.game.mgr;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.RectF;
-import android.util.Log;
 
-import com.blogspot.sontx.dut.game.App;
 import com.blogspot.sontx.dut.game.R;
 import com.blogspot.sontx.dut.game.lib.SoundManager;
-import com.blogspot.sontx.dut.game.lib.SystemAlert;
 import com.blogspot.sontx.dut.game.lib.Timer;
 import com.blogspot.sontx.dut.game.mgr.helper.BricksHolder;
+import com.blogspot.sontx.dut.game.mgr.helper.ControlPanel;
 import com.blogspot.sontx.dut.game.obj.Ball;
 import com.blogspot.sontx.dut.game.obj.Bar;
 import com.blogspot.sontx.dut.game.obj.Border;
@@ -26,14 +21,18 @@ import java.util.List;
  * Created by Noem on 17/1/2016.
  */
 public abstract class PlayingManager extends SceneManager {
-    protected static final float HOLE_RADIUS = 50.0f;
+    public static final int GAME_PLAYING = 1;
+    public static final int GAME_WIN = 2;
+    public static final int GAME_OVER = 4;
+    public static final int GAME_PAUSED = 8;
+    protected static final float HOLE_RADIUS = 20.0f;
     protected static final float HOLE_HEIGHT = 20.0f;
     protected static final float BALL_RADIUS = 20.0f;
     private static final float BALL_SPEED = 7.0f;
     private static final long BRICK_AUTO_GENERATE_AFTER = 5000;
     private static final float BRICK_PROBABILITY_LEVEL0 = 15.0f;
     private static final float BRICK_PROBABILITY_LEVEL1 = 25.0f;
-    private static final float BRICK_PROBABILITY_LEVEL2 = 60.0f;
+    //private static final float BRICK_PROBABILITY_LEVEL2 = 60.0f;
     private static final float BAR_WIDTH = 250.0f;
     private static final float BAR_HEIGHT = 20.0f;
     private static final float BAR_MARGIN_BOTTOM = 300.0f;
@@ -41,31 +40,22 @@ public abstract class PlayingManager extends SceneManager {
     private static final int SOUND_COLLISION_BRICK = 1;
     private static final int SOUND_COLLISION_BAR = 2;
     private static final int SOUND_WIN = 3;
-
-    public static final int GAME_PLAYING = 1;
-    public static final int GAME_WIN = 2;
-    public static final int GAME_OVER = 4;
-    public static final int GAME_PAUSED = 8;
-
-    protected final Bar mBar;
+    private static final float PANEL_HEIGHT = 200.0f;
+    protected final RectF mPlayableBound;
     protected final List<Ball> mBalls = new ArrayList<>();
     protected final List<Hole> mHoles = new ArrayList<>();
-    private final Border mBorder;
+    protected Bar mBar;
     protected BricksHolder mBricksHolder;
+    protected ControlPanel mControlPanel;
+    private Border mBorder;
     private int mGameState = GAME_PLAYING;
 
     public PlayingManager() {
-        mBorder = new Border(new RectF(DRAWABLE_X, DRAWABLE_Y, DRAWABLE_X + DRAWABLE_WIDTH, DRAWABLE_Y + DRAWABLE_HEIGHT), 3.0f, Color.GRAY);
-        mObjects.add(mBorder);
-
-        mBar = new Bar(DRAWABLE_X + (DRAWABLE_WIDTH - BAR_WIDTH) / 2.0f, DRAWABLE_Y + DRAWABLE_HEIGHT - BAR_MARGIN_BOTTOM - BAR_HEIGHT, Color.RED);
-        mBar.setHeight(BAR_HEIGHT);
-        mBar.setWidth(BAR_WIDTH);
-        mBar.setMovableBound(new RectF(DRAWABLE_X, 0.0f, DRAWABLE_X + DRAWABLE_WIDTH, 0.0f));
-        mBar.setExtendWidth(100f);
-        mObjects.add(mBar);
-
-        mBricksHolder = new BricksHolder(4, new RectF(DRAWABLE_X, DRAWABLE_Y, DRAWABLE_X + DRAWABLE_WIDTH, (DRAWABLE_Y + DRAWABLE_HEIGHT) * 0.5f));
+        float left = DRAWABLE_X;
+        float top = DRAWABLE_Y + PANEL_HEIGHT;
+        float right = left + DRAWABLE_WIDTH;
+        float bottom = top + DRAWABLE_HEIGHT - PANEL_HEIGHT;
+        mPlayableBound = new RectF(left, top, right, bottom);
     }
 
     public int getGameState() {
@@ -75,11 +65,7 @@ public abstract class PlayingManager extends SceneManager {
     public abstract int getCurrentLevel();
 
     protected void generateBall() {
-        Ball ball = new Ball(
-                mBar.getLeft() + mBar.getWidth() / 2.0f - BALL_RADIUS,
-                mBar.getTop() - BALL_RADIUS * 2.0f,
-                BALL_RADIUS,
-                Color.MAGENTA);
+        Ball ball = new Ball(mBar.getLeft() + mBar.getWidth() / 2.0f - BALL_RADIUS, mBar.getTop() - BALL_RADIUS * 2.0f, BALL_RADIUS, Color.MAGENTA);
         ball.setSpeedY(-BALL_SPEED);
         ball.setSpeedX(-BALL_SPEED);
         addBall(ball);
@@ -135,6 +121,7 @@ public abstract class PlayingManager extends SceneManager {
         }, BRICK_AUTO_GENERATE_AFTER);
         mBricksHolder.removeBrick(brick);
         mObjects.remove(brick);
+        mControlPanel.addScore(brick.getLevel() + 1);
     }
 
     private void doCollisionWithBorder(Ball ball, int dir) {
@@ -161,6 +148,26 @@ public abstract class PlayingManager extends SceneManager {
         SoundManager.addSound(SOUND_COLLISION_BRICK, R.raw.collision_brick);
         SoundManager.addSound(SOUND_COLLISION_BAR, R.raw.collision_bar);
         SoundManager.addSound(SOUND_WIN, R.raw.win);
+
+        mBorder = new Border(mPlayableBound, 1.0f, Color.GRAY);
+        mObjects.add(mBorder);
+
+        mBar = new Bar(mPlayableBound.left + (mPlayableBound.width() - BAR_WIDTH) / 2.0f, mPlayableBound.bottom - BAR_MARGIN_BOTTOM - BAR_HEIGHT, Color.RED);
+        mBar.setHeight(BAR_HEIGHT);
+        mBar.setWidth(BAR_WIDTH);
+        mBar.setMovableBound(new RectF(mPlayableBound.left, 0.0f, mPlayableBound.right, 0.0f));
+        mBar.setExtendWidth(100f);
+        mObjects.add(mBar);
+
+        RectF brickArea = new RectF(mPlayableBound);
+        brickArea.bottom = mPlayableBound.bottom * 0.5f;
+        mBricksHolder = new BricksHolder(4, brickArea);
+
+        RectF panelArea = new RectF(DRAWABLE_X + 10.0f, DRAWABLE_Y + 50.0f, DRAWABLE_WIDTH, DRAWABLE_Y + PANEL_HEIGHT);
+        mControlPanel = new ControlPanel(panelArea);
+        mControlPanel.register(mObjects);
+
+        mControlPanel.setLevel(getCurrentLevel());
     }
 
     @Override

@@ -15,6 +15,11 @@ public class Brick extends GameObject {
     private long mValue = 0;
     private long mStartTime = -1L;
     private boolean mDisappear = false;
+    private int mLevel;
+
+    public int getLevel() {
+        return mLevel;
+    }
 
     public boolean isDisappear() {
         return mDisappear;
@@ -32,6 +37,7 @@ public class Brick extends GameObject {
 
     public Brick(float x, float y, int level) {
         super(x, y, Color.WHITE);
+        mLevel = level;
         switch (level) {
             case LEVEL0:
                 setup(Color.GRAY, 15000, 60000);
