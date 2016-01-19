@@ -12,14 +12,19 @@ public class Bar extends MovableObject {
     private boolean mLastTouchDown = false;
     private float mLeftBound = 0.0f;
     private float mRightBound = 0.0f;
+    private float mExtendWidth = 0.0f;
+
+    public Bar(float x, float y, int color) {
+        super(x, y, color);
+    }
 
     public void setBound(float left, float right) {
         mLeftBound = left;
         mRightBound = right;
     }
 
-    public Bar(float x, float y, int color) {
-        super(x, y, color);
+    public void setExtendWidth(float width) {
+        mExtendWidth = width;
     }
 
     @Override
@@ -30,6 +35,7 @@ public class Bar extends MovableObject {
     private void horizontalMove(float dx) {
         mRect.left += dx;
         mRect.right += dx;
+        mSpeedX = dx;
     }
 
     private void ensureInsideBound() {
@@ -40,13 +46,20 @@ public class Bar extends MovableObject {
     }
 
     @Override
+    protected boolean contains(PointF point) {
+        return point.x >= (mRect.left - mExtendWidth) && point.x < (mRect.right + mExtendWidth) &&
+                point.y >= (mRect.top - mExtendWidth) && point.y < (mRect.bottom + mExtendWidth);
+    }
+
+    @Override
     protected void update0() {
-        super.update0();
-        if (InputManager.hasTouch(InputManager.TOUCH_DOWN) && contains(InputManager.getTouchPoint()))  {
+        //super.update0();
+        if (InputManager.hasTouch(InputManager.TOUCH_DOWN) && contains(InputManager.getTouchPoint())) {
             mLastTouchDown = true;
             return;
         } else if (mLastTouchDown && InputManager.hasTouch(InputManager.TOUCH_DRAG)) {
-            horizontalMove(InputManager.getTouchDelta().x);
+            float dx = InputManager.getTouchDelta().x;
+            horizontalMove(dx);
             ensureInsideBound();
             return;
         }

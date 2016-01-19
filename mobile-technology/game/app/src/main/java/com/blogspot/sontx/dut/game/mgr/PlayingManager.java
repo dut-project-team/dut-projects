@@ -27,9 +27,9 @@ public abstract class PlayingManager extends SceneManager {
     private static final float BRICK_PROBABILITY_LEVEL0 = 15.0f;
     private static final float BRICK_PROBABILITY_LEVEL1 = 25.0f;
     private static final float BRICK_PROBABILITY_LEVEL2 = 60.0f;
-    private static final float BAR_WIDTH = 200.0f;
-    private static final float BAR_HEIGHT = 40.0f;
-    private static final float BAR_MARGIN_BOTTOM = 150.0f;
+    private static final float BAR_WIDTH = 250.0f;
+    private static final float BAR_HEIGHT = 20.0f;
+    private static final float BAR_MARGIN_BOTTOM = 10.0f;
     private static final int SOUND_COLLISION_WALL = 0;
     private static final int SOUND_COLLISION_BRICK = 1;
     private static final int SOUND_COLLISION_BAR = 2;
@@ -41,29 +41,17 @@ public abstract class PlayingManager extends SceneManager {
     protected BricksHolder mBricksHolder;
 
     public PlayingManager() {
-        mBorder = new Border(
-                new RectF(DRAWABLE_X, DRAWABLE_Y,
-                        DRAWABLE_X + DRAWABLE_WIDTH,
-                        DRAWABLE_Y + DRAWABLE_HEIGHT),
-                3.0f,
-                Color.GRAY);
+        mBorder = new Border(new RectF(DRAWABLE_X, DRAWABLE_Y, DRAWABLE_X + DRAWABLE_WIDTH, DRAWABLE_Y + DRAWABLE_HEIGHT), 3.0f, Color.GRAY);
         mObjects.add(mBorder);
 
-        mBar = new Bar(
-                DRAWABLE_X + (DRAWABLE_WIDTH - BAR_WIDTH) / 2.0f,
-                DRAWABLE_Y + DRAWABLE_HEIGHT - BAR_MARGIN_BOTTOM - BAR_HEIGHT,
-                Color.RED);
+        mBar = new Bar(DRAWABLE_X + (DRAWABLE_WIDTH - BAR_WIDTH) / 2.0f, DRAWABLE_Y + DRAWABLE_HEIGHT - BAR_MARGIN_BOTTOM - BAR_HEIGHT, Color.RED);
         mBar.setHeight(BAR_HEIGHT);
         mBar.setWidth(BAR_WIDTH);
         mBar.setBound(DRAWABLE_X, DRAWABLE_X + DRAWABLE_WIDTH);
+        mBar.setExtendWidth(100f);
         mObjects.add(mBar);
 
-        mBricksHolder = new BricksHolder(
-                4,
-                new RectF(DRAWABLE_X,
-                        DRAWABLE_Y,
-                        DRAWABLE_X + DRAWABLE_WIDTH,
-                        (DRAWABLE_Y + DRAWABLE_HEIGHT) * 0.5f));
+        mBricksHolder = new BricksHolder(4, new RectF(DRAWABLE_X, DRAWABLE_Y, DRAWABLE_X + DRAWABLE_WIDTH, (DRAWABLE_Y + DRAWABLE_HEIGHT) * 0.5f));
     }
 
     protected void generateBall() {
@@ -106,8 +94,8 @@ public abstract class PlayingManager extends SceneManager {
                 ball.setSpeedY(-ball.getSpeedY());
                 break;
             default:
-                ball.setSpeedX(-ball.getSpeedX());
-                ball.setSpeedY(-ball.getSpeedY());
+                //ball.setSpeedX(-ball.getSpeedX());
+                //ball.setSpeedY(-ball.getSpeedY());
         }
     }
 
@@ -131,6 +119,7 @@ public abstract class PlayingManager extends SceneManager {
 
     private void doCollisionWithBar(Ball ball, int dir) {
         SoundManager.playSound(SOUND_COLLISION_BAR);
+        //ball.setSpeedX(ball.getSpeedX() + mBar.getSpeedX());
         reflect(ball, dir);
     }
 
