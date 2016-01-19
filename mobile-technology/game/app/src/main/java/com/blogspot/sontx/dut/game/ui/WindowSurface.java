@@ -3,7 +3,10 @@ package com.blogspot.sontx.dut.game.ui;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.view.MotionEvent;
 import android.view.View;
+
+import com.blogspot.sontx.dut.game.lib.InputManager;
 
 /**
  * Created by Noem on 16/1/2016.
@@ -27,6 +30,15 @@ public final class WindowSurface extends View {
     public WindowSurface(Context context) {
         super(context);
         setBackgroundColor(Color.WHITE);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int motionAction = event.getAction();
+        float x = event.getX();
+        float y = event.getY();
+        InputManager.onTouch(motionAction, x, y);
+        return true;
     }
 
     @Override

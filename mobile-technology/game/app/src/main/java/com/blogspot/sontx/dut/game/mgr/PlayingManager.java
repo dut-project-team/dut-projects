@@ -45,7 +45,7 @@ public abstract class PlayingManager extends SceneManager {
                 new RectF(DRAWABLE_X, DRAWABLE_Y,
                         DRAWABLE_X + DRAWABLE_WIDTH,
                         DRAWABLE_Y + DRAWABLE_HEIGHT),
-                5.0f,
+                3.0f,
                 Color.GRAY);
         mObjects.add(mBorder);
 
@@ -55,6 +55,7 @@ public abstract class PlayingManager extends SceneManager {
                 Color.RED);
         mBar.setHeight(BAR_HEIGHT);
         mBar.setWidth(BAR_WIDTH);
+        mBar.setBound(DRAWABLE_X, DRAWABLE_X + DRAWABLE_WIDTH);
         mObjects.add(mBar);
 
         mBricksHolder = new BricksHolder(

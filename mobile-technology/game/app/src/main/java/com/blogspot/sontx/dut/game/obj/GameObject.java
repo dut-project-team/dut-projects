@@ -2,7 +2,10 @@ package com.blogspot.sontx.dut.game.obj;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.RectF;
+
+import com.blogspot.sontx.dut.game.lib.InputManager;
 
 /**
  * Created by Noem on 16/1/2016.
@@ -21,36 +24,8 @@ public abstract class GameObject {
         return mRect.left;
     }
 
-    public float getRight() {
-        return mRect.right;
-    }
-
-    public float getBottom() {
-        return mRect.bottom;
-    }
-
     public float getWidth() {
         return mRect.width();
-    }
-
-    public float getHeight() {
-        return mRect.height();
-    }
-
-    public void setTop(float top) {
-        mRect.top = top;
-    }
-
-    public void setLeft(float left) {
-        mRect.left = left;
-    }
-
-    public void setRight(float right) {
-        mRect.right = right;
-    }
-
-    public void setBottom(float bottom) {
-        mRect.bottom = bottom;
     }
 
     public void setWidth(float width) {
@@ -59,18 +34,6 @@ public abstract class GameObject {
 
     public void setHeight(float height) {
         mRect.bottom = mRect.top + height;
-    }
-
-    public boolean isVisible() {
-        return mVisible;
-    }
-
-    public void setVisible(boolean visible) {
-        mVisible = visible;
-    }
-
-    public Paint getPaint() {
-        return mPaint;
     }
 
     public Object getTag() {
@@ -82,6 +45,10 @@ public abstract class GameObject {
     }
 
     protected abstract void draw0(Canvas canvas);
+
+    protected boolean contains(PointF point) {
+        return mRect.contains(point.x, point.y);
+    }
 
     protected abstract void update0();
 

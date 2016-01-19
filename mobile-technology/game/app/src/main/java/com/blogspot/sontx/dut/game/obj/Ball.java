@@ -13,14 +13,6 @@ public class Ball extends MovableObject {
 
     private float mR;
 
-    @Override
-    public void setRight(float right) {
-    }
-
-    @Override
-    public void setBottom(float bottom) {
-    }
-
     public void setR(float r) {
         mR = r;
         float width = r * 2.0f;
