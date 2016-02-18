@@ -38,5 +38,10 @@ public final class InputManager {
         return new PointF(mX, mY);
     }
 
+    public static void refreshTouchPoint() {
+        mLastX = mX;
+        mLastY = mY;
+    }
+
     private InputManager() {}
 }

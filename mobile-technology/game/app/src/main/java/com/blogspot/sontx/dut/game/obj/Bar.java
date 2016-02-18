@@ -54,6 +54,7 @@ public class Bar extends MovableObject {
             float dx = InputManager.getTouchDelta().x;
             horizontalMove(dx);
             ensureInsideBound();
+            InputManager.refreshTouchPoint();
             return;
         }
         mLastTouchDown = false;
