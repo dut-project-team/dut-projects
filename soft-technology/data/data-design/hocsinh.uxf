@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>130</x>
+      <y>60</y>
+      <w>100</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>HocSinh
+--
+*MaHS*
+--
+Ten
+--
+NgaySinh
+--
+QueQuan
+--
+GioiTinh
+--
+TrangThai
+--
+MaLop</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>380</x>
+      <y>60</y>
+      <w>100</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>DiemThi
+--
+*MaHS*
+--
+*MaMonHoc*
+--
+*HocKy*
+--
+*NamHoc*
+--
+DiemMieng
+--
+Diem15Phut
+--
+Diem1Tiet
+--
+DiemThi</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>80</y>
+      <w>180</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=7..n</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>610</x>
+      <y>90</y>
+      <w>120</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>MonHoc
+--
+*MaMonHoc*
+--
+TenMonHoc</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>470</x>
+      <y>110</y>
+      <w>160</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=n
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>110</x>
+      <y>390</y>
+      <w>120</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>GiaoVien
+--
+*MaGiaoVien*
+--
+Ten
+--
+GioiTinh
+--
+NgaySinh
+--
+DiaChi
+--
+QueQuan
+--
+SoDienThoai
+--
+Email</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>380</x>
+      <y>340</y>
+      <w>100</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Lop
+--
+*MaLop*
+--
+TenLop
+--
+*MaGiaoVien*</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>410</y>
+      <w>180</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>210</y>
+      <w>180</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=20..n
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;160.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>610</x>
+      <y>320</y>
+      <w>140</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>ThoiKhoaBieu
+--
+*MaThoiKhoaBieu*
+--
+*MaLop*
+--
+ThuNgay
+--
+MaMonHocTiet1
+--
+MaMonHocTiet2
+--
+MaMonHocTiet3
+--
+MaMonHocTiet4
+--
+MaMonHocTiet5</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>470</x>
+      <y>360</y>
+      <w>160</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
+  </element>
+</diagram>
