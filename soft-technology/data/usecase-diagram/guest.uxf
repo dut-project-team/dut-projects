@@ -4,8 +4,8 @@
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>0</x>
-      <y>192</y>
+      <x>24</x>
+      <y>64</y>
       <w>48</w>
       <h>80</h>
     </coordinates>
@@ -15,253 +15,74 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>176</x>
-      <y>256</y>
-      <w>144</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>Xem thông báo 
-của trường(4)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>16</x>
-      <y>216</y>
-      <w>176</w>
-      <h>80</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;200.0;80.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>176</x>
-      <y>64</y>
-      <w>144</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>Xem các hoạt động
-của trường(1)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>176</x>
-      <y>192</y>
-      <w>144</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>Xem các tài liệu - giáo án
-theo từng khối(3)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>176</x>
-      <y>432</y>
-      <w>144</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>Xem thông tin - liên hệ(6)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>408</x>
-      <y>408</y>
-      <w>128</w>
+      <x>376</x>
+      <y>16</y>
+      <w>120</w>
       <h>32</h>
     </coordinates>
-    <panel_attributes>Giới thiệu về trường(6.1)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>312</x>
-      <y>416</y>
-      <w>112</w>
-      <h>56</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;50.0;120.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>408</x>
-      <y>448</y>
-      <w>128</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>Cơ cấu tổ chức(6.2)</panel_attributes>
+    <panel_attributes>Tìm học sinh(1.1)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>400</x>
+      <x>184</x>
       <y>40</y>
-      <w>152</w>
-      <h>32</h>
+      <w>104</w>
+      <h>24</h>
     </coordinates>
-    <panel_attributes>Công đoàn nhà trường(1.1)</panel_attributes>
+    <panel_attributes>Tìm kiếm(1)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>392</x>
-      <y>488</y>
-      <w>168</w>
+      <x>384</x>
+      <y>64</y>
+      <w>112</w>
       <h>32</h>
     </coordinates>
-    <panel_attributes>Danh sách cán bộ(6.3)</panel_attributes>
+    <panel_attributes>Tìm giáo viên(1.2)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>312</x>
+      <x>280</x>
+      <y>24</y>
+      <w>112</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
+    <additional_attributes>10.0;40.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
       <y>48</y>
-      <w>104</w>
-      <h>56</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;50.0;110.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>400</x>
-      <y>96</y>
-      <w>160</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>Đội thiếu niên tiền phong(1.2)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>312</x>
-      <y>80</y>
-      <w>104</w>
+      <w>120</w>
       <h>48</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;110.0;40.0</additional_attributes>
+    <additional_attributes>10.0;10.0;130.0;40.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>400</x>
-      <y>184</y>
-      <w>144</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>Tài liệu giảng dạy(2.1)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>400</x>
-      <y>224</y>
-      <w>144</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>Tài liệu học tập(2.2)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>312</x>
-      <y>192</y>
-      <w>104</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;30.0;110.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>312</x>
-      <y>208</y>
-      <w>104</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;110.0;40.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>624</x>
-      <y>224</y>
+      <x>160</x>
+      <y>112</y>
       <w>136</w>
       <h>32</h>
     </coordinates>
-    <panel_attributes>Bài tập làm thêm(2.2.2)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>632</x>
-      <y>272</y>
-      <w>112</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>Đề thi mẫu(2.2.3)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>600</x>
-      <y>176</y>
-      <w>176</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>Video giảng dạy sưu tầm(2.2.1)</panel_attributes>
+    <panel_attributes>Xem thời khóa biểu(2)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>536</x>
-      <y>184</y>
-      <w>80</w>
-      <h>72</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;70.0;80.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>536</x>
-      <y>224</y>
-      <w>104</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;20.0;110.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>536</x>
-      <y>232</y>
+      <x>64</x>
+      <y>72</y>
       <w>112</w>
       <h>72</h>
     </coordinates>
@@ -271,189 +92,12 @@ theo từng khối(3)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>312</x>
-      <y>440</y>
-      <w>112</w>
-      <h>40</h>
+      <x>64</x>
+      <y>40</y>
+      <w>136</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;20.0;120.0;30.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>312</x>
-      <y>448</y>
-      <w>96</w>
-      <h>72</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;100.0;70.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>400</x>
-      <y>280</y>
-      <w>144</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>Tìm học sinh(5.1)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>176</x>
-      <y>320</y>
-      <w>144</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>Tìm kiếm(5)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>400</x>
-      <y>344</y>
-      <w>144</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>Tìm giáo viên(5.2)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>312</x>
-      <y>296</y>
-      <w>104</w>
-      <h>64</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;60.0;110.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>312</x>
-      <y>336</y>
-      <w>104</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;110.0;40.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>176</x>
-      <y>128</y>
-      <w>144</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>Xem thời khóa biểu(2)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>16</x>
-      <y>144</y>
-      <w>176</w>
-      <h>96</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;100.0;200.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>16</x>
-      <y>80</y>
-      <w>176</w>
-      <h>160</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;180.0;200.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>16</x>
-      <y>200</y>
-      <w>176</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;30.0;200.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>16</x>
-      <y>216</y>
-      <w>176</w>
-      <h>256</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;200.0;300.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>16</x>
-      <y>216</y>
-      <w>176</w>
-      <h>144</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;200.0;160.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>200</x>
-      <y>528</y>
-      <w>96</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>Góp ý(7)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>16</x>
-      <y>216</y>
-      <w>200</w>
-      <h>344</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;uses&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;230.0;410.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>424</x>
-      <y>136</y>
-      <w>96</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>Tìm kiếm</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>312</x>
-      <y>144</y>
-      <w>128</w>
-      <h>88</h>
-    </coordinates>
-    <panel_attributes>lt=.&gt;
-&lt;&lt;extends&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;90.0;140.0;10.0</additional_attributes>
+    <additional_attributes>10.0;50.0;150.0;10.0</additional_attributes>
   </element>
 </diagram>
