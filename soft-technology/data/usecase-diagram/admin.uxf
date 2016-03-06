@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="13.3">
-  <zoom_level>7</zoom_level>
+  <zoom_level>9</zoom_level>
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>35</x>
-      <y>266</y>
-      <w>42</w>
-      <h>70</h>
+      <x>0</x>
+      <y>333</y>
+      <w>54</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>Admin</panel_attributes>
     <additional_attributes/>
@@ -15,10 +15,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>329</x>
-      <y>175</y>
-      <w>84</w>
-      <h>28</h>
+      <x>378</x>
+      <y>216</y>
+      <w>108</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Quản lý cán bộ(2)</panel_attributes>
     <additional_attributes/>
@@ -26,10 +26,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>322</x>
-      <y>294</y>
-      <w>98</w>
-      <h>28</h>
+      <x>369</x>
+      <y>369</y>
+      <w>126</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Quản lý học sinh(3)</panel_attributes>
     <additional_attributes/>
@@ -37,10 +37,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>70</x>
-      <y>182</y>
-      <w>273</w>
-      <h>126</h>
+      <x>45</x>
+      <y>225</y>
+      <w>351</w>
+      <h>162</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;160.0;370.0;10.0</additional_attributes>
@@ -48,10 +48,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>70</x>
-      <y>287</y>
-      <w>266</w>
-      <h>35</h>
+      <x>45</x>
+      <y>360</y>
+      <w>342</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;360.0;30.0</additional_attributes>
@@ -59,10 +59,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>476</x>
-      <y>175</y>
-      <w>140</w>
-      <h>28</h>
+      <x>567</x>
+      <y>216</y>
+      <w>180</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Xem danh sách cán bộ(2.2)</panel_attributes>
     <additional_attributes/>
@@ -70,10 +70,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>497</x>
-      <y>119</y>
-      <w>98</w>
-      <h>28</h>
+      <x>594</x>
+      <y>144</y>
+      <w>126</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Thêm cán bộ(2.1)</panel_attributes>
     <additional_attributes/>
@@ -81,10 +81,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>406</x>
-      <y>175</y>
-      <w>84</w>
-      <h>28</h>
+      <x>477</x>
+      <y>216</y>
+      <w>108</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;20.0;100.0;20.0</additional_attributes>
@@ -92,10 +92,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>406</x>
-      <y>126</y>
-      <w>105</w>
-      <h>77</h>
+      <x>477</x>
+      <y>153</y>
+      <w>135</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;90.0;130.0;10.0</additional_attributes>
@@ -103,10 +103,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>133</x>
-      <y>14</y>
-      <w>84</w>
-      <h>28</h>
+      <x>126</x>
+      <y>9</y>
+      <w>108</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Đăng xuất(1)</panel_attributes>
     <additional_attributes/>
@@ -114,10 +114,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>133</x>
-      <y>84</y>
-      <w>84</w>
-      <h>28</h>
+      <x>126</x>
+      <y>99</y>
+      <w>108</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Đăng nhập(4)</panel_attributes>
     <additional_attributes/>
@@ -125,10 +125,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>70</x>
-      <y>91</y>
-      <w>77</w>
-      <h>217</h>
+      <x>45</x>
+      <y>108</y>
+      <w>99</w>
+      <h>279</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;290.0;90.0;10.0</additional_attributes>
@@ -136,10 +136,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>70</x>
-      <y>21</y>
-      <w>77</w>
-      <h>287</h>
+      <x>45</x>
+      <y>18</y>
+      <w>99</w>
+      <h>369</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;390.0;90.0;10.0</additional_attributes>
@@ -147,10 +147,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>483</x>
-      <y>273</y>
-      <w>112</w>
-      <h>28</h>
+      <x>576</x>
+      <y>342</y>
+      <w>144</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Tìm kiếm học sinh(3.2)</panel_attributes>
     <additional_attributes/>
@@ -158,10 +158,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>413</x>
-      <y>280</y>
-      <w>84</w>
-      <h>42</h>
+      <x>486</x>
+      <y>351</y>
+      <w>108</w>
+      <h>54</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;40.0;100.0;10.0</additional_attributes>
@@ -169,10 +169,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>301</x>
-      <y>371</y>
-      <w>140</w>
-      <h>42</h>
+      <x>342</x>
+      <y>468</y>
+      <w>180</w>
+      <h>54</h>
     </coordinates>
     <panel_attributes>Quản lý thời khóa biểu(6)</panel_attributes>
     <additional_attributes/>
@@ -180,10 +180,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>70</x>
-      <y>287</y>
-      <w>245</w>
-      <h>119</h>
+      <x>45</x>
+      <y>360</y>
+      <w>315</w>
+      <h>153</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;330.0;150.0</additional_attributes>
@@ -191,58 +191,58 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>161</x>
-      <y>105</y>
-      <w>175</w>
-      <h>217</h>
+      <x>162</x>
+      <y>126</y>
+      <w>225</w>
+      <h>279</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes>
+&lt;&lt;use&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;230.0;290.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>161</x>
-      <y>105</y>
-      <w>182</w>
-      <h>98</h>
+      <x>225</x>
+      <y>108</y>
+      <w>171</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;240.0;120.0</additional_attributes>
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;140.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>168</x>
-      <y>35</y>
-      <w>63</w>
-      <h>63</h>
+      <x>171</x>
+      <y>36</y>
+      <w>54</w>
+      <h>81</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes>
+&lt;&lt;use&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>161</x>
-      <y>105</y>
-      <w>154</w>
-      <h>301</h>
+      <x>162</x>
+      <y>126</y>
+      <w>198</w>
+      <h>387</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes>
+&lt;&lt;use&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;200.0;410.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>322</x>
-      <y>35</y>
-      <w>112</w>
-      <h>28</h>
+      <x>369</x>
+      <y>36</y>
+      <w>144</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Tạo lớp(5)</panel_attributes>
     <additional_attributes/>
@@ -250,10 +250,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>70</x>
-      <y>42</y>
-      <w>266</w>
-      <h>266</h>
+      <x>45</x>
+      <y>45</y>
+      <w>342</w>
+      <h>342</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;360.0;360.0;10.0</additional_attributes>
@@ -261,10 +261,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>427</x>
-      <y>42</y>
-      <w>70</w>
-      <h>49</h>
+      <x>504</x>
+      <y>45</y>
+      <w>90</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;80.0;50.0</additional_attributes>
@@ -272,10 +272,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>483</x>
-      <y>63</y>
-      <w>112</w>
-      <h>28</h>
+      <x>576</x>
+      <y>72</y>
+      <w>144</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Lên lớp(5.2)</panel_attributes>
     <additional_attributes/>
@@ -283,10 +283,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>427</x>
-      <y>14</y>
-      <w>70</w>
-      <h>49</h>
+      <x>504</x>
+      <y>9</y>
+      <w>90</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;50.0;80.0;10.0</additional_attributes>
@@ -294,10 +294,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>483</x>
-      <y>7</y>
-      <w>112</w>
-      <h>28</h>
+      <x>576</x>
+      <y>0</y>
+      <w>144</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Tạo mới(5.1)</panel_attributes>
     <additional_attributes/>
@@ -305,10 +305,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>413</x>
-      <y>301</y>
-      <w>70</w>
-      <h>56</h>
+      <x>486</x>
+      <y>378</y>
+      <w>90</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;80.0;60.0</additional_attributes>
@@ -316,10 +316,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>469</x>
-      <y>329</y>
-      <w>140</w>
-      <h>28</h>
+      <x>558</x>
+      <y>414</y>
+      <w>180</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Xem danh sách học sinh(3.1)</panel_attributes>
     <additional_attributes/>
@@ -327,10 +327,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>490</x>
-      <y>224</y>
-      <w>112</w>
-      <h>28</h>
+      <x>585</x>
+      <y>279</y>
+      <w>144</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>Cập nhật cán bộ(2.3)</panel_attributes>
     <additional_attributes/>
@@ -338,12 +338,24 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>406</x>
-      <y>182</y>
-      <w>98</w>
-      <h>70</h>
+      <x>477</x>
+      <y>225</y>
+      <w>126</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;120.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>225</x>
+      <y>45</y>
+      <w>162</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;80.0;160.0;10.0</additional_attributes>
   </element>
 </diagram>
