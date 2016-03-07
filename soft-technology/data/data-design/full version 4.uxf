@@ -221,8 +221,6 @@ NgaySinh
 --
 DiaChi
 --
-QueQuan
---
 SoDienThoai
 --
 *GiaoVienID*
@@ -235,11 +233,11 @@ SoDienThoai
       <x>416</x>
       <y>240</y>
       <w>104</w>
-      <h>200</h>
+      <h>184</h>
     </coordinates>
     <panel_attributes>m1=1
 m2=1</panel_attributes>
-    <additional_attributes>24;24;88;184</additional_attributes>
+    <additional_attributes>24;24;88;168</additional_attributes>
   </element>
   <element>
     <type>com.baselet.element.old.element.Relation</type>
