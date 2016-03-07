@@ -15,12 +15,12 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>378</x>
+      <x>360</x>
       <y>216</y>
-      <w>108</w>
+      <w>126</w>
       <h>36</h>
     </coordinates>
-    <panel_attributes>Quản lý cán bộ(2)</panel_attributes>
+    <panel_attributes>Quản lý giáo viên (2)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -39,11 +39,11 @@
     <coordinates>
       <x>45</x>
       <y>225</y>
-      <w>351</w>
+      <w>333</w>
       <h>162</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;160.0;370.0;10.0</additional_attributes>
+    <additional_attributes>10.0;160.0;350.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -59,12 +59,12 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>567</x>
+      <x>576</x>
       <y>216</y>
-      <w>180</w>
+      <w>198</w>
       <h>36</h>
     </coordinates>
-    <panel_attributes>Xem danh sách cán bộ(2.2)</panel_attributes>
+    <panel_attributes>Xem danh sách giáo viên (2.2)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -72,10 +72,10 @@
     <coordinates>
       <x>594</x>
       <y>144</y>
-      <w>126</w>
+      <w>153</w>
       <h>36</h>
     </coordinates>
-    <panel_attributes>Thêm cán bộ(2.1)</panel_attributes>
+    <panel_attributes>Thêm giáo viên (2.1)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -83,11 +83,11 @@
     <coordinates>
       <x>477</x>
       <y>216</y>
-      <w>108</w>
+      <w>117</w>
       <h>36</h>
     </coordinates>
     <panel_attributes>&lt;&lt;uses&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;20.0;100.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;110.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -205,12 +205,12 @@
     <coordinates>
       <x>225</x>
       <y>108</y>
-      <w>171</w>
+      <w>153</w>
       <h>144</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 &lt;&lt;use&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;170.0;140.0</additional_attributes>
+    <additional_attributes>10.0;10.0;150.0;140.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -329,10 +329,10 @@
     <coordinates>
       <x>585</x>
       <y>279</y>
-      <w>144</w>
+      <w>153</w>
       <h>36</h>
     </coordinates>
-    <panel_attributes>Cập nhật cán bộ(2.3)</panel_attributes>
+    <panel_attributes>Cập nhật giáo viên (2.3)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
