@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 17/1/2016.
  */
 public class Border extends GameObject {

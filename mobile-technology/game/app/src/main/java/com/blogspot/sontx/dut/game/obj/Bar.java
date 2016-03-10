@@ -6,6 +6,7 @@ import android.graphics.PointF;
 import com.blogspot.sontx.dut.game.lib.InputManager;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 17/1/2016.
  */
 public class Bar extends MovableObject {

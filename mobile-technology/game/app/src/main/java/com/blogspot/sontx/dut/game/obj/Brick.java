@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 17/1/2016.
  */
 public class Brick extends GameObject {

@@ -3,6 +3,7 @@ package com.blogspot.sontx.dut.game.obj;
 import android.graphics.Canvas;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 17/1/2016.
  */
 public class Hole extends MovableObject {

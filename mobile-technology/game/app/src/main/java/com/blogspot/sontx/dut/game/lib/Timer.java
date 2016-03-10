@@ -3,6 +3,7 @@ package com.blogspot.sontx.dut.game.lib;
 import android.os.Handler;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 18/1/2016.
  */
 public final class Timer {

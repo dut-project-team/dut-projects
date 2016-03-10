@@ -8,6 +8,7 @@ import android.graphics.RectF;
 import com.blogspot.sontx.dut.game.lib.InputManager;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 16/1/2016.
  */
 public abstract class GameObject {

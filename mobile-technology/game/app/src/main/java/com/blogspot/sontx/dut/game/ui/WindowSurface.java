@@ -9,11 +9,13 @@ import android.view.View;
 import com.blogspot.sontx.dut.game.lib.InputManager;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 16/1/2016.
  */
 public final class WindowSurface extends View {
     private static WindowSurface instance;
     private WindowEventListener mWindowEventListener = null;
+    private boolean mInitialized = false;
 
     public static WindowSurface getInstance() {
         return instance;
@@ -52,8 +54,9 @@ public final class WindowSurface extends View {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        if (mWindowEventListener != null)
+        if (!mInitialized && mWindowEventListener != null)
             mWindowEventListener.onInit();
+        mInitialized = true;
     }
 
     @Override
