@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 18/1/2016.
  */
 public final class SoundManager {

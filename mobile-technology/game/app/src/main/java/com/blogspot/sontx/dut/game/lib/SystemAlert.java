@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 19/1/2016.
  */
 public final class SystemAlert {

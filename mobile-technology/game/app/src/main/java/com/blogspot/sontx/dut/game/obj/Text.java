@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Typeface;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 19/1/2016.
  */
 public class Text extends GameObject {

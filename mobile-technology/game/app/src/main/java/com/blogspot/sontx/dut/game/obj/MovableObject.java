@@ -3,6 +3,7 @@ package com.blogspot.sontx.dut.game.obj;
 import android.graphics.RectF;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 16/1/2016.
  */
 public abstract class MovableObject extends GameObject {

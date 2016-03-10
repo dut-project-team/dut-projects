@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 16/1/2016.
  */
 public class Ball extends MovableObject {

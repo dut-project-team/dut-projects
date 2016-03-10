@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 17/1/2016.
  */
 public final class StageManager {
@@ -30,7 +31,7 @@ public final class StageManager {
         return nextLevel < mLevelManagerTypes.size() ? mLevelManagerTypes.get(nextLevel) : null;
     }
 
-    private void displayGameWin(final PlayingManager playingManager) {
+    private void displayGameWin(final LevelManager playingManager) {
         mPaused = true;
         final Class lvMgr = getNextLevelManager(playingManager.getCurrentLevel());
         AlertDialog.Builder builder = SystemAlert.getBuilder();
@@ -40,9 +41,9 @@ public final class StageManager {
             builder.setNegativeButton("Next Level", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    PlayingManager instance = null;
+                    LevelManager instance = null;
                     try {
-                        instance = (PlayingManager) lvMgr.newInstance();
+                        instance = (LevelManager) lvMgr.newInstance();
                     } catch (InstantiationException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
@@ -58,7 +59,7 @@ public final class StageManager {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    PlayingManager instance = playingManager.getClass().newInstance();
+                    LevelManager instance = playingManager.getClass().newInstance();
                     setSceneManager(instance);
                 } catch (InstantiationException e) {
                     e.printStackTrace();
@@ -84,10 +85,10 @@ public final class StageManager {
     public void update() {
         if (mPaused)
             return;
-        if (mSceneManager instanceof PlayingManager) {
-            PlayingManager playingManager = (PlayingManager) mSceneManager;
+        if (mSceneManager instanceof LevelManager) {
+            LevelManager playingManager = (LevelManager) mSceneManager;
             int state = playingManager.getGameState();
-            if ((state & PlayingManager.GAME_WIN) == PlayingManager.GAME_WIN)
+            if ((state & LevelManager.GAME_WIN) == LevelManager.GAME_WIN)
                 displayGameWin(playingManager);
         }
         mSceneManager.update();

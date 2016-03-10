@@ -4,6 +4,7 @@ import android.graphics.PointF;
 import android.view.MotionEvent;
 
 /**
+ * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 19/1/2016.
  */
 public final class InputManager {
