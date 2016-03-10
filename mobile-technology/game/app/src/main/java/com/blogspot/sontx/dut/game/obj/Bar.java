@@ -3,6 +3,8 @@ package com.blogspot.sontx.dut.game.obj;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 
+import com.blogspot.sontx.dut.game.R;
+import com.blogspot.sontx.dut.game.lib.BitmapLoader;
 import com.blogspot.sontx.dut.game.lib.InputManager;
 
 /**
@@ -13,17 +15,12 @@ public class Bar extends MovableObject {
     private boolean mLastTouchDown = false;
     private float mExtendWidth = 0.0f;
 
-    public Bar(float x, float y, int color) {
-        super(x, y, color);
+    public Bar(float x, float y) {
+        super(x, y);
     }
 
     public void setExtendWidth(float width) {
         mExtendWidth = width;
-    }
-
-    @Override
-    protected void draw0(Canvas canvas) {
-        canvas.drawRect(mRect, mPaint);
     }
 
     private void horizontalMove(float dx) {
@@ -46,8 +43,13 @@ public class Bar extends MovableObject {
     }
 
     @Override
-    protected void update0() {
-        //super.update0();
+    public void init() {
+        setBitmap(BitmapLoader.getBitmapById(R.drawable.bar));
+        stretchBitmapToRectangle();
+    }
+
+    @Override
+    public void update() {
         if (InputManager.hasTouch(InputManager.TOUCH_DOWN) && contains(InputManager.getTouchPoint())) {
             mLastTouchDown = true;
             return;

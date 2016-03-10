@@ -1,7 +1,7 @@
 package com.blogspot.sontx.dut.game.obj;
 
-import android.graphics.Canvas;
-import android.graphics.RectF;
+import com.blogspot.sontx.dut.game.R;
+import com.blogspot.sontx.dut.game.lib.BitmapLoader;
 
 /**
  * Copyright by SONTX 2016. www.sontx.in
@@ -19,16 +19,18 @@ public class Ball extends MovableObject {
         float width = r * 2.0f;
         mRect.right = mRect.left + width;
         mRect.bottom = mRect.top + width;
+        stretchBitmapToRectangle();
     }
 
-    public Ball(float x, float y, float r, int color) {
-        super(x, y, color);
+    public Ball(float x, float y, float r) {
+        super(x, y);
         setR(r);
     }
 
     @Override
-    protected void draw0(Canvas canvas) {
-        canvas.drawCircle(mRect.left + mR, mRect.top + mR, mR, mPaint);
+    public void init() {
+        setBitmap(BitmapLoader.getBitmapById(R.drawable.ball));
+        stretchBitmapToRectangle();
     }
 
     public boolean isInnerVerticalCollision(GameObject obj) {

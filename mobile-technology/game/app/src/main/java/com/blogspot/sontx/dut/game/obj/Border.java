@@ -24,11 +24,12 @@ public class Border extends GameObject {
     }
 
     @Override
-    protected void draw0(Canvas canvas) {
+    public void draw(Canvas canvas) {
         canvas.drawRect(mRect, mPaint);
     }
 
     @Override
-    protected void update0() {
+    public void init() {
+
     }
 }

@@ -3,6 +3,9 @@ package com.blogspot.sontx.dut.game.obj;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
+import com.blogspot.sontx.dut.game.R;
+import com.blogspot.sontx.dut.game.lib.BitmapLoader;
+
 /**
  * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 17/1/2016.
@@ -36,6 +39,22 @@ public class Brick extends GameObject {
         mValue = value * 1000000000L;
     }
 
+    @Override
+    public void init() {
+        switch (mLevel) {
+            case LEVEL0:
+                setBitmap(BitmapLoader.getBitmapById(R.drawable.blue_brick));
+                break;
+            case LEVEL1:
+                setBitmap(BitmapLoader.getBitmapById(R.drawable.pink_brick));
+                break;
+            case LEVEL2:
+                setBitmap(BitmapLoader.getBitmapById(R.drawable.yellow_brick));
+                break;
+        }
+        stretchBitmapToRectangle();
+    }
+
     public Brick(float x, float y, int level) {
         super(x, y, Color.WHITE);
         mLevel = level;
@@ -53,12 +72,7 @@ public class Brick extends GameObject {
     }
 
     @Override
-    protected void draw0(Canvas canvas) {
-        canvas.drawRect(mRect, mPaint);
-    }
-
-    @Override
-    protected void update0() {
+    public void update() {
         if (mStartTime < 0) {
             mStartTime = System.nanoTime();
         } else {

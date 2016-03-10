@@ -1,5 +1,6 @@
 package com.blogspot.sontx.dut.game.obj;
 
+import android.graphics.Color;
 import android.graphics.RectF;
 
 /**
@@ -7,8 +8,8 @@ import android.graphics.RectF;
  * Created by Noem on 16/1/2016.
  */
 public abstract class MovableObject extends GameObject {
-    protected float mSpeedX;
-    protected float mSpeedY;
+    protected float mSpeedX = 0.0f;
+    protected float mSpeedY = 0.0f;
     protected RectF mMovableBound = new RectF(0.0f, 0.0f, 0.0f, 0.0f);
 
     public void setMovableBound(RectF rect) {
@@ -32,13 +33,15 @@ public abstract class MovableObject extends GameObject {
     }
 
     @Override
-    protected void update0() {
+    public void update() {
         mRect.offset(mSpeedX, mSpeedY);
+    }
+
+    public MovableObject(float x, float y) {
+        super(x, y);
     }
 
     public MovableObject(float x, float y, int color) {
         super(x, y, color);
-        mSpeedX = 0.0f;
-        mSpeedY = 0.0f;
     }
 }

@@ -26,8 +26,8 @@ public abstract class LevelManager extends SceneManager {
     public static final int GAME_OVER                           = 4;
     public static final int GAME_PAUSED                         = 8;
 
-    protected static final float HOLE_RADIUS                    = 20.0f;
-    protected static final float HOLE_HEIGHT                    = 20.0f;
+    protected static final float HOLE_RADIUS                    = 25.0f;
+    protected static final float HOLE_HEIGHT                    = 50.0f;
 
     protected static final float BALL_RADIUS                    = 20.0f;
 
@@ -79,8 +79,7 @@ public abstract class LevelManager extends SceneManager {
         Ball ball = new Ball(
                 mBar.getLeft() + mBar.getWidth() / 2.0f - BALL_RADIUS,
                 mBar.getTop() - BALL_RADIUS * 4.0f,
-                BALL_RADIUS,
-                Color.MAGENTA);
+                BALL_RADIUS);
         ball.setSpeedY(-getBallSpeed());
         ball.setSpeedX(-getBallSpeed());
         this.mBall = ball;
@@ -165,7 +164,7 @@ public abstract class LevelManager extends SceneManager {
 
     private void initializeBar() {
         mBar = new Bar(mPlayableBound.left + (mPlayableBound.width() - BAR_WIDTH) / 2.0f,
-                mPlayableBound.bottom - BAR_MARGIN_BOTTOM - BAR_HEIGHT, Color.RED);
+                mPlayableBound.bottom - BAR_MARGIN_BOTTOM - BAR_HEIGHT);
         mBar.setHeight(BAR_HEIGHT);
         mBar.setWidth(BAR_WIDTH);
         mBar.setMovableBound(new RectF(mPlayableBound.left, 0.0f, mPlayableBound.right, 0.0f));

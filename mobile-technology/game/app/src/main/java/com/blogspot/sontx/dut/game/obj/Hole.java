@@ -2,6 +2,9 @@ package com.blogspot.sontx.dut.game.obj;
 
 import android.graphics.Canvas;
 
+import com.blogspot.sontx.dut.game.R;
+import com.blogspot.sontx.dut.game.lib.BitmapLoader;
+
 /**
  * Copyright by SONTX 2016. www.sontx.in
  * Created by Noem on 17/1/2016.
@@ -19,21 +22,22 @@ public class Hole extends MovableObject {
         mSpeedX = 0.0f;
     }
 
+    @Override
+    public void init() {
+        setBitmap(BitmapLoader.getBitmapById(R.drawable.hole));
+        stretchBitmapToRectangle();
+    }
+
     public Hole(float x, float y, int color) {
         super(x, y, color);
     }
 
     @Override
-    protected void update0() {
-        super.update0();
+    public void update() {
+        super.update();
         if (mRect.left < mMovableBound.left || mRect.right > mMovableBound.right)
             mSpeedX = -mSpeedX;
         if (mRect.top < mMovableBound.top || mRect.bottom > mMovableBound.bottom)
             mSpeedY = -mSpeedY;
-    }
-
-    @Override
-    protected void draw0(Canvas canvas) {
-        canvas.drawRect(mRect, mPaint);
     }
 }

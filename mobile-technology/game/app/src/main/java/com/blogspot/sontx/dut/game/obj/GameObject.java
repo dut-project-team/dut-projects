@@ -1,10 +1,13 @@
 package com.blogspot.sontx.dut.game.obj;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import com.blogspot.sontx.dut.game.lib.BitmapLoader;
 import com.blogspot.sontx.dut.game.lib.InputManager;
 
 /**
@@ -13,7 +16,7 @@ import com.blogspot.sontx.dut.game.lib.InputManager;
  */
 public abstract class GameObject {
     protected final RectF mRect;
-    protected boolean mVisible;
+    private Bitmap mBitmap = null;
     protected final Paint mPaint;
     private Object mTag;
 
@@ -45,30 +48,54 @@ public abstract class GameObject {
         mTag = tag;
     }
 
-    protected abstract void draw0(Canvas canvas);
-
     protected boolean contains(PointF point) {
         return mRect.contains(point.x, point.y);
     }
 
-    protected abstract void update0();
-
-    public final void draw(Canvas canvas) {
-        if (mVisible)
-            draw0(canvas);
+    protected void recomputeRectangleFromBitmap() {
+        if (mBitmap != null) {
+            mRect.right = mRect.left + mBitmap.getWidth();
+            mRect.bottom = mRect.top + mBitmap.getHeight();
+        }
     }
 
-    public final void update() {
-        if (mVisible)
-            update0();
+    protected void stretchBitmapToRectangle() {
+        if (mBitmap != null) {
+            Bitmap stretchBitmap = BitmapLoader.stretchBitmap(mBitmap, (int) mRect.width(), (int) mRect.height());
+            if (!stretchBitmap.equals(mBitmap)) {
+                mBitmap.recycle();
+                mBitmap = stretchBitmap;
+            }
+        }
+    }
+
+    protected void setBitmap(Bitmap bitmap) {
+        this.mBitmap = bitmap;
+    }
+
+    public abstract void init();
+
+    public void draw(Canvas canvas) {
+        if (mBitmap != null)
+            canvas.drawBitmap(mBitmap, mRect.left, mRect.top, mPaint);
+    }
+
+    public void update() {
     }
 
     public void destroy() {
+        if (mBitmap != null) {
+            mBitmap.recycle();
+            mBitmap = null;
+        }
+    }
+
+    public GameObject(float x, float y) {
+        this(x, y, Color.BLACK);
     }
 
     public GameObject(float x, float y, int color) {
         mRect = new RectF(x, y, 100.0f, 100.0f);
-        mVisible = true;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(color);
         mTag = null;
