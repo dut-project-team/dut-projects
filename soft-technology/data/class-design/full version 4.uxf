@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>340</x>
+      <y>150</y>
+      <w>170</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>QuanLyThoiKhoaBieu
+--
+taoThoiKhoaBieu()
+xoaThoiKhoaBieu()
+capNhatThoiKhoaBieu()
+layThoiKhoaBieu()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>50</x>
+      <y>160</y>
+      <w>150</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>QuanLyTaiKhoan
+--
+taoTaiKhoan()
+xoaTaiKhoan()
+capNhatTaiKhoan()
+kiemTraDangNhap()
+xacThucTaiKhoan()
+dangXuatTaiKhoan()
+thayDoiMatKhau()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>590</x>
+      <y>130</y>
+      <w>140</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>QuanLyLop
+--
+taoLop()
+xoaLop()
+capNhatLop()
+lenLop()
+xemDanhSachLop()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>390</x>
+      <y>390</y>
+      <w>160</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>QuanLyHocSinh
+--
+taoHocSinh()
+xoaHocSinh()
+capNhatHocSinh()
+timKiemHocSinh()
+layDanhSachHocSinh()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>640</x>
+      <y>360</y>
+      <w>130</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>QuanLyDiem
+--
+taoDiem()
+xoaDiem()
+capNhatDiem()
+layDiem()
+layHocLuc()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>100</x>
+      <y>400</y>
+      <w>170</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>QuanLyGiaoVien
+--
+taoGiaoVien()
+xoaGiaoVien()
+capNhatGiaoVien()
+timKiemGiaoVien()
+layDanhSachGiaoVien()</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
