@@ -56,6 +56,12 @@ public abstract class SceneManager {
         }
     }
 
+    protected void initializeObjects() {
+        for (GameObject obj : mObjects) {
+            obj.init();
+        }
+    }
+
     public abstract void init();
 
     public void destroy() {

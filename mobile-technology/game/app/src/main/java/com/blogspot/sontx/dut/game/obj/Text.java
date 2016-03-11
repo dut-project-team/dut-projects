@@ -29,11 +29,11 @@ public class Text extends GameObject {
     }
 
     @Override
-    protected void draw0(Canvas canvas) {
+    public void draw(Canvas canvas) {
         canvas.drawText(mText, 0, mText.length(), mRect.left, mRect.top, mPaint);
     }
 
     @Override
-    protected void update0() {
+    public void init() {
     }
 }

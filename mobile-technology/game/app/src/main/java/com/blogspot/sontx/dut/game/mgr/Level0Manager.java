@@ -20,17 +20,20 @@ public class Level0Manager extends LevelManager {
         return 7.0f;
     }
 
-    @Override
-    public void init() {
-        super.init();
-
-        generateBricks(10, Brick.LEVEL0);
-
+    private void initializeHode() {
         Hole hole = new Hole(mPlayableBound.left + mPlayableBound.width() / 2.0f - HOLE_RADIUS, mPlayableBound.top, Color.BLACK);
         hole.setMovableBound(mPlayableBound);
         hole.setWidth(HOLE_RADIUS * 2.0f);
         hole.setHeight(HOLE_HEIGHT);
         hole.setSpeedX(5.5f);
         setHole(hole);
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        generateBricks(10, Brick.LEVEL0);
+        initializeHode();
+        initializeObjects();
     }
 }

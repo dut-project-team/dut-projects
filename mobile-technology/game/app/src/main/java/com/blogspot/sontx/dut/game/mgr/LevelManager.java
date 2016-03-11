@@ -26,8 +26,8 @@ public abstract class LevelManager extends SceneManager {
     public static final int GAME_OVER                           = 4;
     public static final int GAME_PAUSED                         = 8;
 
-    protected static final float HOLE_RADIUS                    = 20.0f;
-    protected static final float HOLE_HEIGHT                    = 20.0f;
+    protected static final float HOLE_RADIUS                    = 25.0f;
+    protected static final float HOLE_HEIGHT                    = 50.0f;
 
     protected static final float BALL_RADIUS                    = 20.0f;
 
@@ -57,6 +57,7 @@ public abstract class LevelManager extends SceneManager {
     private GameInfoPanel mGameInfoPanel;
 
     private int mGameState = GAME_PLAYING;
+    private boolean mLastCollisionWithBar = false;
 
     public LevelManager() {
         float left = clientRectangle.left;
@@ -79,8 +80,7 @@ public abstract class LevelManager extends SceneManager {
         Ball ball = new Ball(
                 mBar.getLeft() + mBar.getWidth() / 2.0f - BALL_RADIUS,
                 mBar.getTop() - BALL_RADIUS * 4.0f,
-                BALL_RADIUS,
-                Color.MAGENTA);
+                BALL_RADIUS);
         ball.setSpeedY(-getBallSpeed());
         ball.setSpeedX(-getBallSpeed());
         this.mBall = ball;
@@ -124,8 +124,10 @@ public abstract class LevelManager extends SceneManager {
     }
 
     private void doCollisionWithBar(int direction) {
-        SoundManager.playSound(SOUND_INDEX_COLLISION_BAR);
-        reflect(direction);
+        if (!mLastCollisionWithBar) {
+            SoundManager.playSound(SOUND_INDEX_COLLISION_BAR);
+            reflect(direction);
+        }
     }
 
     private void doCollisionWithHole() {
@@ -165,7 +167,7 @@ public abstract class LevelManager extends SceneManager {
 
     private void initializeBar() {
         mBar = new Bar(mPlayableBound.left + (mPlayableBound.width() - BAR_WIDTH) / 2.0f,
-                mPlayableBound.bottom - BAR_MARGIN_BOTTOM - BAR_HEIGHT, Color.RED);
+                mPlayableBound.bottom - BAR_MARGIN_BOTTOM - BAR_HEIGHT);
         mBar.setHeight(BAR_HEIGHT);
         mBar.setWidth(BAR_WIDTH);
         mBar.setMovableBound(new RectF(mPlayableBound.left, 0.0f, mPlayableBound.right, 0.0f));
@@ -198,7 +200,11 @@ public abstract class LevelManager extends SceneManager {
         // check bar collision
         if (mBall.isCollision(mBar)) {
             doCollisionWithBar(mBall.checkOuterCollision(mBar));
+            mLastCollisionWithBar = true;
+            return;
         }
+
+        mLastCollisionWithBar = false;
 
         // check bricks collision
         Iterable<GameObject> objects = getObjects();
@@ -212,10 +218,14 @@ public abstract class LevelManager extends SceneManager {
         }
 
         // check wall collision
-        if (mBall.isInnerHorizontalCollision(mBorder))
+        if (mBall.isInnerHorizontalCollision(mBorder)) {
             doCollisionWithBorder(Ball.HORIZONTAL_COLLISION);
-        if (mBall.isInnerVerticalCollision(mBorder))
+            return;
+        }
+        if (mBall.isInnerVerticalCollision(mBorder)) {
             doCollisionWithBorder(Ball.VERTICAL_COLLISION);
+            return;
+        }
 
         // check hole collision
         if (mBall.isCollision(mHole)) {
