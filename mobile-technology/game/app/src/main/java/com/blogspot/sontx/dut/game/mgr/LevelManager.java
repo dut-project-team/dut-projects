@@ -57,6 +57,7 @@ public abstract class LevelManager extends SceneManager {
     private GameInfoPanel mGameInfoPanel;
 
     private int mGameState = GAME_PLAYING;
+    private boolean mLastCollisionWithBar = false;
 
     public LevelManager() {
         float left = clientRectangle.left;
@@ -123,8 +124,10 @@ public abstract class LevelManager extends SceneManager {
     }
 
     private void doCollisionWithBar(int direction) {
-        SoundManager.playSound(SOUND_INDEX_COLLISION_BAR);
-        reflect(direction);
+        if (!mLastCollisionWithBar) {
+            SoundManager.playSound(SOUND_INDEX_COLLISION_BAR);
+            reflect(direction);
+        }
     }
 
     private void doCollisionWithHole() {
@@ -197,7 +200,11 @@ public abstract class LevelManager extends SceneManager {
         // check bar collision
         if (mBall.isCollision(mBar)) {
             doCollisionWithBar(mBall.checkOuterCollision(mBar));
+            mLastCollisionWithBar = true;
+            return;
         }
+
+        mLastCollisionWithBar = false;
 
         // check bricks collision
         Iterable<GameObject> objects = getObjects();
@@ -211,10 +218,14 @@ public abstract class LevelManager extends SceneManager {
         }
 
         // check wall collision
-        if (mBall.isInnerHorizontalCollision(mBorder))
+        if (mBall.isInnerHorizontalCollision(mBorder)) {
             doCollisionWithBorder(Ball.HORIZONTAL_COLLISION);
-        if (mBall.isInnerVerticalCollision(mBorder))
+            return;
+        }
+        if (mBall.isInnerVerticalCollision(mBorder)) {
             doCollisionWithBorder(Ball.VERTICAL_COLLISION);
+            return;
+        }
 
         // check hole collision
         if (mBall.isCollision(mHole)) {
