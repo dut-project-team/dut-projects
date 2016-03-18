@@ -76,6 +76,10 @@ public abstract class LevelManager extends SceneManager {
 
     protected abstract float getBallSpeed();
 
+    protected abstract int getCountdownMinutes();
+
+    protected abstract int getCountdownSeconds();
+
     private void generateBall() {
         Ball ball = new Ball(
                 mBar.getLeft() + mBar.getWidth() / 2.0f - BALL_RADIUS,
@@ -161,7 +165,7 @@ public abstract class LevelManager extends SceneManager {
                 clientRectangle.top + GAME_INFO_PANEL_MARGIN_TOP,
                 clientRectangle.right - GAME_INFO_PANEL_MARGIN_RIGHT,
                 clientRectangle.top + GAME_INFO_PANEL_HEIGHT + GAME_INFO_PANEL_MARGIN_TOP);
-        mGameInfoPanel = new GameInfoPanel(panelArea, this);
+        mGameInfoPanel = new GameInfoPanel(panelArea, getCountdownMinutes(), getCountdownSeconds(), this);
         mGameInfoPanel.setLevel(getCurrentLevel());
     }
 
@@ -191,45 +195,70 @@ public abstract class LevelManager extends SceneManager {
         SoundManager.reset();
     }
 
+    private boolean checkBarCollision() {
+        if (mBall.isCollision(mBar)) {
+            doCollisionWithBar(mBall.checkOuterCollision(mBar));
+            mLastCollisionWithBar = true;
+            return true;
+        }
+        mLastCollisionWithBar = false;
+        return false;
+    }
+
+    private boolean checkBricksCollision() {
+        Iterable<GameObject> objects = getObjects();
+        for (GameObject object : objects) {
+            if (object instanceof Brick) {
+                if (mBall.isCollision(object)) {
+                    doCollisionWithBrick((Brick) object, mBall.checkOuterCollision(object));
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkWallCollision() {
+        if (mBall.isInnerHorizontalCollision(mBorder)) {
+            doCollisionWithBorder(Ball.HORIZONTAL_COLLISION);
+            return true;
+        }
+        if (mBall.isInnerVerticalCollision(mBorder)) {
+            doCollisionWithBorder(Ball.VERTICAL_COLLISION);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkHoleCollision() {
+        if (mBall.isCollision(mHole)) {
+            doCollisionWithHole();
+            return true;
+        }
+        return false;
+    }
+
+    private void updateGameInfo() {
+        mGameInfoPanel.update();
+        if (mGameInfoPanel.isTimeout()) {
+            mGameState |= GAME_OVER;
+        }
+    }
+
     @Override
     public void update() {
         if ((mGameState & GAME_PAUSED) == GAME_PAUSED)
             return;
         super.update();
 
-        // check bar collision
-        if (mBall.isCollision(mBar)) {
-            doCollisionWithBar(mBall.checkOuterCollision(mBar));
-            mLastCollisionWithBar = true;
+        updateGameInfo();
+
+        if (checkBarCollision())
             return;
-        }
-
-        mLastCollisionWithBar = false;
-
-        // check bricks collision
-        Iterable<GameObject> objects = getObjects();
-        for (GameObject object : objects) {
-            if (object instanceof Brick) {
-                if (mBall.isCollision(object)) {
-                    doCollisionWithBrick((Brick) object, mBall.checkOuterCollision(object));
-                    return;
-                }
-            }
-        }
-
-        // check wall collision
-        if (mBall.isInnerHorizontalCollision(mBorder)) {
-            doCollisionWithBorder(Ball.HORIZONTAL_COLLISION);
+        if (checkBricksCollision())
             return;
-        }
-        if (mBall.isInnerVerticalCollision(mBorder)) {
-            doCollisionWithBorder(Ball.VERTICAL_COLLISION);
+        if (checkWallCollision())
             return;
-        }
-
-        // check hole collision
-        if (mBall.isCollision(mHole)) {
-            doCollisionWithHole();
-        }
+        checkHoleCollision();
     }
 }

@@ -31,22 +31,26 @@ public final class StageManager {
         return nextLevel < mLevelManagerTypes.size() ? mLevelManagerTypes.get(nextLevel) : null;
     }
 
+    private void displayGameover(final LevelManager playingManager) {
+        AlertDialog.Builder builder = SystemAlert.getBuilder();
+        builder.setTitle("Gameover");
+        builder.show();
+    }
+
     private void displayGameWin(final LevelManager playingManager) {
         mPaused = true;
-        final Class lvMgr = getNextLevelManager(playingManager.getCurrentLevel());
+        final Class levelManager = getNextLevelManager(playingManager.getCurrentLevel());
         AlertDialog.Builder builder = SystemAlert.getBuilder();
         builder.setTitle(R.string.app_name);
-        builder.setMessage(lvMgr != null ? "You win!" : "You are best, WIN WINNNNN!!!");
-        if (lvMgr != null) {
+        builder.setMessage(levelManager != null ? "You win!" : "You are best, WIN WINNNNN!!!");
+        if (levelManager != null) {
             builder.setNegativeButton("Next Level", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     LevelManager instance = null;
                     try {
-                        instance = (LevelManager) lvMgr.newInstance();
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
+                        instance = (LevelManager) levelManager.newInstance();
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     setSceneManager(instance);
@@ -61,9 +65,7 @@ public final class StageManager {
                 try {
                     LevelManager instance = playingManager.getClass().newInstance();
                     setSceneManager(instance);
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 dialog.dismiss();
@@ -90,6 +92,8 @@ public final class StageManager {
             int state = playingManager.getGameState();
             if ((state & LevelManager.GAME_WIN) == LevelManager.GAME_WIN)
                 displayGameWin(playingManager);
+            else if ((state & LevelManager.GAME_OVER) == LevelManager.GAME_OVER)
+                displayGameover(playingManager);
         }
         mSceneManager.update();
     }

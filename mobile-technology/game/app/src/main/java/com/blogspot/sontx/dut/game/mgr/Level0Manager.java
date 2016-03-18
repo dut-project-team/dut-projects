@@ -20,6 +20,16 @@ public class Level0Manager extends LevelManager {
         return 7.0f;
     }
 
+    @Override
+    protected int getCountdownMinutes() {
+        return 0;
+    }
+
+    @Override
+    protected int getCountdownSeconds() {
+        return 30;
+    }
+
     private void initializeHode() {
         Hole hole = new Hole(mPlayableBound.left + mPlayableBound.width() / 2.0f - HOLE_RADIUS, mPlayableBound.top, Color.BLACK);
         hole.setMovableBound(mPlayableBound);
