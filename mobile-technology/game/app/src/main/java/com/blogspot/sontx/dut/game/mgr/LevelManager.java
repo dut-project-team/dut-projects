@@ -58,6 +58,7 @@ public abstract class LevelManager extends SceneManager {
 
     private int mGameState = GAME_PLAYING;
     private boolean mLastCollisionWithBar = false;
+    private boolean mLastCollisionWithWall = false;
 
     public LevelManager() {
         float left = clientRectangle.left;
@@ -132,10 +133,8 @@ public abstract class LevelManager extends SceneManager {
     }
 
     private void doCollisionWithBar(int direction) {
-        if (!mLastCollisionWithBar) {
-            SoundManager.playSound(SOUND_INDEX_COLLISION_BAR);
-            reflect(direction);
-        }
+        SoundManager.playSound(SOUND_INDEX_COLLISION_BAR);
+        reflect(direction);
     }
 
     private void doCollisionWithHole() {
@@ -201,7 +200,7 @@ public abstract class LevelManager extends SceneManager {
     }
 
     private boolean checkBarCollision() {
-        if (mBall.isCollision(mBar)) {
+        if (!mLastCollisionWithBar && mBall.isCollision(mBar)) {
             doCollisionWithBar(mBall.checkOuterCollision(mBar));
             mLastCollisionWithBar = true;
             return true;
@@ -224,14 +223,18 @@ public abstract class LevelManager extends SceneManager {
     }
 
     private boolean checkWallCollision() {
-        if (mBall.isInnerHorizontalCollision(mBorder)) {
-            doCollisionWithBorder(Ball.HORIZONTAL_COLLISION);
-            return true;
+        if (!mLastCollisionWithWall && mBall.isCollision(mBorder)) {
+            mLastCollisionWithWall = true;
+            if (mBall.isInnerHorizontalCollision(mBorder)) {
+                doCollisionWithBorder(Ball.HORIZONTAL_COLLISION);
+                return true;
+            }
+            if (mBall.isInnerVerticalCollision(mBorder)) {
+                doCollisionWithBorder(Ball.VERTICAL_COLLISION);
+                return true;
+            }
         }
-        if (mBall.isInnerVerticalCollision(mBorder)) {
-            doCollisionWithBorder(Ball.VERTICAL_COLLISION);
-            return true;
-        }
+        mLastCollisionWithWall = false;
         return false;
     }
 
