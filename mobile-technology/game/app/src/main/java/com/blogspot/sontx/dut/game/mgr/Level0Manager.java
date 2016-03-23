@@ -27,10 +27,10 @@ public class Level0Manager extends LevelManager {
 
     @Override
     protected int getCountdownSeconds() {
-        return 30;
+        return 40;
     }
 
-    private void initializeHode() {
+    private void initializeHole() {
         Hole hole = new Hole(mPlayableBound.left + mPlayableBound.width() / 2.0f - HOLE_RADIUS, mPlayableBound.top, Color.BLACK);
         hole.setMovableBound(mPlayableBound);
         hole.setWidth(HOLE_RADIUS * 2.0f);
@@ -43,7 +43,7 @@ public class Level0Manager extends LevelManager {
     public void init() {
         super.init();
         generateBricks(10, Brick.LEVEL0);
-        initializeHode();
+        initializeHole();
         initializeObjects();
     }
 }

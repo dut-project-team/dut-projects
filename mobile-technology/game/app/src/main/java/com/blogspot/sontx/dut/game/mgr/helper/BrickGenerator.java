@@ -17,7 +17,7 @@ import java.util.List;
  */
 public final class BrickGenerator {
     private static final float RATIO_WIDTH_HEIGHT = 2.8f;// w:h
-    private static final float BRICK_MARGIN = 85.0f;
+    private static final float BRICK_MARGIN = 5.0f;
 
     private final RectF mBound;
     private final float mBrickWidth;

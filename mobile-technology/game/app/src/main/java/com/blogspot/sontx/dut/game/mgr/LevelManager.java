@@ -40,7 +40,7 @@ public abstract class LevelManager extends SceneManager {
     private static final int SOUND_INDEX_COLLISION_BAR          = 2;
     private static final int SOUND_INDEX_WIN                    = 3;
 
-    private static final float GAME_INFO_PANEL_HEIGHT           = 200.0f;
+    private static final float GAME_INFO_PANEL_HEIGHT           = 75.0f;
     private static final float GAME_INFO_PANEL_MARGIN_TOP       = 50.0f;
     private static final float GAME_INFO_PANEL_MARGIN_LEFT      = 10.0f;
     private static final float GAME_INFO_PANEL_MARGIN_RIGHT     = GAME_INFO_PANEL_MARGIN_LEFT;
@@ -79,6 +79,10 @@ public abstract class LevelManager extends SceneManager {
     protected abstract int getCountdownMinutes();
 
     protected abstract int getCountdownSeconds();
+
+    protected int getBrickColumns() {
+        return 8;
+    }
 
     private void generateBall() {
         Ball ball = new Ball(
@@ -156,7 +160,8 @@ public abstract class LevelManager extends SceneManager {
     private void initializeBrickGenerator() {
         RectF brickArea = new RectF(mPlayableBound);
         brickArea.bottom = mPlayableBound.top + mPlayableBound.height() * 0.5f;
-        mBrickGenerator = new BrickGenerator(4, brickArea, this);
+        brickArea.top += HOLE_RADIUS * 2.0f;
+        mBrickGenerator = new BrickGenerator(getBrickColumns(), brickArea, this);
     }
 
     private void initializeGameInfoPanel() {
