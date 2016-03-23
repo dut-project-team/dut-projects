@@ -80,6 +80,7 @@ public final class StageManager {
         setSceneManager(new Level0Manager());
         mLevelManagerTypes.add(Level0Manager.class);
         mLevelManagerTypes.add(Level1Manager.class);
+        mLevelManagerTypes.add(Level2Manager.class);
     }
 
     public void draw(Canvas canvas) {
