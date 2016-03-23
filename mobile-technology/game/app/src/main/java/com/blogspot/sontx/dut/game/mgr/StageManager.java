@@ -31,7 +31,8 @@ public final class StageManager {
         return nextLevel < mLevelManagerTypes.size() ? mLevelManagerTypes.get(nextLevel) : null;
     }
 
-    private void displayGameover(final LevelManager playingManager) {
+    private void displayGameover(final LevelManager levelManager) {
+        mPaused = true;
         AlertDialog.Builder builder = SystemAlert.getBuilder();
         builder.setTitle("Gameover");
         builder.show();
@@ -78,6 +79,7 @@ public final class StageManager {
     public void init() {
         setSceneManager(new Level0Manager());
         mLevelManagerTypes.add(Level0Manager.class);
+        mLevelManagerTypes.add(Level1Manager.class);
     }
 
     public void draw(Canvas canvas) {
