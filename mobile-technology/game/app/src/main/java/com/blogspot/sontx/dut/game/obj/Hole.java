@@ -1,8 +1,5 @@
 package com.blogspot.sontx.dut.game.obj;
 
-import android.graphics.Canvas;
-
-import com.blogspot.sontx.dut.game.R;
 import com.blogspot.sontx.dut.game.lib.BitmapLoader;
 
 /**
@@ -10,6 +7,8 @@ import com.blogspot.sontx.dut.game.lib.BitmapLoader;
  * Created by Noem on 17/1/2016.
  */
 public class Hole extends MovableObject {
+    private final int mHoleBitmapResource;
+
     @Override
     public void setSpeedX(float speed) {
         super.setSpeedX(speed);
@@ -24,12 +23,13 @@ public class Hole extends MovableObject {
 
     @Override
     public void init() {
-        setBitmap(BitmapLoader.getBitmapById(R.drawable.hole));
-        stretchBitmapToRectangle();
+        setBitmap(BitmapLoader.getBitmapById(mHoleBitmapResource));
+        stretchBitmapByWidth();
     }
 
-    public Hole(float x, float y, int color) {
-        super(x, y, color);
+    public Hole(float x, float y, int holeBitmapResource) {
+        super(x, y);
+        mHoleBitmapResource = holeBitmapResource;
     }
 
     @Override

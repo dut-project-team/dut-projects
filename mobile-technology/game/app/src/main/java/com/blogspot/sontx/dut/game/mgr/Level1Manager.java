@@ -1,7 +1,6 @@
 package com.blogspot.sontx.dut.game.mgr;
 
-import android.graphics.Color;
-
+import com.blogspot.sontx.dut.game.R;
 import com.blogspot.sontx.dut.game.obj.Brick;
 import com.blogspot.sontx.dut.game.obj.Hole;
 
@@ -30,8 +29,13 @@ public class Level1Manager extends LevelManager {
         return 25;
     }
 
+    @Override
+    protected int getBackgroundResource() {
+        return R.drawable.bg2;
+    }
+
     private void initializeHole() {
-        Hole hole = new Hole(mPlayableBound.left + mPlayableBound.width() / 2.0f - HOLE_RADIUS, mPlayableBound.top, Color.BLACK);
+        Hole hole = new Hole(mPlayableBound.left + mPlayableBound.width() / 2.0f - HOLE_RADIUS, mPlayableBound.top, R.drawable.cloud);
         hole.setMovableBound(mPlayableBound);
         hole.setWidth(HOLE_RADIUS * 2.0f);
         hole.setHeight(HOLE_HEIGHT);

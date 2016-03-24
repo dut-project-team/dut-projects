@@ -45,7 +45,7 @@ public class Bar extends MovableObject {
     @Override
     public void init() {
         setBitmap(BitmapLoader.getBitmapById(R.drawable.bar));
-        stretchBitmapToRectangle();
+        stretchBitmapByWidth();
     }
 
     @Override

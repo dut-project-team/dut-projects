@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Noem on 17/1/2016.
  */
 public final class BrickGenerator {
-    private static final float RATIO_WIDTH_HEIGHT = 2.8f;// w:h
+    private static final float RATIO_WIDTH_HEIGHT = 1.0f;// w:h
     private static final float BRICK_MARGIN = 5.0f;
 
     private final RectF mBound;

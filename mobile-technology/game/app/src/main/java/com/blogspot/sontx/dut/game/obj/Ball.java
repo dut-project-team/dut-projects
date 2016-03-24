@@ -19,7 +19,7 @@ public class Ball extends MovableObject {
         float width = r * 2.0f;
         mRect.right = mRect.left + width;
         mRect.bottom = mRect.top + width;
-        stretchBitmapToRectangle();
+        stretchBitmapByWidth();
     }
 
     public Ball(float x, float y, float r) {
@@ -30,7 +30,7 @@ public class Ball extends MovableObject {
     @Override
     public void init() {
         setBitmap(BitmapLoader.getBitmapById(R.drawable.ball));
-        stretchBitmapToRectangle();
+        stretchBitmapByWidth();
     }
 
     public boolean isInnerVerticalCollision(GameObject obj) {

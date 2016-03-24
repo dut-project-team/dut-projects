@@ -7,6 +7,7 @@ import com.blogspot.sontx.dut.game.R;
 import com.blogspot.sontx.dut.game.lib.SoundManager;
 import com.blogspot.sontx.dut.game.mgr.helper.BrickGenerator;
 import com.blogspot.sontx.dut.game.mgr.helper.GameInfoPanel;
+import com.blogspot.sontx.dut.game.obj.Background;
 import com.blogspot.sontx.dut.game.obj.Ball;
 import com.blogspot.sontx.dut.game.obj.Bar;
 import com.blogspot.sontx.dut.game.obj.Border;
@@ -29,7 +30,7 @@ public abstract class LevelManager extends SceneManager {
     protected static final float HOLE_RADIUS                    = 25.0f;
     protected static final float HOLE_HEIGHT                    = 50.0f;
 
-    protected static final float BALL_RADIUS                    = 20.0f;
+    protected static final float BALL_RADIUS                    = 40.0f;
 
     private static final float BAR_WIDTH                        = 250.0f;
     private static final float BAR_HEIGHT                       = 20.0f;
@@ -52,6 +53,7 @@ public abstract class LevelManager extends SceneManager {
     private Hole mHole;
     private Bar mBar;
     private Border mBorder;
+    private Background mBackground;
 
     private BrickGenerator mBrickGenerator;
     private GameInfoPanel mGameInfoPanel;
@@ -80,6 +82,8 @@ public abstract class LevelManager extends SceneManager {
     protected abstract int getCountdownMinutes();
 
     protected abstract int getCountdownSeconds();
+
+    protected abstract int getBackgroundResource();
 
     protected int getBrickColumns() {
         return 8;
@@ -156,6 +160,13 @@ public abstract class LevelManager extends SceneManager {
         registerObject(mBorder);
     }
 
+    private void initializeBackground() {
+        mBackground = new Background();
+        mBackground.setBackgroundRectangle(clientRectangle);
+        mBackground.setBitmap(getBackgroundResource());
+        registerBackgroundObject(mBackground);
+    }
+
     private void initializeBrickGenerator() {
         RectF brickArea = new RectF(mPlayableBound);
         brickArea.bottom = mPlayableBound.top + mPlayableBound.height() * 0.5f;
@@ -186,6 +197,7 @@ public abstract class LevelManager extends SceneManager {
     @Override
     public void init() {
         initializeSounds();
+        initializeBackground();
         initializeBorder();
         initializeBrickGenerator();
         initializeGameInfoPanel();

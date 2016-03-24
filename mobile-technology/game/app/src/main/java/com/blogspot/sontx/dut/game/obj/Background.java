@@ -10,8 +10,8 @@ import com.blogspot.sontx.dut.game.lib.BitmapLoader;
  * Created by noem on 23/03/2016.
  */
 public class Background extends GameObject {
-    public Background(float x, float y) {
-        super(x, y);
+    public Background() {
+        super(0.0f, 0.0f);
     }
 
     public void setBackgroundRectangle(RectF rectangle) {

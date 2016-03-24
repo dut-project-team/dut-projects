@@ -13,7 +13,7 @@ public class AboutManager extends MenuManager {
 
     @Override
     public void init() {
-        Background background = new Background(0, 0);
+        Background background = new Background();
         background.setBackgroundRectangle(clientRectangle);
         background.setBitmap(R.drawable.about_scene);
         registerObject(background);

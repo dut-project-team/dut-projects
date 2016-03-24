@@ -77,6 +77,25 @@ public abstract class GameObject {
         }
     }
 
+    protected void stretchBitmapByWidth() {
+        mBitmap = stretchBitmapByWidth(mBitmap);
+    }
+
+    protected Bitmap stretchBitmapByWidth(Bitmap bitmap) {
+        if (bitmap != null) {
+            float ratio = bitmap.getWidth() / (float) bitmap.getHeight();
+            int newHeight = (int) (mRect.width() / ratio);
+            mRect.bottom = mRect.top + newHeight;
+            Bitmap stretchBitmap = BitmapLoader.stretchBitmap(bitmap, (int) mRect.width(), newHeight);
+            if (!stretchBitmap.equals(bitmap)) {
+                bitmap.recycle();
+                bitmap = stretchBitmap;
+            }
+            return bitmap;
+        }
+        return null;
+    }
+
     protected void setBitmap(Bitmap bitmap) {
         this.mBitmap = bitmap;
     }

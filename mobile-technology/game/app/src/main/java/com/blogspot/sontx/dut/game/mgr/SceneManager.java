@@ -36,6 +36,10 @@ public abstract class SceneManager {
         return mObjects;
     }
 
+    protected void registerBackgroundObject(GameObject object) {
+        mObjects.add(0, object);
+    }
+
     public void registerObject(GameObject object) {
         mObjects.add(object);
     }

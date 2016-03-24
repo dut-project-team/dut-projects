@@ -43,13 +43,13 @@ public class Brick extends GameObject {
     public void init() {
         switch (mLevel) {
             case LEVEL0:
-                setBitmap(BitmapLoader.getBitmapById(R.drawable.blue_brick));
+                setBitmap(BitmapLoader.getBitmapById(R.drawable.brick1));
                 break;
             case LEVEL1:
-                setBitmap(BitmapLoader.getBitmapById(R.drawable.pink_brick));
+                setBitmap(BitmapLoader.getBitmapById(R.drawable.brick2));
                 break;
             case LEVEL2:
-                setBitmap(BitmapLoader.getBitmapById(R.drawable.yellow_brick));
+                setBitmap(BitmapLoader.getBitmapById(R.drawable.brick3));
                 break;
         }
         stretchBitmapToRectangle();

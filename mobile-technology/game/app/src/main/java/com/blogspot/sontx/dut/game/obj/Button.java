@@ -24,15 +24,6 @@ public class Button extends GameObject {
     public void init() {
     }
 
-    private Bitmap stretchBitmapByWidth(Bitmap bitmap) {
-        float ratio = bitmap.getWidth() / (float) bitmap.getHeight();
-        int newHeight = (int) (mRect.width() / ratio);
-        Bitmap stretchBitmap = BitmapLoader.stretchBitmap(bitmap, (int) mRect.width(), newHeight);
-        if (!stretchBitmap.equals(bitmap))
-            bitmap.recycle();
-        return stretchBitmap;
-    }
-
     public void setBitmap(int bitmapRes) {
         Bitmap bitmap = BitmapLoader.getBitmapById(bitmapRes);
         super.setBitmap(stretchBitmapByWidth(bitmap));
