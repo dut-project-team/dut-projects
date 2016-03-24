@@ -49,6 +49,7 @@ public final class StageManager {
                 closePopupMenu(dialog);
             }
         });
+        showPopupMenu(builder);
     }
 
     private AlertDialog.Builder getPopupMenu(String message) {
