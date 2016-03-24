@@ -1,13 +1,16 @@
 package com.blogspot.sontx.dut.game;
 
+import android.app.Activity;
 import android.app.Application;
 import android.graphics.Canvas;
 
 import com.blogspot.sontx.dut.game.lib.SoundManager;
 import com.blogspot.sontx.dut.game.mgr.StageManager;
+import com.blogspot.sontx.dut.game.ui.MainActivity;
 import com.blogspot.sontx.dut.game.ui.WindowSurface;
 
 /**
+ * Copyright by sontx, www.sontx.in
  * Created by Noem on 16/1/2016.
  */
 public final class App extends Application implements WindowSurface.WindowEventListener {
@@ -18,6 +21,12 @@ public final class App extends Application implements WindowSurface.WindowEventL
 
     public static App getInstance() {
         return instance;
+    }
+
+    public void exit() {
+        Activity mainActivity = MainActivity.getInstance();
+        if (mainActivity != null)
+            mainActivity.finish();
     }
 
     @Override
@@ -43,7 +52,7 @@ public final class App extends Application implements WindowSurface.WindowEventL
         mSurfaceWidth = WindowSurface.getInstance().getWidth();
         mSurfaceHeight = WindowSurface.getInstance().getHeight();
         SoundManager.createInstance(getApplicationContext());
-        mStageManager = new StageManager();
+        mStageManager = StageManager.getInstance();
         mStageManager.init();
     }
 

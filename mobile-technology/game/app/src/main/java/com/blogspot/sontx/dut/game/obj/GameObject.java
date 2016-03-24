@@ -20,6 +20,14 @@ public abstract class GameObject {
     protected final Paint mPaint;
     private Object mTag;
 
+    public void setTop(float top) {
+        mRect.top = top;
+    }
+
+    public void setLeft(float left) {
+        mRect.left = left;
+    }
+
     public float getTop() {
         return mRect.top;
     }
@@ -104,5 +112,21 @@ public abstract class GameObject {
     public boolean isCollision(GameObject obj) {
         return mRect.left <= obj.mRect.right && obj.mRect.left <= mRect.right
                 && mRect.top <= obj.mRect.bottom && obj.mRect.top <= mRect.bottom;
+    }
+
+    public float getBottom() {
+        return mRect.bottom;
+    }
+
+    public void setRight(float right) {
+        this.mRect.right = right;
+    }
+
+    public void setBottom(float bottom) {
+        this.mRect.bottom = bottom;
+    }
+
+    public float getHeight() {
+        return mRect.height();
     }
 }

@@ -15,9 +15,18 @@ import java.util.List;
  * Created by Noem on 17/1/2016.
  */
 public final class StageManager {
+    private static StageManager instance = null;
     private SceneManager mSceneManager = null;
     private List<Class> mLevelManagerTypes = new ArrayList<>();
     private boolean mPaused = false;
+
+    public static StageManager getInstance() {
+        if (instance == null)
+            instance = new StageManager();
+        return instance;
+    }
+
+    private StageManager() {}
 
     private void setSceneManager(SceneManager sceneManager) {
         if (mSceneManager != null)
@@ -31,53 +40,74 @@ public final class StageManager {
         return nextLevel < mLevelManagerTypes.size() ? mLevelManagerTypes.get(nextLevel) : null;
     }
 
-    private void displayGameover(final LevelManager levelManager) {
-        mPaused = true;
+    private void displayGameover(final LevelManager currentLevelManager) {
+        AlertDialog.Builder builder = getPopupMenu("Gameoverrrrrrrr, you are stupid men :|");
+        builder.setPositiveButton("Play again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startLevel(currentLevelManager.getClass());
+                closePopupMenu(dialog);
+            }
+        });
+    }
+
+    private AlertDialog.Builder getPopupMenu(String message) {
         AlertDialog.Builder builder = SystemAlert.getBuilder();
-        builder.setTitle("Gameover");
+        builder.setTitle(R.string.app_name);
+        builder.setMessage(message);
+        builder.setNegativeButton("Main menu", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                showMainMenu();
+                closePopupMenu(dialog);
+            }
+        });
+        return builder;
+    }
+
+    private void showPopupMenu(AlertDialog.Builder builder) {
+        mPaused = true;
         builder.show();
     }
 
-    private void displayGameWin(final LevelManager playingManager) {
-        mPaused = true;
-        final Class levelManager = getNextLevelManager(playingManager.getCurrentLevel());
-        AlertDialog.Builder builder = SystemAlert.getBuilder();
-        builder.setTitle(R.string.app_name);
-        builder.setMessage(levelManager != null ? "You win!" : "You are best, WIN WINNNNN!!!");
+    private void closePopupMenu(DialogInterface dialog) {
+        mPaused = false;
+        dialog.dismiss();
+    }
+
+    private void startLevel(Class<? extends LevelManager> levelManagerClass) {
+        try {
+            LevelManager instance = levelManagerClass.newInstance();
+            setSceneManager(instance);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void displayGameWin(final LevelManager currentLevelManager) {
+        final Class levelManager = getNextLevelManager(currentLevelManager.getCurrentLevel());
+        AlertDialog.Builder builder = getPopupMenu(levelManager != null ? "You win!" : "You are best, WIN WINNNNN!!!");
         if (levelManager != null) {
-            builder.setNegativeButton("Next Level", new DialogInterface.OnClickListener() {
+            builder.setNeutralButton("Next Level", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    LevelManager instance = null;
-                    try {
-                        instance = (LevelManager) levelManager.newInstance();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    setSceneManager(instance);
-                    dialog.dismiss();
-                    mPaused = false;
+                    startLevel(levelManager);
+                    closePopupMenu(dialog);
                 }
             });
         }
         builder.setPositiveButton("Play Again", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                try {
-                    LevelManager instance = playingManager.getClass().newInstance();
-                    setSceneManager(instance);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                dialog.dismiss();
-                mPaused = false;
+                startLevel(currentLevelManager.getClass());
+                closePopupMenu(dialog);
             }
         });
-        builder.show();
+        showPopupMenu(builder);
     }
 
     public void init() {
-        setSceneManager(new Level0Manager());
+        setSceneManager(new MainMenuManager());
         mLevelManagerTypes.add(Level0Manager.class);
         mLevelManagerTypes.add(Level1Manager.class);
         mLevelManagerTypes.add(Level2Manager.class);
@@ -103,5 +133,17 @@ public final class StageManager {
 
     public void destroy() {
         mSceneManager.destroy();
+    }
+
+    public void startGame() {
+        setSceneManager(new Level0Manager());
+    }
+
+    public void showAbout() {
+        setSceneManager(new AboutManager());
+    }
+
+    public void showMainMenu() {
+        setSceneManager(new MainMenuManager());
     }
 }
