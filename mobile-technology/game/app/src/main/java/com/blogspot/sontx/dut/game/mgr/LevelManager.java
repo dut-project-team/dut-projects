@@ -160,7 +160,7 @@ public abstract class LevelManager extends SceneManager {
     private void initializeBrickGenerator() {
         RectF brickArea = new RectF(mPlayableBound);
         brickArea.bottom = mPlayableBound.top + mPlayableBound.height() * 0.5f;
-        brickArea.top += HOLE_RADIUS * 2.0f;
+        brickArea.top += HOLE_RADIUS * 2.0f + 100.0f;
         mBrickGenerator = new BrickGenerator(getBrickColumns(), brickArea, this);
     }
 
