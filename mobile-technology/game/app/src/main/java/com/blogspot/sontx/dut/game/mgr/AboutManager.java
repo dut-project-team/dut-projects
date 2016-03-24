@@ -1,8 +1,6 @@
 package com.blogspot.sontx.dut.game.mgr;
 
 import com.blogspot.sontx.dut.game.R;
-import com.blogspot.sontx.dut.game.mgr.helper.MenuManager;
-import com.blogspot.sontx.dut.game.obj.Background;
 import com.blogspot.sontx.dut.game.obj.Button;
 
 /**
@@ -12,12 +10,12 @@ import com.blogspot.sontx.dut.game.obj.Button;
 public class AboutManager extends MenuManager {
 
     @Override
-    public void init() {
-        Background background = new Background();
-        background.setBackgroundRectangle(clientRectangle);
-        background.setBitmap(R.drawable.about_scene);
-        registerObject(background);
+    protected int getBackgroundResource() {
+        return R.drawable.about_scene;
+    }
 
+    @Override
+    public void init() {
         Button backButton = new Button(0, 0);
         putButtonAtMiddle(backButton);
         backButton.setBitmap(R.drawable.about_scene_back);
@@ -26,6 +24,8 @@ public class AboutManager extends MenuManager {
         backButton.setTop(backButton.getBottom() - backButtonHeight);
         backButton.setOnClickListener(this);
         registerObject(backButton);
+
+        super.init();
     }
 
     @Override

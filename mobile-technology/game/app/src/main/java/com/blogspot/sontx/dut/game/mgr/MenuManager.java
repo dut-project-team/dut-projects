@@ -1,4 +1,4 @@
-package com.blogspot.sontx.dut.game.mgr.helper;
+package com.blogspot.sontx.dut.game.mgr;
 
 import com.blogspot.sontx.dut.game.mgr.SceneManager;
 import com.blogspot.sontx.dut.game.obj.Button;

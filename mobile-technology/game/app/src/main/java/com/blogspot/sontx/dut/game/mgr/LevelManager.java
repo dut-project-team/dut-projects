@@ -34,7 +34,7 @@ public abstract class LevelManager extends SceneManager {
 
     private static final float BAR_WIDTH                        = 250.0f;
     private static final float BAR_HEIGHT                       = 20.0f;
-    private static final float BAR_MARGIN_BOTTOM                = 300.0f;
+    private static final float BAR_MARGIN_BOTTOM                = 100.0f;
 
     private static final int SOUND_INDEX_COLLISION_WALL         = 0;
     private static final int SOUND_INDEX_COLLISION_BRICK        = 1;
@@ -53,7 +53,6 @@ public abstract class LevelManager extends SceneManager {
     private Hole mHole;
     private Bar mBar;
     private Border mBorder;
-    private Background mBackground;
 
     private BrickGenerator mBrickGenerator;
     private GameInfoPanel mGameInfoPanel;
@@ -82,8 +81,6 @@ public abstract class LevelManager extends SceneManager {
     protected abstract int getCountdownMinutes();
 
     protected abstract int getCountdownSeconds();
-
-    protected abstract int getBackgroundResource();
 
     protected int getBrickColumns() {
         return 8;
@@ -160,13 +157,6 @@ public abstract class LevelManager extends SceneManager {
         registerObject(mBorder);
     }
 
-    private void initializeBackground() {
-        mBackground = new Background();
-        mBackground.setBackgroundRectangle(clientRectangle);
-        mBackground.setBitmap(getBackgroundResource());
-        registerBackgroundObject(mBackground);
-    }
-
     private void initializeBrickGenerator() {
         RectF brickArea = new RectF(mPlayableBound);
         brickArea.bottom = mPlayableBound.top + mPlayableBound.height() * 0.5f;
@@ -197,12 +187,12 @@ public abstract class LevelManager extends SceneManager {
     @Override
     public void init() {
         initializeSounds();
-        initializeBackground();
         initializeBorder();
         initializeBrickGenerator();
         initializeGameInfoPanel();
         initializeBar();
         generateBall();
+        super.init();
     }
 
     @Override

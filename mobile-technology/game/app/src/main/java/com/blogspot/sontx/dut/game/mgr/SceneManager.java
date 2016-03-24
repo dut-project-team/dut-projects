@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 
 import com.blogspot.sontx.dut.game.App;
+import com.blogspot.sontx.dut.game.obj.Background;
 import com.blogspot.sontx.dut.game.obj.GameObject;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public abstract class SceneManager {
     protected final RectF clientRectangle;
-
+    private Background mBackground;
     private final List<GameObject> mObjects = new ArrayList<>();
 
     public GameObject getObjectByTag(Object tag) {
@@ -32,12 +33,10 @@ public abstract class SceneManager {
         return null;
     }
 
+    protected abstract int getBackgroundResource();
+
     protected Iterable<GameObject> getObjects() {
         return mObjects;
-    }
-
-    protected void registerBackgroundObject(GameObject object) {
-        mObjects.add(0, object);
     }
 
     public void registerObject(GameObject object) {
@@ -66,7 +65,16 @@ public abstract class SceneManager {
         }
     }
 
-    public abstract void init();
+    private void initializeBackground() {
+        mBackground = new Background();
+        mBackground.setBackgroundRectangle(clientRectangle);
+        mBackground.setBitmap(getBackgroundResource());
+        mObjects.add(0, mBackground);
+    }
+
+    public void init() {
+        initializeBackground();
+    }
 
     public void destroy() {
         for (GameObject obj : mObjects) {

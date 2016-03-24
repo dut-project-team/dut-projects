@@ -2,7 +2,6 @@ package com.blogspot.sontx.dut.game.mgr;
 
 import com.blogspot.sontx.dut.game.App;
 import com.blogspot.sontx.dut.game.R;
-import com.blogspot.sontx.dut.game.mgr.helper.MenuManager;
 import com.blogspot.sontx.dut.game.obj.Button;
 
 /**
@@ -10,6 +9,11 @@ import com.blogspot.sontx.dut.game.obj.Button;
  * Created by noem on 23/03/2016.
  */
 public class MainMenuManager extends MenuManager {
+    @Override
+    protected int getBackgroundResource() {
+        return R.drawable.main_menu;
+    }
+
     @Override
     public void init() {
         Button startButton = new Button(0, 0);
@@ -35,6 +39,8 @@ public class MainMenuManager extends MenuManager {
         putButtonAtMiddle(quitButton);
         quitButton.setBitmap(R.drawable.quit_button);
         registerObject(quitButton);
+
+        super.init();
     }
 
     @Override
