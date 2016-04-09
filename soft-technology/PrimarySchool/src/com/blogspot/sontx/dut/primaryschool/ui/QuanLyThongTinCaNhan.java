@@ -1,13 +1,15 @@
 package com.blogspot.sontx.dut.primaryschool.ui;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.Font;
 
 public class QuanLyThongTinCaNhan extends Window {
+	private static final long serialVersionUID = 1L;
 	private JTextField soDienThoai;
+	private JTextArea diaChiNha;
+	
 	public QuanLyThongTinCaNhan() {
 		
 		JLabel lblQunLThng = new JLabel("Qu\u1EA3n l\u00FD th\u00F4ng tin c\u00E1 nh\u00E2n");
@@ -52,17 +54,32 @@ public class QuanLyThongTinCaNhan extends Window {
 		getContentPane().add(soDienThoai);
 		soDienThoai.setColumns(10);
 		
-		JTextArea diaChiNha = new JTextArea();
+		diaChiNha = new JTextArea();
 		diaChiNha.setText("sfsfsdf");
 		diaChiNha.setBounds(350, 183, 217, 60);
 		getContentPane().add(diaChiNha);
 		
 		JButton nutLuuThongTin = new JButton("L\u01B0u th\u00F4ng tin");
 		nutLuuThongTin.setBounds(281, 266, 103, 23);
+		nutLuuThongTin.addActionListener(this);
+		nutLuuThongTin.setActionCommand("LuuThongTin");
 		getContentPane().add(nutLuuThongTin);
 		
 		JButton nutTroVe = new JButton("Tr\u1EDF v\u1EC1");
 		nutTroVe.setBounds(418, 266, 89, 23);
+		nutTroVe.addActionListener(this);
+		nutTroVe.setActionCommand("TroVe");
 		getContentPane().add(nutTroVe);
+		
+		this.setVisible(true);
+	}
+
+	@Override
+	protected void onClicked(String whoClicked) {
+		if ("LuuThongTin".equals(whoClicked)) {
+			
+		} else if ("TroVe".equals(whoClicked)) {
+			
+		}
 	}
 }

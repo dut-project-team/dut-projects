@@ -1,11 +1,11 @@
 package com.blogspot.sontx.dut.primaryschool.ui;
 import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 
 public class ThayDoiMatKhau extends Window {
+	private static final long serialVersionUID = 1L;
 	private JPasswordField matKhauMoi;
 	private JPasswordField xacNhanMatKhauMoi;
 	public ThayDoiMatKhau() {
@@ -25,6 +25,8 @@ public class ThayDoiMatKhau extends Window {
 		
 		JButton nutDongY = new JButton("\u0110\u1ED3ng \u00FD");
 		nutDongY.setBounds(347, 220, 89, 23);
+		nutDongY.addActionListener(this);
+		nutDongY.setActionCommand("DongY");
 		getContentPane().add(nutDongY);
 		
 		matKhauMoi = new JPasswordField();
@@ -34,5 +36,14 @@ public class ThayDoiMatKhau extends Window {
 		xacNhanMatKhauMoi = new JPasswordField();
 		xacNhanMatKhauMoi.setBounds(393, 173, 128, 20);
 		getContentPane().add(xacNhanMatKhauMoi);
+		
+		this.setVisible(true);
+	}
+	
+	@Override
+	protected void onClicked(String whoClicked) {
+		if ("DongY".equals(whoClicked)) {
+			
+		}
 	}
 }
