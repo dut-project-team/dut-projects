@@ -10,6 +10,10 @@ public class ButtonPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private ButtonGroup ButtonGroup = new ButtonGroup();
 
+	public ButtonPanel() {
+		setLayout(null);
+	}
+	
 	@Override
 	public Component add(Component comp) {
 		if (comp instanceof JRadioButton)
