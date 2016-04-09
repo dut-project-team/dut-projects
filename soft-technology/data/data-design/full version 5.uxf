@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>8</zoom_level>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>168</x>
+      <y>184</y>
+      <w>80</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Khoi
+--
+TenKhoi
+--
+*KhoiID*
+--
+/ThoiGianID/
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>24</x>
+      <y>184</y>
+      <w>88</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>ThoiGian
+--
+TenNam
+--
+TenKy
+--
+*ThoiGianID*
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>368</x>
+      <y>200</y>
+      <w>96</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>Lop
+--
+TenLop
+--
+*LopID*
+--
+/KhoiID/
+--
+/GiaoVienID/
+--
+/ThoiKhoaBieuID/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>88</x>
+      <y>216</y>
+      <w>96</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=1..5</panel_attributes>
+    <additional_attributes>24;24;80;24</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>224</x>
+      <y>200</y>
+      <w>160</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=1..20</panel_attributes>
+    <additional_attributes>24;24;144;56</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>440</x>
+      <y>176</y>
+      <w>112</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=20..50</panel_attributes>
+    <additional_attributes>24;64;96;24</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>672</x>
+      <y>152</y>
+      <w>80</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>DiemThi
+--
+DiemMieng
+--
+Diem15Phut
+--
+Diem1Tiet
+--
+DiemThi
+--
+*DiemThiID*
+--
+/MonHocID/
+--
+/HocBaID/
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>960</x>
+      <y>304</y>
+      <w>96</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>MonHoc
+--
+*MonHocID*
+--
+TenMonHoc</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>536</x>
+      <y>160</y>
+      <w>80</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>HocBa
+--
+HocSinhID
+--
+LopID
+--
+*HocBaID*
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>336</x>
+      <y>24</y>
+      <w>80</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>HocSinh
+--
+TenHocSinh
+--
+QueQuan
+--
+GioiTinh
+--
+NgaySinh
+--
+ThoiGianVao
+--
+ThoiGianRa
+--
+*HocSinhID*
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>592</x>
+      <y>192</y>
+      <w>96</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=7</panel_attributes>
+    <additional_attributes>24;24;80;88</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>392</x>
+      <y>112</y>
+      <w>160</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=1..n</panel_attributes>
+    <additional_attributes>24;24;144;72</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>528</x>
+      <y>320</y>
+      <w>80</w>
+      <h>152</h>
+    </coordinates>
+    <panel_attributes>GiaoVien
+--
+TenGiaoVien
+--
+GioiTinh
+--
+NgaySinh
+--
+DiaChi
+--
+SoDienThoai
+--
+*GiaoVienID*
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>440</x>
+      <y>248</y>
+      <w>104</w>
+      <h>184</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=1</panel_attributes>
+    <additional_attributes>24;24;88;168</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>728</x>
+      <y>240</y>
+      <w>248</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>m1=n
+m2=n</panel_attributes>
+    <additional_attributes>24;24;232;88</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>192</x>
+      <y>344</y>
+      <w>112</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>ThoiKhoaBieu
+--
+BuoiHoc
+--
+*ThoiKhoaBieuID*
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>264</y>
+      <w>104</w>
+      <h>136</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=1</panel_attributes>
+    <additional_attributes>88;24;24;120</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>392</x>
+      <y>448</y>
+      <w>96</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>Thu
+--
+TenThu
+--
+*ThuID*
+--
+/ThoiKhoaBieuID/
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>752</x>
+      <y>496</y>
+      <w>80</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>TietHoc
+--
+MonHocID
+--
+*TietHocID*
+--
+/ThuID/
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>464</x>
+      <y>464</y>
+      <w>304</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=5</panel_attributes>
+    <additional_attributes>24;24;288;88</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>368</y>
+      <w>128</w>
+      <h>152</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=5</panel_attributes>
+    <additional_attributes>24;24;112;136</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>808</x>
+      <y>312</y>
+      <w>168</w>
+      <h>224</h>
+    </coordinates>
+    <panel_attributes>m1=n
+m2=n</panel_attributes>
+    <additional_attributes>24;208;152;24</additional_attributes>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>744</x>
+      <y>328</y>
+      <w>80</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>TaiKhoan
+--
+*TenDapNhap*
+--
+MatKhau
+--
+LoaiTaiKhoan
+--
+/TaiKhoanID/
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Relation</type>
+    <coordinates>
+      <x>584</x>
+      <y>368</y>
+      <w>176</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=1</panel_attributes>
+    <additional_attributes>24;48;160;24</additional_attributes>
+  </element>
+</diagram>
