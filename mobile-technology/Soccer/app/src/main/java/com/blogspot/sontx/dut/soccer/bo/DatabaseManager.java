@@ -1,7 +1,11 @@
 package com.blogspot.sontx.dut.soccer.bo;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;import java.lang.String;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.blogspot.sontx.dut.soccer.bean.Account;
+
+import java.lang.String;
 
 /**
  * Copyright by sontx, www.sontx.in
@@ -39,5 +43,35 @@ public final class DatabaseManager {
             id = cursor.getInt(0);
         cursor.close();
         return id;
+    }
+
+    public Account getAccountById(int accountId) {
+        String sql = "SELECT email FROM accounts WHERE account_id=%d";
+        sql = String.format(sql, accountId);
+        Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
+        Account account = null;
+        if (cursor.moveToFirst()) {
+            account = new Account();
+            account.setId(accountId);
+            account.setEmail(cursor.getString(0));
+        }
+        cursor.close();
+        return account;
+    }
+
+    public boolean checkAccountExists(String email) {
+        String sql = "SELECT * FROM accounts WHERE email='%s'";
+        sql = String.format(sql, email);
+        Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
+        boolean exists = cursor.moveToFirst();
+        cursor.close();
+        return exists;
+    }
+
+    public boolean createAccount(String email, String password) {
+        String sql = "INSERT INTO accounts(email, password) VALUES('%s', '%s')";
+        sql = String.format(sql, email, password);
+        mSQLiteDatabase.execSQL(sql);
+        return true;
     }
 }

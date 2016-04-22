@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -17,44 +16,42 @@ import android.widget.Toast;
 import com.blogspot.sontx.dut.soccer.R;
 import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
 
-public class LoginActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
+
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mConfirmPasswordView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
+        mPasswordView.setOnEditorActionListener(this);
+
+        mConfirmPasswordView = (EditText) findViewById(R.id.confirm_password);
+        mConfirmPasswordView.setOnEditorActionListener(this);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                attemptRegister();
             }
         });
     }
 
-    private void attemptLogin() {
+    private void attemptRegister() {
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mConfirmPasswordView.setError(null);
 
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String confirmPassword = mConfirmPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -66,6 +63,10 @@ public class LoginActivity extends AppCompatActivity {
         } else if (!isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
+            cancel = true;
+        } else if (!confirmPassword.equals(password)) {
+            mConfirmPasswordView.setError(getString(R.string.error_not_match_password));
+            focusView = mConfirmPasswordView;
             cancel = true;
         }
 
@@ -82,19 +83,23 @@ public class LoginActivity extends AppCompatActivity {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            checkLogin(email, password);
+            checkRegister(email, password);
         }
     }
 
-    private void checkLogin(String email, String password) {
-        int id = DatabaseManager.getInstance().getAccountId(email, password);
-        if (id < 0) {
-            Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+    private void checkRegister(String email, String password) {
+        boolean accountExists = DatabaseManager.getInstance().checkAccountExists(email);
+        if (accountExists) {
+            Toast.makeText(RegisterActivity.this, "Email already exists, try another", Toast.LENGTH_SHORT).show();
         } else {
-            Intent intent = new Intent();
-            intent.putExtra("id", id);
-            setResult(RESULT_OK, intent);
-            finish();
+            boolean isSuccess = DatabaseManager.getInstance().createAccount(email, password);
+            if (isSuccess) {
+                int id = DatabaseManager.getInstance().getAccountId(email, password);
+                Intent intent = new Intent();
+                intent.putExtra("id", id);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
         }
     }
 
@@ -105,5 +110,13 @@ public class LoginActivity extends AppCompatActivity {
     private boolean isPasswordValid(String password) {
         return password.length() > 4;
     }
-}
 
+    @Override
+    public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+        if (id == R.id.login || id == EditorInfo.IME_NULL) {
+            attemptRegister();
+            return true;
+        }
+        return false;
+    }
+}
