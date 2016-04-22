@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_change_password) {
 
         } else if (id == R.id.nav_logout) {
-
+            logout();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -147,5 +146,11 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logout() {
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
