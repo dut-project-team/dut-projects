@@ -74,4 +74,10 @@ public final class DatabaseManager {
         mSQLiteDatabase.execSQL(sql);
         return true;
     }
+
+    public void changePassword(int accountId, String password) {
+        String sql = "UPDATE accounts SET password = '%s' WHERE account_id=%d";
+        sql = String.format(sql, password, accountId);
+        mSQLiteDatabase.execSQL(sql);
+    }
 }

@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
 
         } else if (id == R.id.nav_change_password) {
-
+            changePassword();
         } else if (id == R.id.nav_logout) {
             logout();
         } else if (id == R.id.nav_share) {
@@ -157,6 +157,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void changePassword() {
+        Intent intent = new Intent(this, ChangePasswordActivity.class);
+        intent.putExtra("id", mAccountId);
+        startActivity(intent);
     }
 
     private void logout() {

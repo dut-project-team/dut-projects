@@ -7,6 +7,7 @@
     <string name="prompt_confirm_password">Confirm Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_up">Sign up</string>
+    <string name="action_change_password">Change password</string>
     <string name="error_not_match_password">Confirm password not match with password</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
