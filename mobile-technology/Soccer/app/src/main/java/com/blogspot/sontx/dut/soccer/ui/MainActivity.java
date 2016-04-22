@@ -69,14 +69,18 @@ public class MainActivity extends AppCompatActivity
         displayUserEmail();
     }
 
-    private boolean checkAccountIdIsPassed() {
-        Intent intent = getIntent();
-        if (intent != null) {
-            int accountId = intent.getIntExtra("id", -1);
-            if (accountId != -1) {
-                onLoginSuccess(accountId);
-                return true;
-            }
+    private boolean checkAccountIdIsPassed(Bundle bundle) {
+        int accountId = -1;
+        if (bundle != null)
+            accountId = bundle.getInt("id", -1);
+        else {
+            Intent intent = getIntent();
+            if (intent != null)
+                accountId = intent.getIntExtra("id", -1);
+        }
+        if (accountId != -1) {
+            onLoginSuccess(accountId);
+            return true;
         }
         return false;
     }
@@ -87,8 +91,15 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         initializeToolbar();
         registerNavigationItemSelectedListener();
-        if (!checkAccountIdIsPassed())
+        if (!checkAccountIdIsPassed(savedInstanceState))
             requestLogin();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mAccountId != -1)
+            outState.putInt("id", mAccountId);
     }
 
     @Override
