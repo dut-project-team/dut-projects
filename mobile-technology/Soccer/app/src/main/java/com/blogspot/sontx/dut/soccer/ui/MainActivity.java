@@ -2,6 +2,7 @@ package com.blogspot.sontx.dut.soccer.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final int LOGIN_REQUEST_CODE = 1;
     private int mAccountId = -1;
+    private boolean mDoubleBackToExitPressedOnce = false;
 
     private void displayUserEmail() {
         TextView tvEmail = (TextView) findViewById(R.id.tv_user_email);
@@ -124,6 +126,16 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (!mDoubleBackToExitPressedOnce) {
+            mDoubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mDoubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         } else {
             super.onBackPressed();
         }
