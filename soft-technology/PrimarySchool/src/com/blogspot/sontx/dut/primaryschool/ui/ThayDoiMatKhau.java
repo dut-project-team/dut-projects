@@ -4,6 +4,10 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 
+/**
+ * @author trong
+ *
+ */
 public class ThayDoiMatKhau extends Window {
 	private static final long serialVersionUID = 1L;
 	private JPasswordField matKhauMoi;
@@ -37,13 +41,34 @@ public class ThayDoiMatKhau extends Window {
 		xacNhanMatKhauMoi.setBounds(393, 173, 128, 20);
 		getContentPane().add(xacNhanMatKhauMoi);
 		
+		JButton dangXuat = new JButton("Đăng xuất");
+		dangXuat.setBounds(667, 17, 89, 23);
+		dangXuat.addActionListener(this);
+		dangXuat.setActionCommand("DangXuat");
+		getContentPane().add(dangXuat);
+		
 		this.setVisible(true);
 	}
 	
 	@Override
 	protected void onClicked(String whoClicked) {
 		if ("DongY".equals(whoClicked)) {
+			String pass1 = matKhauMoi.getText();
+			String pass2 = xacNhanMatKhauMoi.getText();
+			int minLenOfPass = 6;
+			if (pass1.length() >= 6 && pass1.equals(pass2)) {
+				QuanLyThongTinCaNhan.infoBox("Doi mat khau thanh cong", "Thanh cong");
+			} else if (pass1.length() < 6) {
+				QuanLyThongTinCaNhan.infoBox("Mật khẩu ít nhất " + minLenOfPass + " ký tự", "Mật khẩu không hợp lệ");
+			} else if (!pass1.equals(pass2)) {
+				QuanLyThongTinCaNhan.infoBox("Mật khẩu xác nhận không khớp", "Mật khẩu không khớp");
+			}
+		} else if ("DangXuat".equals(whoClicked)) {
 			
 		}
+	}
+	
+	public static void main(String[] args) {
+		new ThayDoiMatKhau();
 	}
 }
