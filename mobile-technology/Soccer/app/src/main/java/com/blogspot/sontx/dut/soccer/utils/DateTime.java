@@ -1,0 +1,20 @@
+package com.blogspot.sontx.dut.soccer.utils;
+
+import java.util.Date;
+
+/**
+ * Copyright by sontx, www.sontx.in
+ * Created by noem on 23/04/2016.
+ */
+public final class DateTime {
+    public static Date parse(String st) {
+        String[] parts = st.split("/");
+        Date date = new Date(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
+        return date;
+    }
+    public static String getFriendlyString(Date date) {
+        return String.format("%02d:%02d - %02d/%02d/%d",
+                date.getHours(), date.getMinutes(), date.getDay(), date.getMonth(), date.getYear());
+    }
+    private DateTime() {}
+}

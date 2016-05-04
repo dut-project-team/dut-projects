@@ -1,5 +1,7 @@
 package com.blogspot.sontx.dut.soccer.ui;
 
+import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,20 +18,28 @@ import android.widget.Toast;
 
 import com.blogspot.sontx.dut.soccer.R;
 import com.blogspot.sontx.dut.soccer.bean.Account;
+import com.blogspot.sontx.dut.soccer.bean.Match;
 import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
+import com.blogspot.sontx.dut.soccer.ui.dlg.MatchDialog;
+import com.blogspot.sontx.dut.soccer.ui.frag.MatchesFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        MatchesFragment.OnListFragmentInteractionListener {
     private static final int LOGIN_REQUEST_CODE = 1;
+    private static final int DEFAULT_CITY_ID = 43;
     private int mAccountId = -1;
     private boolean mDoubleBackToExitPressedOnce = false;
+    private boolean mAttachedMatchesFragment = false;
 
-    private void displayUserEmail() {
+    private void onLoginSuccess() {
         TextView tvEmail = (TextView) findViewById(R.id.tv_user_email);
         if (tvEmail != null && tvEmail.getText().length() == 0) {
             Account account = DatabaseManager.getInstance().getAccountById(mAccountId);
             tvEmail.setText(account.getEmail());
         }
+        if (!mAttachedMatchesFragment)
+            attachMatchesFragment();
     }
 
     private void initializeToolbar() {
@@ -43,7 +53,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                displayUserEmail();
+                onLoginSuccess();
             }
 
             @Override
@@ -68,7 +78,8 @@ public class MainActivity extends AppCompatActivity
 
     private void onLoginSuccess(int accountId) {
         mAccountId = accountId;
-        displayUserEmail();
+        AlertDialog.Builder builder;
+        onLoginSuccess();
     }
 
     private boolean checkAccountIdIsPassed(Bundle bundle) {
@@ -85,6 +96,18 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         return false;
+    }
+
+    private void attachMatchesFragment(int cityId) {
+        mAttachedMatchesFragment = true;
+        FragmentManager fragmentManager = getFragmentManager();
+        MatchesFragment fragment = MatchesFragment.newInstance(cityId);
+        fragment.setOnListFragmentInteractionListener(this);
+        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
+    }
+
+    private void attachMatchesFragment() {
+        attachMatchesFragment(DEFAULT_CITY_ID);
     }
 
     @Override
@@ -142,15 +165,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -179,5 +193,11 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onListFragmentInteraction(Match item) {
+        MatchDialog dialog = new MatchDialog(this, item);
+        dialog.show();
     }
 }
