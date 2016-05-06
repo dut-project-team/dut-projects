@@ -1,16 +1,13 @@
 package com.blogspot.sontx.dut.soccer.ui.frag;
 
-import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 
 import com.blogspot.sontx.dut.soccer.R;
 import com.blogspot.sontx.dut.soccer.bean.City;
@@ -43,7 +40,8 @@ public class AnotherMatchesFragment extends MatchesFragment implements AdapterVi
 
     private void loadCitiesList() {
         mCities = DatabaseManager.getInstance().getCities();
-        mSpinner.setAdapter(new CityAdapter(mSpinner.getContext(), mCities));
+        ArrayAdapter<City> adapter = new ArrayAdapter<>(mSpinner.getContext(), android.R.layout.simple_spinner_dropdown_item, mCities);
+        mSpinner.setAdapter(adapter);
         mSpinner.setOnItemSelectedListener(this);
     }
 
@@ -79,74 +77,5 @@ public class AnotherMatchesFragment extends MatchesFragment implements AdapterVi
         Match match = mMatches.get(position);
         if (mOnListFragmentInteractionListener != null)
             mOnListFragmentInteractionListener.onListFragmentInteraction(match);
-    }
-
-    private static class CityAdapter implements SpinnerAdapter {
-        private List<City> mCities;
-        private Context mContext;
-
-        public CityAdapter(Context context, List<City> cities) {
-            mContext = context;
-            this.mCities = cities;
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            TextView textView = new TextView(mContext);
-            textView.setText(mCities.get(position).getName());
-            return textView;
-        }
-
-        @Override
-        public void registerDataSetObserver(DataSetObserver observer) {
-
-        }
-
-        @Override
-        public void unregisterDataSetObserver(DataSetObserver observer) {
-
-        }
-
-        @Override
-        public int getCount() {
-            return mCities.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mCities.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return mCities.get(position).getCityId();
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return false;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            TextView textView = new TextView(mContext);
-            textView.setText(mCities.get(position).getName());
-            return textView;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return 0;
-        }
-
-        @Override
-        public int getViewTypeCount() {
-            return 1;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return false;
-        }
     }
 }
