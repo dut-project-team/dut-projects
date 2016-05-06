@@ -20,14 +20,20 @@ import com.blogspot.sontx.dut.soccer.R;
 import com.blogspot.sontx.dut.soccer.bean.Account;
 import com.blogspot.sontx.dut.soccer.bean.Match;
 import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
+import com.blogspot.sontx.dut.soccer.ui.dlg.BaseDialog;
 import com.blogspot.sontx.dut.soccer.ui.dlg.MatchDialog;
 import com.blogspot.sontx.dut.soccer.ui.frag.MatchesFragment;
+import com.blogspot.sontx.dut.soccer.ui.frag.OnFragmentDataChangedListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MatchesFragment.OnListFragmentInteractionListener {
     private static final int LOGIN_REQUEST_CODE = 1;
     private static final int DEFAULT_CITY_ID = 43;
+    private List<OnFragmentDataChangedListener> mOnFragmentDataChangedListeners = new ArrayList<>();
     private int mAccountId = -1;
     private boolean mDoubleBackToExitPressedOnce = false;
     private boolean mAttachedMatchesFragment = false;
@@ -104,6 +110,7 @@ public class MainActivity extends AppCompatActivity
         MatchesFragment fragment = MatchesFragment.newInstance(cityId);
         fragment.setOnListFragmentInteractionListener(this);
         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
+        addOnFragmentDataChangedListener(fragment);
     }
 
     private void attachMatchesFragment() {
@@ -196,8 +203,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Match item) {
+    public void onListFragmentInteraction(final Match item) {
         MatchDialog dialog = new MatchDialog(this, item);
+        dialog.setOnDialogDataChangedListener(new BaseDialog.OnDialogDataChangedListener() {
+            @Override
+            public void onDialogDataChanged(BaseDialog dialog) {
+                for (OnFragmentDataChangedListener listener : mOnFragmentDataChangedListeners) {
+                    listener.onFragmentDataChanged(item);
+                }
+            }
+        });
         dialog.show();
+    }
+
+    public void addOnFragmentDataChangedListener(OnFragmentDataChangedListener listener) {
+        mOnFragmentDataChangedListeners.add(listener);
+    }
+
+    public void removeOnFragmentDataChangedListener(OnFragmentDataChangedListener listener) {
+        mOnFragmentDataChangedListeners.remove(listener);
     }
 }

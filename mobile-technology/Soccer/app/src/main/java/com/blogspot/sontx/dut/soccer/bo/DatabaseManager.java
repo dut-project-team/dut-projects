@@ -184,4 +184,10 @@ public final class DatabaseManager {
         cursor.close();
         return profile;
     }
+
+    public void updateMatch(Match match) {
+        String sql = "UPDATE matches SET status=%d, price=%d, is_verified=%d, updated='%s' WHERE match_id=%d";
+        sql = String.format(sql, match.getNumberOfAvailableSlots(), match.getMoneyPerSlot(), match.isVerified() ? 1 : 0, DateTime.now(), match.getMatchId());
+        mSQLiteDatabase.execSQL(sql);
+    }
 }

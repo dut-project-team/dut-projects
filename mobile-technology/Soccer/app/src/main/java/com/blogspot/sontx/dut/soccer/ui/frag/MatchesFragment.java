@@ -15,10 +15,11 @@ import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
 
 import java.util.List;
 
-public class MatchesFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class MatchesFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     private static final String ARG_CITY_ID = "city-id";
     private int mCityId = 1;
     private List<Match> mMatches;
+    private ListView mListView;
     private OnListFragmentInteractionListener mListener;
 
     public void setOnListFragmentInteractionListener(OnListFragmentInteractionListener listener) {
@@ -50,10 +51,10 @@ public class MatchesFragment extends Fragment implements AdapterView.OnItemClick
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_matches_list, container, false);
 
-        ListView listView = (ListView) view;
+        mListView = (ListView) view;
         mMatches = getMatches();
-        listView.setOnItemClickListener(this);
-        listView.setAdapter(new MatchesAdapter(mMatches, getActivity()));
+        mListView.setOnItemClickListener(this);
+        mListView.setAdapter(new MatchesAdapter(mMatches, getActivity()));
 
         return view;
     }
@@ -74,6 +75,14 @@ public class MatchesFragment extends Fragment implements AdapterView.OnItemClick
         Match match = mMatches.get(position);
         if (mListener != null)
             mListener.onListFragmentInteraction(match);
+    }
+
+    @Override
+    public void onFragmentDataChanged(Object extra) {
+        mMatches = getMatches();
+        mListView.setOnItemClickListener(this);
+        mListView.setAdapter(new MatchesAdapter(mMatches, getActivity()));
+        super.onFragmentDataChanged(extra);
     }
 
     public interface OnListFragmentInteractionListener {

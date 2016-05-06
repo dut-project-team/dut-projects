@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blogspot.sontx.dut.soccer.R;
 import com.blogspot.sontx.dut.soccer.bean.City;
@@ -21,8 +22,7 @@ import com.blogspot.sontx.dut.soccer.utils.DateTime;
  * Copyright by sontx, www.sontx.in
  * Created by noem on 29/04/2016.
  */
-public class MatchDialog implements View.OnClickListener {
-    private Dialog mDialog;
+public class MatchDialog extends BaseDialog implements View.OnClickListener {
     private TextView mStartTimeView;
     private TextView mAvailableSlotView;
     private TextView mMoneyView;
@@ -31,6 +31,7 @@ public class MatchDialog implements View.OnClickListener {
     private TextView mVerifiedView;
     private Button mJoinView;
     private Button mCloseView;
+    private Match mMatch;
 
     private void getViewFromIds() {
         mStartTimeView = (TextView) mDialog.findViewById(R.id.tv_match_start);
@@ -44,11 +45,12 @@ public class MatchDialog implements View.OnClickListener {
     }
 
     public MatchDialog(Context context, Match match) {
-        mDialog = new Dialog(context);
+        super(new Dialog(context));
         mDialog.setContentView(R.layout.dialog_match);
         mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         getViewFromIds();
         loadMatchDetail(match);
+        mMatch = match;
     }
 
     private void loadMatchDetail(Match match) {
@@ -73,16 +75,15 @@ public class MatchDialog implements View.OnClickListener {
         mCloseView.setOnClickListener(this);
     }
 
-    public void show() {
-        mDialog.show();
-    }
-
     @Override
     public void onClick(View v) {
         if (v.equals(mJoinView)) {
-
+            mMatch.setNumberOfAvailableSlots(mMatch.getNumberOfAvailableSlots() + 1);
+            DatabaseManager.getInstance().updateMatch(mMatch);
+            Toast.makeText(mDialog.getContext(), "Joined!", Toast.LENGTH_SHORT).show();
+            fireOnDialogDataChanged();
         } else if (v.equals(mCloseView)) {
-            mDialog.dismiss();
         }
+        mDialog.dismiss();
     }
 }
