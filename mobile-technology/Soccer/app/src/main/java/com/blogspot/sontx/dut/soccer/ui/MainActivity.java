@@ -25,6 +25,7 @@ import com.blogspot.sontx.dut.soccer.ui.dlg.MatchDialog;
 import com.blogspot.sontx.dut.soccer.ui.frag.AnotherMatchesFragment;
 import com.blogspot.sontx.dut.soccer.ui.frag.DaNangMatchesFragment;
 import com.blogspot.sontx.dut.soccer.ui.frag.MatchesFragment;
+import com.blogspot.sontx.dut.soccer.ui.frag.MyMatchesFragment;
 import com.blogspot.sontx.dut.soccer.ui.frag.OnFragmentDataChangedListener;
 
 import java.util.ArrayList;
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity
     private void attachMyMatchesFragment() {
         mAttachedMatchesFragment = true;
         FragmentManager fragmentManager = getFragmentManager();
-        MyMachesFragment fragment = MyMachesFragment.newInstance(mAccountId);
+        MyMatchesFragment fragment = MyMatchesFragment.newInstance(mAccountId);
         fragment.setOnListFragmentInteractionListener(this);
         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
         addOnFragmentDataChangedListener(fragment);
