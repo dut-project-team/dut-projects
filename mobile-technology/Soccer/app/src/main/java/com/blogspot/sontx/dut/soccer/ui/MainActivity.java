@@ -128,6 +128,15 @@ public class MainActivity extends AppCompatActivity
         addOnFragmentDataChangedListener(fragment);
     }
 
+    private void attachMyMatchesFragment() {
+        mAttachedMatchesFragment = true;
+        FragmentManager fragmentManager = getFragmentManager();
+        MyMachesFragment fragment = MyMachesFragment.newInstance(mAccountId);
+        fragment.setOnListFragmentInteractionListener(this);
+        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
+        addOnFragmentDataChangedListener(fragment);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,8 +194,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.nav_match_danang) {
+        if (id == R.id.nav_match_mymatches) {
+            attachMyMatchesFragment();
+        } else if (id == R.id.nav_match_danang) {
             attachDaNangMatchesFragment();
         } else if (id == R.id.nav_match_another) {
             attachAnotherMatchesFragment();

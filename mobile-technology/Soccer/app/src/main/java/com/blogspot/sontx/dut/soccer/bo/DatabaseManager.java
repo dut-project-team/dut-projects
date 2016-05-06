@@ -206,4 +206,32 @@ public final class DatabaseManager {
         cursor.close();
         return cities;
     }
+
+    public List<Match> getMachesByAccountId(int accountId) {
+        String sql = "SELECT * FROM matches, fields, districts, cities WHERE " +
+                " matches.field_id=fields.field_id AND " +
+                " fields.district_id=districts.district_id AND " +
+                " matches.host_id=%d";
+        sql = String.format(sql, accountId);
+        Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
+        List<Match> matches = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Match match = new Match();
+            match.setMatchId(cursor.getInt(0));
+            match.setFieldId(cursor.getInt(1));
+            match.setHostId(cursor.getInt(2));
+            match.setNumberOfAvailableSlots(cursor.getInt(3));
+            match.setNumberOfSlots(cursor.getInt(4));
+            match.setMoneyPerSlot(cursor.getInt(5));
+            match.setStartTime(DateTime.parse(cursor.getString(6)));
+            match.setEndTime(DateTime.parse(cursor.getString(7)));
+            match.setIsVerified(cursor.getInt(8) != 0);
+            match.setCreatedTime(DateTime.parse(cursor.getString(10)));
+            matches.add(match);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return matches;
+    }
 }
