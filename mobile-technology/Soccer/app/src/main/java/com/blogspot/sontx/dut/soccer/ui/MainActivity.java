@@ -22,6 +22,8 @@ import com.blogspot.sontx.dut.soccer.bean.Match;
 import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
 import com.blogspot.sontx.dut.soccer.ui.dlg.BaseDialog;
 import com.blogspot.sontx.dut.soccer.ui.dlg.MatchDialog;
+import com.blogspot.sontx.dut.soccer.ui.frag.AnotherMatchesFragment;
+import com.blogspot.sontx.dut.soccer.ui.frag.DaNangMatchesFragment;
 import com.blogspot.sontx.dut.soccer.ui.frag.MatchesFragment;
 import com.blogspot.sontx.dut.soccer.ui.frag.OnFragmentDataChangedListener;
 
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity
             tvEmail.setText(account.getEmail());
         }
         if (!mAttachedMatchesFragment)
-            attachMatchesFragment();
+            attachDaNangMatchesFragment();
     }
 
     private void initializeToolbar() {
@@ -107,14 +109,23 @@ public class MainActivity extends AppCompatActivity
     private void attachMatchesFragment(int cityId) {
         mAttachedMatchesFragment = true;
         FragmentManager fragmentManager = getFragmentManager();
-        MatchesFragment fragment = MatchesFragment.newInstance(cityId);
+        DaNangMatchesFragment fragment = DaNangMatchesFragment.newInstance(cityId);
         fragment.setOnListFragmentInteractionListener(this);
         fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
         addOnFragmentDataChangedListener(fragment);
     }
 
-    private void attachMatchesFragment() {
+    private void attachDaNangMatchesFragment() {
         attachMatchesFragment(DEFAULT_CITY_ID);
+    }
+
+    private void attachAnotherMatchesFragment() {
+        mAttachedMatchesFragment = true;
+        FragmentManager fragmentManager = getFragmentManager();
+        AnotherMatchesFragment fragment = AnotherMatchesFragment.newInstance();
+        fragment.setOnListFragmentInteractionListener(this);
+        fragmentManager.beginTransaction().replace(R.id.content_main, fragment).commit();
+        addOnFragmentDataChangedListener(fragment);
     }
 
     @Override
@@ -175,7 +186,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_change_password) {
+        if (id == R.id.nav_match_danang) {
+            attachDaNangMatchesFragment();
+        } else if (id == R.id.nav_match_another) {
+            attachAnotherMatchesFragment();
+        } else if (id == R.id.nav_change_password) {
             changePassword();
         } else if (id == R.id.nav_logout) {
             logout();

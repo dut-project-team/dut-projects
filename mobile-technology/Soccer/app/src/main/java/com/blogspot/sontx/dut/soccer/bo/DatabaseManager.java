@@ -190,4 +190,20 @@ public final class DatabaseManager {
         sql = String.format(sql, match.getNumberOfAvailableSlots(), match.getMoneyPerSlot(), match.isVerified() ? 1 : 0, DateTime.now(), match.getMatchId());
         mSQLiteDatabase.execSQL(sql);
     }
+
+    public List<City> getCities() {
+        String sql = "SELECT * FROM cities";
+        Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
+        List<City> cities = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            City city = new City();
+            city.setCityId(cursor.getInt(0));
+            city.setName(cursor.getString(1));
+            cities.add(city);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return cities;
+    }
 }
