@@ -47,7 +47,6 @@ public class MatchDialog extends BaseDialog implements View.OnClickListener {
     public MatchDialog(Context context, Match match) {
         super(new Dialog(context));
         mDialog.setContentView(R.layout.dialog_match);
-        mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         getViewFromIds();
         loadMatchDetail(match);
         mMatch = match;

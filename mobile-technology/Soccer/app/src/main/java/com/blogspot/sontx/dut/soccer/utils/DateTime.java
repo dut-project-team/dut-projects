@@ -1,5 +1,6 @@
 package com.blogspot.sontx.dut.soccer.utils;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -60,12 +61,12 @@ public final class DateTime {
 
     public static DateTime now() {
         DateTime dt = new DateTime();
-        Date date = new Date();
-        dt.setMinute(date.getMinutes());
-        dt.setHour(date.getHours());
-        dt.setDay(date.getDay());
-        dt.setMonth(date.getMonth());
-        dt.setYear(date.getYear());
+        Calendar calendar = Calendar.getInstance();
+        dt.setMinute(calendar.get(Calendar.MINUTE));
+        dt.setHour(calendar.get(Calendar.HOUR_OF_DAY));
+        dt.setDay(calendar.get(Calendar.DAY_OF_MONTH));
+        dt.setMonth(calendar.get(Calendar.MONTH) + 1);
+        dt.setYear(calendar.get(Calendar.YEAR));
         return dt;
     }
 

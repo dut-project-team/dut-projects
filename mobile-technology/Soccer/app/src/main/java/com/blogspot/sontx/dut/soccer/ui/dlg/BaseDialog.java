@@ -1,6 +1,7 @@
 package com.blogspot.sontx.dut.soccer.ui.dlg;
 
 import android.app.Dialog;
+import android.view.ViewGroup;
 
 /**
  * Copyright by sontx, www.sontx.in
@@ -24,6 +25,7 @@ public class BaseDialog {
     }
 
     public void show() {
+        mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mDialog.show();
     }
 
