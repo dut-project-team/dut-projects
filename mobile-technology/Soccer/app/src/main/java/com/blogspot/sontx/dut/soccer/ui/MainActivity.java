@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blogspot.sontx.dut.soccer.App;
 import com.blogspot.sontx.dut.soccer.R;
 import com.blogspot.sontx.dut.soccer.bean.Account;
 import com.blogspot.sontx.dut.soccer.bean.Match;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity
         }
         if (!mAttachedMatchesFragment)
             attachDaNangMatchesFragment();
+        App.getInstance().setCurrentAccountId(mAccountId);
     }
 
     private void initializeToolbar() {

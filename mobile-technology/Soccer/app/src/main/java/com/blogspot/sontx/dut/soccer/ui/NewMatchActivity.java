@@ -15,15 +15,21 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.blogspot.sontx.dut.soccer.App;
 import com.blogspot.sontx.dut.soccer.R;
+import com.blogspot.sontx.dut.soccer.bean.Match;
 import com.blogspot.sontx.dut.soccer.bean.Money;
+import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
 import com.blogspot.sontx.dut.soccer.bo.SampleData;
 import com.blogspot.sontx.dut.soccer.utils.DateTime;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+
+import java.util.Date;
 
 public class NewMatchActivity extends AppCompatActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
     private static final int REQUEST_SELECT_LOCATION = 1;
@@ -33,6 +39,7 @@ public class NewMatchActivity extends AppCompatActivity implements View.OnClickL
     private Button mStartDateView;
     private ImageButton mWhereView;
     private TextView mWhereNameView;
+    private Button mAddView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,7 @@ public class NewMatchActivity extends AppCompatActivity implements View.OnClickL
         mStartDateView = (Button) findViewById(R.id.btn_new_match_startdate);
         mWhereView = (ImageButton) findViewById(R.id.ib_new_match_where);
         mWhereNameView = (TextView) findViewById(R.id.tv_new_match_where);
+        mAddView = (Button) findViewById(R.id.btn_new_match_add);
 
         mStartTimeView.setOnClickListener(this);
         mStartDateView.setOnClickListener(this);
@@ -85,6 +93,18 @@ public class NewMatchActivity extends AppCompatActivity implements View.OnClickL
         } else if (mWhereView.equals(v) || mWhereNameView.equals(v)) {
             Intent intent = new Intent(this, MapActivity.class);
             startActivityForResult(intent, REQUEST_SELECT_LOCATION);
+        } else if (mAddView.equals(v)) {
+//            Match match = new Match();
+//            match.setCreatedTime(new Date());
+//            match.setIsVerified(true);
+//            match.setMoneyPerSlot(Integer.parseInt(mMoneyView.getSelectedItem().toString().split(" ")[0]));
+//            match.setNumberOfAvailableSlots(0);
+//            match.setNumberOfSlots(Integer.parseInt(mSlotsView.getSelectedItem().toString()));
+//            match.setHostId(App.getInstance().getCurrentAccountId());
+//            match.setStartTime();
+//            DatabaseManager.getInstance().addMatch(match);
+            Toast.makeText(NewMatchActivity.this, "Added your own match!", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 

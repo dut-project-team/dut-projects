@@ -17,10 +17,19 @@ import java.io.InputStream;import java.lang.Override;import java.lang.String;
 public class App extends Application {
     private static final boolean FORCE_OVERWRITE_DB = false;
     public static final String DB_NAME = "bongda.sqlite";
-    private static Application instance = null;
+    private static App instance = null;
+    private int mCurrentAccountId;
 
-    public static Application getInstance() {
+    public static App getInstance() {
         return instance;
+    }
+
+    public void setCurrentAccountId(int accountId) {
+        mCurrentAccountId = accountId;
+    }
+
+    public int getCurrentAccountId() {
+        return mCurrentAccountId;
     }
 
     @Override
