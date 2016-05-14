@@ -97,4 +97,9 @@ public class Field {
     public void setDeleted(Date deleted) {
         this.deleted = deleted;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

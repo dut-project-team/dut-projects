@@ -1,5 +1,8 @@
 package com.blogspot.sontx.dut.soccer.bean;
 
+import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
+import com.blogspot.sontx.dut.soccer.utils.DateTime;
+
 import java.util.Date;
 
 /**
@@ -96,5 +99,11 @@ public class Match {
 
     public void setIsVerified(boolean isVerified) {
         this.isVerified = isVerified;
+    }
+
+    @Override
+    public String toString() {
+        Field field = DatabaseManager.getInstance().getField(fieldId);
+        return String.format("%s at %s", field.getName(), DateTime.getFriendlyString(startTime));
     }
 }

@@ -61,7 +61,7 @@ public class MatchDialog extends BaseDialog implements View.OnClickListener {
         mDialog.setTitle(String.format("Match of %s", profile.getUsername()));
 
         mStartTimeView.setText(DateTime.getFriendlyString(match.getStartTime()));
-        mAvailableSlotView.setText(String.format("%d/%d", match.getNumberOfAvailableSlots(), match.getNumberOfSlots()));
+        mAvailableSlotView.setText(String.format("%d/%d", match.getNumberOfSlots() - match.getNumberOfAvailableSlots(), match.getNumberOfSlots()));
         mMoneyView.setText(String.format("%d VND", match.getMoneyPerSlot()));
         mWhereView.setText(String.format("%s, %s", district.getName(), city.getName()));
         mFieldView.setText(String.format("%s, %s", field.getName(), field.getAddress()));
@@ -77,7 +77,7 @@ public class MatchDialog extends BaseDialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.equals(mJoinView)) {
-            mMatch.setNumberOfAvailableSlots(mMatch.getNumberOfAvailableSlots() + 1);
+            mMatch.setNumberOfAvailableSlots(mMatch.getNumberOfAvailableSlots() - 1);
             DatabaseManager.getInstance().updateMatch(mMatch);
             Toast.makeText(mDialog.getContext(), "Joined!", Toast.LENGTH_SHORT).show();
             fireOnDialogDataChanged();

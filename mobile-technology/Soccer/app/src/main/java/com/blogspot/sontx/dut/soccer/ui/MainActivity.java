@@ -23,6 +23,7 @@ import com.blogspot.sontx.dut.soccer.bean.Match;
 import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
 import com.blogspot.sontx.dut.soccer.ui.dlg.BaseDialog;
 import com.blogspot.sontx.dut.soccer.ui.dlg.MatchDialog;
+import com.blogspot.sontx.dut.soccer.ui.dlg.MyMatchPicker;
 import com.blogspot.sontx.dut.soccer.ui.frag.AnotherMatchesFragment;
 import com.blogspot.sontx.dut.soccer.ui.frag.DaNangMatchesFragment;
 import com.blogspot.sontx.dut.soccer.ui.frag.MatchesFragment;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MatchesFragment.OnListFragmentInteractionListener {
     private static final int LOGIN_REQUEST_CODE = 1;
-    private static final int DEFAULT_CITY_ID = 43;
+    public static final int DEFAULT_CITY_ID = 43;
     private List<OnFragmentDataChangedListener> mOnFragmentDataChangedListeners = new ArrayList<>();
     private int mAccountId = -1;
     private boolean mDoubleBackToExitPressedOnce = false;
@@ -210,12 +211,23 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+            sendMyMatch();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void sendMyMatch() {
+        MyMatchPicker picker = new MyMatchPicker(this);
+        picker.setOnSendSMSListener(new MyMatchPicker.OnSendSMSListener() {
+            @Override
+            public void onSendSMS(Intent intent) {
+                startActivity(intent);
+            }
+        });
+        picker.show();
     }
 
     private void changePassword() {
