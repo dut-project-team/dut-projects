@@ -107,23 +107,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:gravity="right"
+                android:gravity="center_vertical|right"
                 android:layout_gravity="center_vertical">
 
-                <TextView
+                <Spinner
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Somewhere"
-                    android:id="@+id/tv_new_match_where"
-                    android:layout_gravity="center_vertical" />
+                    android:id="@+id/sp_new_match_where"
+                    android:layout_weight="1"
+                    android:spinnerMode="dialog" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/ib_new_match_where"
-                    android:layout_column="1"
-                    android:src="@android:drawable/ic_dialog_map" />
+                    android:src="@drawable/maps_small"/>
             </LinearLayout>
 
         </TableRow>
