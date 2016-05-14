@@ -251,8 +251,8 @@ public final class DatabaseManager {
             //field.setDeleted();
             field.setDistrictId(cursor.getInt(2));
             field.setFieldId(cursor.getInt(0));
-            field.setLatitude(4);
-            field.setLongitude(5);
+            field.setLatitude(cursor.getFloat(4));
+            field.setLongitude(cursor.getFloat(5));
             field.setName(cursor.getString(1));
             field.setPhoneNumber(cursor.getString(6));
             fields.add(field);

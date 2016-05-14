@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.blogspot.sontx.dut.soccer.App;
 import com.blogspot.sontx.dut.soccer.R;
+import com.blogspot.sontx.dut.soccer.bean.Field;
 import com.blogspot.sontx.dut.soccer.bean.Match;
 import com.blogspot.sontx.dut.soccer.bean.Money;
 import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
@@ -35,10 +36,11 @@ public class NewMatchActivity extends AppCompatActivity implements View.OnClickL
     private static final int REQUEST_SELECT_LOCATION = 1;
     private Spinner mSlotsView;
     private Spinner mMoneyView;
+    private Spinner mWhereView;
     private Button mStartTimeView;
     private Button mStartDateView;
-    private ImageButton mWhereView;
-    private TextView mWhereNameView;
+    private ImageButton mWhereButtonView;
+    //private TextView mWhereNameView;
     private Button mAddView;
 
     @Override
@@ -48,15 +50,18 @@ public class NewMatchActivity extends AppCompatActivity implements View.OnClickL
 
         mSlotsView = (Spinner) findViewById(R.id.sp_new_match_slots);
         mMoneyView = (Spinner) findViewById(R.id.sp_new_match_money);
+        mWhereView = (Spinner) findViewById(R.id.sp_new_match_where);
         mStartTimeView = (Button) findViewById(R.id.btn_new_match_startime);
         mStartDateView = (Button) findViewById(R.id.btn_new_match_startdate);
-        mWhereView = (ImageButton) findViewById(R.id.ib_new_match_where);
-        mWhereNameView = (TextView) findViewById(R.id.tv_new_match_where);
+        mWhereButtonView = (ImageButton) findViewById(R.id.ib_new_match_where);
+       // mWhereNameView = (TextView) findViewById(R.id.tv_new_match_where);
         mAddView = (Button) findViewById(R.id.btn_new_match_add);
 
         mStartTimeView.setOnClickListener(this);
         mStartDateView.setOnClickListener(this);
-        mWhereView.setOnClickListener(this);
+        mWhereButtonView.setOnClickListener(this);
+        mAddView.setOnClickListener(this);
+        //mWhereView.setOnClickListener(this);
 
         loadSpinnersData();
     }
@@ -64,22 +69,24 @@ public class NewMatchActivity extends AppCompatActivity implements View.OnClickL
     private void loadSpinnersData() {
         ArrayAdapter<Integer> slotsAdapter = new ArrayAdapter<>(mSlotsView.getContext(), android.R.layout.simple_spinner_dropdown_item, SampleData.getSlots());
         ArrayAdapter<Money> moneyAdapter = new ArrayAdapter<>(mMoneyView.getContext(), android.R.layout.simple_spinner_dropdown_item, SampleData.getMoney());
+        ArrayAdapter<Field> fieldAdapter = new ArrayAdapter<>(mWhereView.getContext(), android.R.layout.simple_spinner_dropdown_item, DatabaseManager.getInstance().getFields(MainActivity.DEFAULT_CITY_ID));
         mSlotsView.setAdapter(slotsAdapter);
         mMoneyView.setAdapter(moneyAdapter);
+        mWhereView.setAdapter(fieldAdapter);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SELECT_LOCATION) {
-            if (resultCode == RESULT_OK) {
-                String address = data.getStringExtra("address");
-                mWhereNameView.setText(address);
-                mWhereNameView.setOnClickListener(this);
-                mWhereView.setVisibility(View.GONE);
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == REQUEST_SELECT_LOCATION) {
+//            if (resultCode == RESULT_OK) {
+//                String address = data.getStringExtra("address");
+//                mWhereNameView.setText(address);
+//                mWhereNameView.setOnClickListener(this);
+//                mWhereView.setVisibility(View.GONE);
+//            }
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
     @Override
     public void onClick(View v) {
@@ -90,22 +97,46 @@ public class NewMatchActivity extends AppCompatActivity implements View.OnClickL
         } else if (mStartDateView.equals(v)) {
             DatePickerDialog dialog = new DatePickerDialog(v.getContext(), this, now.getYear(), now.getMonth(), now.getDay());
             dialog.show();
-        } else if (mWhereView.equals(v) || mWhereNameView.equals(v)) {
-            Intent intent = new Intent(this, MapActivity.class);
-            startActivityForResult(intent, REQUEST_SELECT_LOCATION);
+//        } else if (mWhereView.equals(v) || mWhereNameView.equals(v)) {
+//            Intent intent = new Intent(this, MapActivity.class);
+//            startActivityForResult(intent, REQUEST_SELECT_LOCATION);
         } else if (mAddView.equals(v)) {
-//            Match match = new Match();
-//            match.setCreatedTime(new Date());
-//            match.setIsVerified(true);
-//            match.setMoneyPerSlot(Integer.parseInt(mMoneyView.getSelectedItem().toString().split(" ")[0]));
-//            match.setNumberOfAvailableSlots(0);
-//            match.setNumberOfSlots(Integer.parseInt(mSlotsView.getSelectedItem().toString()));
-//            match.setHostId(App.getInstance().getCurrentAccountId());
-//            match.setStartTime();
-//            DatabaseManager.getInstance().addMatch(match);
-            Toast.makeText(NewMatchActivity.this, "Added your own match!", Toast.LENGTH_SHORT).show();
-            finish();
+            addMyMatch();
+        } else if (mWhereButtonView.equals(v)) {
+            showMap();
         }
+    }
+
+    private void showMap() {
+        Intent intent = new Intent(this, MapActivity.class);
+        Bundle bundle = new Bundle();
+        Field selectedField = (Field) mWhereView.getSelectedItem();
+        bundle.putFloat("latitude", selectedField.getLatitude());
+        bundle.putFloat("longitude", selectedField.getLongitude());
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private Date getStartTime() {
+        String startTime = mStartTimeView.getText().toString();
+        String startDate = mStartDateView.getText().toString();
+        return DateTime.parse(startTime, startDate);
+    }
+
+    private void addMyMatch() {
+        Match match = new Match();
+        match.setCreatedTime(DateTime.now().toDate());
+        match.setIsVerified(true);
+        match.setMoneyPerSlot(Integer.parseInt(mMoneyView.getSelectedItem().toString().split(" ")[0]));
+        match.setNumberOfSlots(Integer.parseInt(mSlotsView.getSelectedItem().toString()));
+        match.setNumberOfAvailableSlots(match.getNumberOfSlots());
+        match.setHostId(App.getInstance().getCurrentAccountId());
+        match.setStartTime(getStartTime());
+        match.setFieldId(((Field) mWhereView.getSelectedItem()).getFieldId());
+        DatabaseManager.getInstance().addMatch(match);
+        Toast.makeText(NewMatchActivity.this, "Added your own match!", Toast.LENGTH_SHORT).show();
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override
