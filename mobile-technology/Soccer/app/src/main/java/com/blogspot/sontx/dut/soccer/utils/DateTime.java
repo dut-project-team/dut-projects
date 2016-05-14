@@ -71,10 +71,46 @@ public final class DateTime {
     }
 
     public static Date parse(String st) {
-        String[] parts = st.split("/");
-        Date date = new Date(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
+        if (st == null)
+            return DateTime.now().toDate();
+        String[] part = st.split("-");
+        Date date;
+        if (part.length > 1) {
+            String[] timeParts = part[0].split(":");
+            String[] dateParts = part[1].split("/");
+            date = new Date(Integer.parseInt(dateParts[2].trim()),
+                    Integer.parseInt(dateParts[1].trim()), Integer.parseInt(dateParts[0].trim()),
+                    Integer.parseInt(timeParts[0].trim()), Integer.parseInt(timeParts[1].trim()));
+        } else {
+            String[] dateParts = st.split("/");
+            date = new Date(Integer.parseInt(dateParts[2].trim()),
+                    Integer.parseInt(dateParts[1].trim()), Integer.parseInt(dateParts[0].trim()));
+        }
         return date;
     }
+
+    public static Date parse(String sTime, String sDate) {
+        Date date = new Date();
+        String[] timeParts = sTime.split(":");
+        date.setHours(Integer.parseInt(timeParts[0]));
+        date.setMinutes(Integer.parseInt(timeParts[1]));
+        String[] dateParts = sDate.split("/");
+        date.setDate(Integer.parseInt(dateParts[2]));
+        date.setMonth(Integer.parseInt(dateParts[1]));
+        date.setYear(Integer.parseInt(dateParts[0]));
+        return date;
+    }
+
+    public Date toDate() {
+        Date date = new Date();
+        date.setHours(hour);
+        date.setMinutes(minute);
+        date.setDate(day);
+        date.setMonth(month);
+        date.setYear(year);
+        return date;
+    }
+
     public static String getFriendlyString(Date date) {
         return String.format("%02d:%02d - %02d/%02d/%d",
                 date.getHours(), date.getMinutes(), date.getDay(), date.getMonth(), date.getYear());

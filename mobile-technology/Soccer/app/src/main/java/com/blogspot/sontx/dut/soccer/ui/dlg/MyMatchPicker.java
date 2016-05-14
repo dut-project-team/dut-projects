@@ -1,18 +1,14 @@
 package com.blogspot.sontx.dut.soccer.ui.dlg;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.widget.ArrayAdapter;
 
 import com.blogspot.sontx.dut.soccer.App;
-import com.blogspot.sontx.dut.soccer.bean.Field;
 import com.blogspot.sontx.dut.soccer.bean.Match;
 import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
-import com.blogspot.sontx.dut.soccer.utils.DateTime;
 
 import java.util.List;
 
@@ -20,13 +16,13 @@ import java.util.List;
  * Copyright NoEm 2016
  * Created by Noem on 14/5/2016.
  */
-public class MyMatchPicker implements DialogInterface.OnClickListener {
+public abstract class MyMatchPicker implements DialogInterface.OnClickListener {
     private AlertDialog.Builder builder;
     private ArrayAdapter<Match> matchAdapter;
-    private OnSendSMSListener mOnSendSMSListener = null;
+    private OnSelectedMatchListener mOnSelectedMatchListener = null;
 
-    public void setOnSendSMSListener(OnSendSMSListener listener) {
-        mOnSendSMSListener = listener;
+    public void setOnSendSMSListener(OnSelectedMatchListener listener) {
+        mOnSelectedMatchListener = listener;
     }
 
     public MyMatchPicker(Context context) {
@@ -51,27 +47,24 @@ public class MyMatchPicker implements DialogInterface.OnClickListener {
             public void onClick(DialogInterface dialog, int which) {
                 Match match = matchAdapter.getItem(which);
                 dialog.dismiss();
-                sendSMS(match);
+                onSelectedMatch(match);
             }
         });
     }
 
-    private void sendSMS(Match match) {
-        Uri uri = Uri.parse("smsto:");
-        Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
-        Field field = DatabaseManager.getInstance().getField(match.getFieldId());
-        String content = String.format("I just created a match at %s at %s, come join with me :D", field.getName(), DateTime.getFriendlyString(match.getStartTime()));
-        intent.putExtra("sms_body", content);
-        if (mOnSendSMSListener != null)
-            mOnSendSMSListener.onSendSMS(intent);
+    private void onSelectedMatch(Match match) {
+        if (mOnSelectedMatchListener != null)
+            mOnSelectedMatchListener.onSelectedMatch(processMatch(match));
     }
+
+    protected abstract Intent processMatch(Match match);
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();
     }
 
-    public interface OnSendSMSListener {
-        void onSendSMS(Intent intent);
+    public interface OnSelectedMatchListener {
+        void onSelectedMatch(Intent intent);
     }
 }

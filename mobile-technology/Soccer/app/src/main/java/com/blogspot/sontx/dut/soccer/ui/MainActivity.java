@@ -24,6 +24,8 @@ import com.blogspot.sontx.dut.soccer.bo.DatabaseManager;
 import com.blogspot.sontx.dut.soccer.ui.dlg.BaseDialog;
 import com.blogspot.sontx.dut.soccer.ui.dlg.MatchDialog;
 import com.blogspot.sontx.dut.soccer.ui.dlg.MyMatchPicker;
+import com.blogspot.sontx.dut.soccer.ui.dlg.SendSMSDialog;
+import com.blogspot.sontx.dut.soccer.ui.dlg.ShareMyMatchDialog;
 import com.blogspot.sontx.dut.soccer.ui.frag.AnotherMatchesFragment;
 import com.blogspot.sontx.dut.soccer.ui.frag.DaNangMatchesFragment;
 import com.blogspot.sontx.dut.soccer.ui.frag.MatchesFragment;
@@ -209,7 +211,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             logout();
         } else if (id == R.id.nav_share) {
-
+            shareMyMatch();
         } else if (id == R.id.nav_send) {
             sendMyMatch();
         }
@@ -219,11 +221,22 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void sendMyMatch() {
-        MyMatchPicker picker = new MyMatchPicker(this);
-        picker.setOnSendSMSListener(new MyMatchPicker.OnSendSMSListener() {
+    private void shareMyMatch() {
+        MyMatchPicker picker = new ShareMyMatchDialog(this);
+        picker.setOnSendSMSListener(new MyMatchPicker.OnSelectedMatchListener() {
             @Override
-            public void onSendSMS(Intent intent) {
+            public void onSelectedMatch(Intent intent) {
+                startActivity(intent);
+            }
+        });
+        picker.show();
+    }
+
+    private void sendMyMatch() {
+        MyMatchPicker picker = new SendSMSDialog(this);
+        picker.setOnSendSMSListener(new MyMatchPicker.OnSelectedMatchListener() {
+            @Override
+            public void onSelectedMatch(Intent intent) {
                 startActivity(intent);
             }
         });
