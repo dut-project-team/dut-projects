@@ -92,27 +92,31 @@ public final class DatabaseManager {
     }
 
     public List<Match> getMatchesByCityId(int cityId) {
-        String sql = "SELECT * FROM matches, fields, districts, cities WHERE " +
-                " matches.field_id=fields.field_id AND " +
-                " fields.district_id=districts.district_id AND " +
-                " districts.city_id=%d";
+        String sql = "SELECT matches.* FROM matches " +
+                " JOIN fields ON matches.field_id=fields.field_id " +
+                " JOIN districts ON fields.district_id=districts.district_id " +
+                " JOIN cities ON cities.city_id=districts.city_id AND cities.city_id=%d";
         sql = String.format(sql, cityId);
         Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
         List<Match> matches = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Match match = new Match();
-            match.setMatchId(cursor.getInt(0));
-            match.setFieldId(cursor.getInt(1));
-            match.setHostId(cursor.getInt(2));
-            match.setNumberOfAvailableSlots(cursor.getInt(3));
-            match.setNumberOfSlots(cursor.getInt(4));
-            match.setMoneyPerSlot(cursor.getInt(5));
-            match.setStartTime(DateTime.parse(cursor.getString(6)));
-            match.setEndTime(DateTime.parse(cursor.getString(7)));
-            match.setIsVerified(cursor.getInt(8) != 0);
-            match.setCreatedTime(DateTime.parse(cursor.getString(10)));
-            matches.add(match);
+            try {
+                Match match = new Match();
+                match.setMatchId(cursor.getInt(0));
+                match.setFieldId(cursor.getInt(1));
+                match.setHostId(cursor.getInt(2));
+                match.setNumberOfAvailableSlots(cursor.getInt(3));
+                match.setNumberOfSlots(cursor.getInt(4));
+                match.setMoneyPerSlot(cursor.getInt(5));
+                match.setStartTime(DateTime.parse(cursor.getString(6)));
+                match.setEndTime(DateTime.parse(cursor.getString(7)));
+                match.setIsVerified(cursor.getInt(8) != 0);
+                match.setCreatedTime(DateTime.parse(cursor.getString(10)));
+                matches.add(match);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             cursor.moveToNext();
         }
         cursor.close();
@@ -207,11 +211,8 @@ public final class DatabaseManager {
         return cities;
     }
 
-    public List<Match> getMachesByAccountId(int accountId) {
-        String sql = "SELECT * FROM matches, fields, districts, cities WHERE " +
-                " matches.field_id=fields.field_id AND " +
-                " fields.district_id=districts.district_id AND " +
-                " matches.host_id=%d";
+    public List<Match> getMatchesByAccountId(int accountId) {
+        String sql = "SELECT * FROM matches WHERE  matches.host_id=%d";
         sql = String.format(sql, accountId);
         Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
         List<Match> matches = new ArrayList<>();
@@ -233,5 +234,42 @@ public final class DatabaseManager {
         }
         cursor.close();
         return matches;
+    }
+
+    public List<Field> getFields(int cityId) {
+        String sql = "SELECT * FROM fields, districts, cities WHERE " +
+                " fields.district_id=districts.district_id AND " +
+                " cities.city_id=%d";
+        sql = String.format(sql, cityId);
+        Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
+        List<Field> fields = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Field field = new Field();
+            field.setAddress(cursor.getString(3));
+            //field.setCreated();
+            //field.setDeleted();
+            field.setDistrictId(cursor.getInt(2));
+            field.setFieldId(cursor.getInt(0));
+            field.setLatitude(4);
+            field.setLongitude(5);
+            field.setName(cursor.getString(1));
+            field.setPhoneNumber(cursor.getString(6));
+            fields.add(field);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return fields;
+    }
+
+    public void addMatch(Match match) {
+        String sql = "INSERT INTO matches(field_id, host_id, status, maximum_players, price, start_time, is_verified, created) VALUES(%d, %d, %d, %d, %d, '%s', %d, '%s')";
+        String startTime = DateTime.getFriendlyString(match.getStartTime());
+        String createTime = DateTime.getFriendlyString(match.getCreatedTime());
+        sql = String.format(sql, match.getFieldId(), match.getHostId(),
+                match.getNumberOfAvailableSlots(), match.getNumberOfSlots(),
+                match.getMoneyPerSlot(), startTime,
+                match.isVerified() ? 1 : 0, createTime);
+        mSQLiteDatabase.execSQL(sql);
     }
 }
